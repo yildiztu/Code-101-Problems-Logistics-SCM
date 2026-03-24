@@ -43,4 +43,28 @@ This repository is designed for individuals interested in learning and practicin
 
 ## About the Author ✍️
 
-All three books and the 101 problems are authored by **Turkay Yildiz, Ph.D.**. This repository serves as a Jupyter-based companion to the books, providing executable, well-documented solutions and visualizations for each problem.
+All three books and the 101 problems are authored by **Turkay Yildiz, Ph.D.**. This repository serves as a Jupyter-based companion to that work, turning the playbook’s concepts and problem statements into executable models and interactive experiments.
+
+Turkay Yildiz received his Ph.D. from the Institute of Marine Sciences and Technology at Dokuz Eylul University in Izmir, Turkey. He holds degrees in Electronics and Management, and a Master’s Degree in Logistics Management from Izmir University of Economics. His research and professional interests span transportation, port operations, logistics, and supply chain management, and he has authored numerous peer‑reviewed publications and conference presentations in these fields. He also has extensive experience in applying information technologies to logistics and supply chain problems.
+
+Research profile: https://www.researchgate.net/profile/Turkay-Yildiz 🔗
+
+## Using and Citing This Work 📖
+
+If you use these notebooks in teaching, research, or practice, please cite the underlying books as the primary sources of the problem statements and conceptual framework:
+
+* Turkay Yildiz, **The Logistics Problem-Solving Playbook: 101 Problems Edition, Part I – The Port & Container Terminal Playbook (Problems 1–46)**, Amazon Kindle.
+* Turkay Yildiz, **The Logistics Problem-Solving Playbook: 101 Problems Edition, Part II – The End-to-End Supply Chain Playbook (Problems 47–101)**, Amazon Kindle.
+* Turkay Yildiz, **Logistics and Supply Chain Management in the Modern Era: Trends, Technologies, and Best Practices**, Amazon Kindle.
+
+You may also reference this repository as a Jupyter-based companion that provides executable implementations, visualizations, and extensions of the problems defined in the books.
+
+## Contributions 🤝
+
+Feedback, suggestions, and improvements are welcome. If you identify an error, have an idea for a clearer visualization, or want to extend a tier with an alternative method (e.g., a different heuristic, metaheuristic, or learning approach), feel free to open an issue or submit a pull request.
+
+When contributing, please keep the spirit of the project in mind:
+
+* Prioritize clarity, pedagogy, and reproducibility.
+* Prefer open-source dependencies and document any non-trivial setup steps.
+* Maintain the tiered structure and clearly explain how a new method relates to the original problem.
