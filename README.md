@@ -55,7 +55,7 @@ If you use these notebooks in teaching, research, or practice, please cite the u
 
 * Yildiz, T. (2025). *The logistics problem-solving playbook: 101 problems edition, Part I – The port & container terminal playbook (Problems 1–46).* Amazon.com. https://www.amazon.com/dp/B0FV7ZK9D5
 * Yildiz, T. (2025). *The logistics problem-solving playbook: 101 problems edition, Part II – The end-to-end supply chain playbook (Problems 47–101).* Amazon.com. https://www.amazon.com/dp/B0FV89XJZ5
-* Yildiz, T. (2025). *Logistics and supply chain management in the modern era: Trends, technologies, and best practices.* Amazon.com. https://www.amazon.com/dp/B0DKHYRT89
+* Yildiz, T. (2024). *Logistics and supply chain management in the modern era: Trends, technologies, and best practices.* Amazon.com. https://www.amazon.com/dp/B0DKHYRT89
 
 You may also reference this repository as a Jupyter-based companion that provides executable implementations, visualizations, and extensions of the problems defined in the books.
 
