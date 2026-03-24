@@ -53,9 +53,9 @@ Research profile: https://www.researchgate.net/profile/Turkay-Yildiz 🔗
 
 If you use these notebooks in teaching, research, or practice, please cite the underlying books as the primary sources of the problem statements and conceptual framework:
 
-* Turkay Yildiz, **The Logistics Problem-Solving Playbook: 101 Problems Edition, Part I – The Port & Container Terminal Playbook (Problems 1–46)**, Amazon Kindle.
-* Turkay Yildiz, **The Logistics Problem-Solving Playbook: 101 Problems Edition, Part II – The End-to-End Supply Chain Playbook (Problems 47–101)**, Amazon Kindle.
-* Turkay Yildiz, **Logistics and Supply Chain Management in the Modern Era: Trends, Technologies, and Best Practices**, Amazon Kindle.
+* Yildiz, T. (2025). *The logistics problem-solving playbook: 101 problems edition, Part I – The port & container terminal playbook (Problems 1–46).* Amazon.com. https://www.amazon.com/dp/B0FV7ZK9D5
+* Yildiz, T. (2025). *The logistics problem-solving playbook: 101 problems edition, Part II – The end-to-end supply chain playbook (Problems 47–101).* Amazon.com. https://www.amazon.com/dp/B0FV89XJZ5
+* Yildiz, T. (2025). *Logistics and supply chain management in the modern era: Trends, technologies, and best practices.* Amazon.com. https://www.amazon.com/dp/B0DKHYRT89
 
 You may also reference this repository as a Jupyter-based companion that provides executable implementations, visualizations, and extensions of the problems defined in the books.
 
