@@ -6,7 +6,7 @@ This workspace contains Jupyter notebooks for solving 101 programming problems, 
 
 ## Relationship to the Books 📚
 
-The 101 problems in this repository are derived from the following books published on Amazon Kindle:
+The 101 problems in this repository are derived from the following books published on Amazon.com:
 
 * **The Logistics Problem-Solving Playbook: 101 Problems Edition: Part I: The Port & Container Terminal Playbook (Problems 1-46)**: An applied playbook focused on 46 core problems at container terminals and ports. Covers topics such as single crane lift sequencing, container stacking rules, dynamic berth allocation, and quay crane scheduling, introducing the 12-Tier Framework as a way to benchmark and systematically improve terminal operations.
 	+ https://www.amazon.com/dp/B0FV7ZK9D5
