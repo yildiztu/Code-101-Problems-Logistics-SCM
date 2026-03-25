@@ -1,0 +1,44 @@
+23. Problem:
+
+1) "TODO.md" dosyasının TAM rehberliğinde P23 için ipynb dosyalarını oluştur, oluşturulmuşsa TAM mı?
+
+2) Eksiklik olmamalı. 
+
+3) Bazı P23 dosyalarda hata var mı, açılmıyor mu? ipynb dosyası içindeki Markdown olan kısımlarla kod olan kısımlar doğru mu, yapısal olarak ve görsel olarak da doğru mu? Hatasız olmalı. Eğer ciddi sorunlar içeren ipynb dosyası söz konusuysa o dosyayı yeniden oluştur.
+
+4) Bir de en son olarak ipynb dosyaları ÇALIŞTIR. Sonuçları P1 ve P2'deki gibi kaliteli mi? Her bir çıktı güzel ve doğru mu? Pedagojik olarak harika mı?
+
+5) Kalite standardı P1 ve P2'deki gibi olacak. 
+
+6) Kaliteyi koru. Haydi.
+
+## Source of truth (must not change)
+- **Source folder**: `D:\Users\Turkay\Desktop\Books\The Logistics & Supply Chain Problem-Solving Playbook (101 Problems Edition)\___LaTeX\___responses-complete\responses-complete-png`
+- This folder contains `line1.tex` … `line101.tex`.
+- For each problem, the **Python code and Tier information** live inside the corresponding `.tex` file (problem narrative + solution code blocks + Tier count, etc.).
+
+
+----
+
+
+ipynb dosyalarının içindeki markdown ile ifadelendirilen yerler bulunuyor. Bir de elbette ipynb için Başlık ve Alt Başlık vb gibi kısımlar var. Bu ifadeler Problem 1 ve Problem 2 için gayet iyi durumda.
+
+Ama Problem 3 ile Problem 17 arasının komple bir kontrol edilmesi gerekiyor.
+
+Çünkü ipybn dosyalarında bulunan Başlık ve Alt Başlık vb gibi kısımlar ve markdown'lı olan kısımlar Problem 1 ve Problem 2 standartlarında değil.
+
+Örneğin Başlıkların adlandırılmaları garip, dosyanın adı gibi örneğin, bir de markdown'lı kısımlarında tekrar eden ifadeler var.
+
+Bana P1-P17 ipynb dosyaları için bir durum raporu oluştur. İfadelerdeki kalite standardı ve tutarlılık Problem 1 ve Problem 2 ipynb dosyalarındaki gibi olmalı. Bir de ipynb dosyalarında "Pedagogical" gibi ifadeler geçiyor, olmaz öyle, uygun ifade edilmeli.
+
+
+---
+
+Hepsinde:
+
+1. Başlık standardı "Tam Uyumlu" olmalı.
+2. Markdown/ifade kalitesi "Çok Yüksek" olmalı.
+3. Tüm P1–P17 için tek seferlik tam Pedagogical temizliği... Ama iyi ifadenmiş olmalı.
+
+----
+

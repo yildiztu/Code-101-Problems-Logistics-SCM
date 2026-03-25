@@ -13,7 +13,7 @@ def check_existing_problems():
                                    item.startswith('13.') or item.startswith('14.') or 
                                    item.startswith('15.') or item.startswith('16.') or 
                                    item.startswith('17.') or item.startswith('18.') or
-                                   item.startswith('19.')):
+                                   item.startswith('19.') or item.startswith('20.')):
             dirs.append(item)
     
     dirs.sort()
