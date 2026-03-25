@@ -10,8 +10,11 @@
   - `Part I - The Port & Container Terminal (Problems 1-46)/` - Contains problems 1-46
   - `Part II - The End-to-End Supply Chain (Problems 47-101)/` - Contains problems 47-101
 - Each problem folder name must follow:
-  - `NN. <Problem Title>` (two-digit format)
+  - `NN. <Problem Title>` (two-digit format for 1-46)
+  - `NNN. <Problem Title>` (three-digit format for 47-101)
   - Example: `01. The Single Crane Lift Sequence Problem`
+  - Example: `047. The Demand Forecasting Problem`
+  - Example: `100. The Advanced Supply Chain Analytics Problem`
 - Inside each problem folder, generate **one Jupyter notebook per Tier**, based on the content in the `.tex`.
   - Example: Problem 1 `line1.tex` → **4 Tiers** → **4 `.ipynb` files**
 
@@ -153,14 +156,34 @@ foreach ($f in $files) {
 }
 ```
 
-Problem 47 (Supply Chain example):
+Problem 47 (example for three-digit format):
 
 ```powershell
-$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\47. The Demand Forecasting Problem"
+$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\047. The Demand Forecasting Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
 # Add appropriate notebook files for Problem 47 when available
+```
+
+Problem 100 (example for three-digit format):
+
+```powershell
+$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\100. The Advanced Supply Chain Analytics Problem"
+$out = Join-Path $dir "executed"
+New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+# Add appropriate notebook files for Problem 100 when available
+```
+
+Problem 101 (example for three-digit format):
+
+```powershell
+$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\101. The Ultimate Supply Chain Challenge Problem"
+$out = Join-Path $dir "executed"
+New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+# Add appropriate notebook files for Problem 101 when available
 ```
 
 The executed notebooks (with all outputs captured) will be under each problem folder's `executed/` directory.
@@ -170,6 +193,8 @@ The executed notebooks (with all outputs captured) will be under each problem fo
   - `"{problem_no}. {problem_title}"`
   - Windows-safe: replace `<>:"/\\|?*` with `_`.
   - No leading/trailing whitespace.
+  - Two-digit format for Part I (01-46)
+  - Three-digit format for Part II (047-101)
 - **[K2] Notebook file naming**
   - **Canonical (required):** `P{problem_no}-Tier-1.ipynb`, `P{problem_no}-Tier-2.ipynb`, ...
   - Example for Problem 1: `P1-Tier-1.ipynb` … `P1-Tier-4.ipynb`
@@ -232,7 +257,7 @@ This must not be manual work. Since the `.tex` files are the single source of tr
   - Example: `D:\...\responses-complete-png\_problems_out` (or a separate repo folder)
 - **[O2]** For each problem, create a folder in the appropriate category:
   - Problems 1-46: `Part I - The Port & Container Terminal (Problems 1-46)/NN. <Problem Title>`
-  - Problems 47-101: `Part II - The End-to-End Supply Chain (Problems 47-101)/NN. <Problem Title>`
+  - Problems 47-101: `Part II - The End-to-End Supply Chain (Problems 47-101)/NNN. <Problem Title>`
 - **[O3]** For each Tier, create an `.ipynb`:
   - Minimum notebook structure:
     - Markdown cell(s): title + context + Tier overview
@@ -340,7 +365,7 @@ Note: the presence of “Integrated Digital Twin” does **not** force AWS usage
 - **[Q2]** Spot-check example:
   - `line1.tex` → folder `Part I - The Port & Container Terminal (Problems 1-46)/01. The Single Crane Lift Sequence Problem` exists
   - Contains `P1-Tier-1.ipynb` … `P1-Tier-4.ipynb`
-  - `line47.tex` → folder `Part II - The End-to-End Supply Chain (Problems 47-101)/47. The Demand Forecasting Problem` exists
+  - `line47.tex` → folder `Part II - The End-to-End Supply Chain (Problems 47-101)/047. The Demand Forecasting Problem` exists
   - Contains appropriate Tier notebooks
 
 ## Implementation (code tasks) — suggested files
@@ -368,7 +393,7 @@ Create a small generator that builds the above structure.
 
 ## Definition of Done
 - **[AC1]** One command generates all 101 problem folders in the appropriate categories.
-- **[AC2]** Each problem folder is named `NN. <Title>` and placed in the correct category folder.
+- **[AC2]** Each problem folder is named `NN. <Title>` (Part I) or `NNN. <Title>` (Part II) and placed in the correct category folder.
 - **[AC3]** Each problem contains one `.ipynb` per Tier.
 - **[AC4]** Notebook content is faithful to the `.tex` Python logic, **while respecting open-source-only package constraints**.
 - **[AC5]** Each Tier notebook includes clear, structured English explanations (not code-only).
