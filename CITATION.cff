@@ -1,0 +1,25 @@
+---
+authors:
+  - name: "Project Contributors"
+title: "Code - 101 Problems: Jupyter Notebooks for Logistics and Supply Chain"
+version: 1.0.0
+date-released: 2025-03-25
+url: "https://github.com/yildiztu/Code-101-Problems-Logistics-SCM"
+abstract: "A comprehensive collection of Jupyter notebooks implementing 101 logistics and supply chain problems, organized into tiered solution approaches from mathematical optimization to advanced machine learning methods."
+license: MIT
+keywords:
+  - logistics
+  - supply chain
+  - optimization
+  - operations research
+  - jupyter notebooks
+  - python
+  - mathematical programming
+  - machine learning
+  - port operations
+  - container terminal
+repository-code: "https://github.com/yildiztu/Code-101-Problems-Logistics-SCM"
+contact:
+  - name: "Project Maintainer"
+    url: "https://github.com/yildiztu/Code-101-Problems-Logistics-SCM/issues"
+---

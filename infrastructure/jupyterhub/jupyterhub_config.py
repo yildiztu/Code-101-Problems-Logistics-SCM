@@ -30,22 +30,22 @@ c.JupyterHub.db_url = "sqlite:////srv/jupyterhub/jupyterhub.sqlite"
 # Enable LDAP by uncommenting below and setting your values.
 #
 # c.JupyterHub.authenticator_class = "ldapauthenticator.LDAPAuthenticator"
-# c.LDAPAuthenticator.server_address = "ldap.example.com"
+# c.LDAPAuthenticator.server_address = "ldap.yourdomain.com"
 # c.LDAPAuthenticator.server_port = 389
 # c.LDAPAuthenticator.use_ssl = False
 #
 # # Simple bind template
-# c.LDAPAuthenticator.bind_dn_template = "cn={username},ou=users,dc=example,dc=com"
+# c.LDAPAuthenticator.bind_dn_template = "cn={username},ou=users,dc=yourdomain,dc=com"
 #
 # # Alternative search/bind (common in corporate LDAP)
-# # c.LDAPAuthenticator.bind_dn = "cn=readonly,dc=example,dc=com"
+# # c.LDAPAuthenticator.bind_dn = "cn=readonly,dc=yourdomain,dc=com"
 # # c.LDAPAuthenticator.bind_password = "CHANGE_ME"
-# # c.LDAPAuthenticator.user_search_base = "ou=users,dc=example,dc=com"
+# # c.LDAPAuthenticator.user_search_base = "ou=users,dc=yourdomain,dc=com"
 # # c.LDAPAuthenticator.user_attribute = "uid"
 #
 # # Optional: restrict to LDAP groups
 # # c.LDAPAuthenticator.allowed_groups = [
-# #     "cn=jupyterhub-users,ou=groups,dc=example,dc=com",
+# #     "cn=jupyterhub-users,ou=groups,dc=yourdomain,dc=com",
 # # ]
 
 # -------------------------
@@ -87,7 +87,7 @@ c.JupyterHub.db_url = "sqlite:////srv/jupyterhub/jupyterhub.sqlite"
 # c.Spawner.mem_limit = "4G"
 #
 # Example external DB:
-# c.JupyterHub.db_url = "postgresql://jupyterhub:PASSWORD@rds-endpoint:5432/jupyterhub"
+# c.JupyterHub.db_url = "postgresql://jupyterhub:PASSWORD@your-db-endpoint:5432/jupyterhub"
 #
 # Example:
-# postgresql://jupyterhub:secret@jupyterhub-db.xxxxxx.us-east-2.rds.amazonaws.com:5432/jupyterhub
+# postgresql://jupyterhub:secret@your-db-host:5432/jupyterhub

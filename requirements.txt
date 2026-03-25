@@ -1,0 +1,31 @@
+# Core scientific computing
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Jupyter and notebook support
+jupyter>=1.0.0
+jupyterlab>=3.0.0
+ipykernel>=6.0.0
+ipywidgets>=7.6.0
+
+# Optimization and scientific libraries
+scipy>=1.7.0
+scikit-learn>=1.0.0
+
+# Network and graph algorithms
+networkx>=2.6.0
+
+# Data structures and utilities
+dataclasses>=0.6; python_version<"3.7"
+typing-extensions>=4.0.0
+
+# Development and testing (optional)
+pytest>=6.0.0
+black>=21.0.0
+flake8>=3.9.0
+
+# Documentation (optional)
+sphinx>=4.0.0
+sphinx-rtd-theme>=1.0.0
