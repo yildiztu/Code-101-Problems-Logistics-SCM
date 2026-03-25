@@ -6,7 +6,9 @@
 - For each problem, the **Python code and Tier information** live inside the corresponding `.tex` file (problem narrative + solution code blocks + Tier count, etc.).
 
 ## End goal (output structure)
-- Create **101 problem folders**.
+- Create **101 problem folders** organized into two main categories:
+  - `Part I - The Port & Container Terminal (Problems 1-46)/` - Contains problems 1-46
+  - `Part II - The End-to-End Supply Chain (Problems 47-101)/` - Contains problems 47-101
 - Each problem folder name must follow:
   - `N. <Problem Title>`
   - Example: `1. The Single Crane Lift Sequence Problem`
@@ -126,7 +128,7 @@ $py = Join-Path $root ".venv\Scripts\python.exe"
 Problem 1:
 
 ```powershell
-$dir = Join-Path $root "1. The Single Crane Lift Sequence Problem"
+$dir = Join-Path $root "Part I - The Port & Container Terminal (Problems 1-46)\1. The Single Crane Lift Sequence Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
@@ -140,7 +142,7 @@ foreach ($f in $files) {
 Problem 2:
 
 ```powershell
-$dir = Join-Path $root "2. The Container Stacking Rules Problem"
+$dir = Join-Path $root "Part I - The Port & Container Terminal (Problems 1-46)\2. The Container Stacking Rules Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
@@ -149,6 +151,16 @@ foreach ($f in $files) {
   & $py -m jupyter nbconvert --to notebook --execute (Join-Path $dir $f) --output $f --output-dir $out --ExecutePreprocessor.timeout=1800
   if ($LASTEXITCODE -ne 0) { throw "Execution failed for $f" }
 }
+```
+
+Problem 47 (Supply Chain example):
+
+```powershell
+$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\47. The Demand Forecasting Problem"
+$out = Join-Path $dir "executed"
+New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+# Add appropriate notebook files for Problem 47 when available
 ```
 
 The executed notebooks (with all outputs captured) will be under each problem folder's `executed/` directory.
@@ -218,8 +230,9 @@ This must not be manual work. Since the `.tex` files are the single source of tr
 ### 3) Produce the output folder tree
 - **[O1]** Choose an output root directory (script parameter):
   - Example: `D:\...\responses-complete-png\_problems_out` (or a separate repo folder)
-- **[O2]** For each problem, create a folder:
-  - `N. <Problem Title>`
+- **[O2]** For each problem, create a folder in the appropriate category:
+  - Problems 1-46: `Part I - The Port & Container Terminal (Problems 1-46)/N. <Problem Title>`
+  - Problems 47-101: `Part II - The End-to-End Supply Chain (Problems 47-101)/N. <Problem Title>`
 - **[O3]** For each Tier, create an `.ipynb`:
   - Minimum notebook structure:
     - Markdown cell(s): title + context + Tier overview
@@ -229,7 +242,6 @@ This must not be manual work. Since the `.tex` files are the single source of tr
 - **[NB1] Markdown cell content (example)**
   - `# {N}. {Problem Title}`
   - `## Tier {k}`
-  - `### Goal`
   - `### Key assumptions`
   - `### Approach (step-by-step)`
   - `### What to look for in the results`
@@ -326,8 +338,10 @@ Note: the presence of “Integrated Digital Twin” does **not** force AWS usage
   - Number of generated notebooks (sum of Tiers)
   - Any files that failed parsing (with reasons)
 - **[Q2]** Spot-check example:
-  - `line1.tex` → folder `1. The Single Crane Lift Sequence Problem` exists
+  - `line1.tex` → folder `Part I - The Port & Container Terminal (Problems 1-46)/1. The Single Crane Lift Sequence Problem` exists
   - Contains `P1-Tier-1.ipynb` … `P1-Tier-4.ipynb`
+  - `line47.tex` → folder `Part II - The End-to-End Supply Chain (Problems 47-101)/47. The Demand Forecasting Problem` exists
+  - Contains appropriate Tier notebooks
 
 ## Implementation (code tasks) — suggested files
 Create a small generator that builds the above structure.
@@ -353,12 +367,12 @@ Create a small generator that builds the above structure.
 - **[D2]** (Optional) `regex` (for more advanced patterns)
 
 ## Definition of Done
-- **[AC1]** One command generates all 101 problem folders.
-- **[AC2]** Each problem folder is named `N. <Title>`.
+- **[AC1]** One command generates all 101 problem folders in the appropriate categories.
+- **[AC2]** Each problem folder is named `N. <Title>` and placed in the correct category folder.
 - **[AC3]** Each problem contains one `.ipynb` per Tier.
 - **[AC4]** Notebook content is faithful to the `.tex` Python logic, **while respecting open-source-only package constraints**.
 - **[AC5]** Each Tier notebook includes clear, structured English explanations (not code-only).
-- **[AC6]** If a `.tex` file can’t be parsed, the script reports it clearly.
+- **[AC6]** If a `.tex` file can't be parsed, the script reports it clearly.
 
 ## Open decisions (need your confirmation)
 - **[C1]** What is the exact output root directory? (Inside the source folder, or a separate repo/output folder?)
