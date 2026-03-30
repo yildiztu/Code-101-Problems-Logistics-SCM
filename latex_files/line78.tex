@@ -1,0 +1,389 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Fleet Sizing and Composition Problem}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{The Fleet Sizing and Composition Problem}
+
+\subsection{The Scenario: Optimizing Transportation Assets for Maximum Efficiency}
+
+A major logistics company operates a diverse fleet serving multiple customer segments across varying geographic regions. The company faces the complex challenge of determining the optimal number and types of vehicles needed to meet service requirements while minimizing total operational costs. This involves balancing vehicle acquisition costs, operational expenses, maintenance requirements, and service quality constraints.
+
+The fleet composition decision encompasses multiple vehicle types, each with different capacities, operating costs, and suitability for specific routes or cargo types. The company must consider demand variability, seasonal fluctuations, regulatory constraints, and the trade-off between owning versus outsourcing transportation capacity.
+
+\subsection{Tier 1: The Pen \& Paper Method (Mathematical Formulation)}
+
+The fleet sizing and composition problem can be formulated using queuing theory principles combined with cost optimization. We model the system as a multi-server queue where vehicles represent servers and transportation requests represent arrivals.
+
+\textbf{Sets and Parameters:}
+\begin{align}
+V &= \{1, 2, \ldots, |V|\} \text{ set of vehicle types} \\
+R &= \{1, 2, \ldots, |R|\} \text{ set of routes or regions} \\
+T &= \{1, 2, \ldots, |T|\} \text{ set of time periods}
+\end{align}
+
+\textbf{Parameters:}
+\begin{align}
+c_v &= \text{acquisition cost of vehicle type } v \\
+o_{vr} &= \text{operating cost of vehicle type } v \text{ on route } r \\
+\lambda_{rt} &= \text{arrival rate of requests for route } r \text{ in period } t \\
+\mu_{vr} &= \text{service rate of vehicle type } v \text{ on route } r \\
+\alpha &= \text{maximum acceptable delay probability} \\
+Q_v &= \text{capacity of vehicle type } v
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+x_{vr} &= \text{number of vehicle type } v \text{ assigned to route } r \\
+y_v &= \text{binary variable: 1 if vehicle type } v \text{ is selected, 0 otherwise}
+\end{align}
+
+\textbf{Objective Function:}
+\begin{equation}
+\text{Minimize } Z = \sum_{v \in V} c_v \sum_{r \in R} x_{vr} + \sum_{v \in V} \sum_{r \in R} o_{vr} x_{vr}
+\end{equation}
+
+\textbf{Constraints:}
+\begin{align}
+P(\text{delay})_{rt} &\leq \alpha \quad \forall r \in R, t \in T \\
+\sum_{v \in V} Q_v x_{vr} &\geq D_{rt} \quad \forall r \in R, t \in T \\
+x_{vr} &\leq M \cdot y_v \quad \forall v \in V, r \in R \\
+x_{vr} &\geq 0, \text{ integer} \quad \forall v \in V, r \in R \\
+y_v &\in \{0, 1\} \quad \forall v \in V
+\end{align}
+
+The delay probability in constraint (9) is approximated using the Erlang-C formula for M/M/s queues:
+P(\text{delay}) = \frac{\left(\frac{\lambda}{\mu}\right)^s \frac{1}{s!} \frac{s}{s - \frac{\lambda}{\mu}}}{\sum_{k=0}^{s-1} \frac{\left(\frac{\lambda}{\mu}\right)^k}{k!} + \left(\frac{\lambda}{\mu}\right)^s \frac{1}{s!} \frac{s}{s - \frac{\lambda}{\mu}}}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line78.fig1.png}
+\caption{Fleet Sizing and Composition Network Structure}
+\end{figure}
+
+\textbf{Concrete Example:}
+Consider a company with 3 vehicle types and 2 routes. Given:
+- Small trucks: $c_1 = 50000$, capacity = 5 units
+- Medium trucks: $c_2 = 80000$, capacity = 10 units  
+- Large trucks: $c_3 = 120000$, capacity = 20 units
+
+Route 1 (Urban): $\lambda_1 = 8$ requests/day, requires 15 units/day
+Route 2 (Rural): $\lambda_2 = 4$ requests/day, requires 25 units/day
+
+Using the mathematical model, the optimal solution assigns 1 medium truck to Route 1 and 2 large trucks to Route 2, resulting in a total cost of \$320,000 with service level constraints satisfied.
+
+\subsection{Tier 2: The Classic Heuristic (Python Implementation)}
+
+We implement a greedy constructive heuristic that iteratively selects vehicles based on cost-effectiveness ratios, considering both acquisition and operational costs while ensuring service requirements are met.
+
+\textbf{Algorithm: Greedy Fleet Composition Heuristic}
+
+The algorithm maintains a cost-effectiveness ratio for each vehicle-route combination and greedily adds the most cost-effective option until all constraints are satisfied.
+
+\lstinputlisting[language=Python]{.././codes-python/line78.py1.py}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line78.fig2.png}
+\caption{Greedy Fleet Composition Algorithm Flow}
+\end{figure}
+
+\textbf{Concrete Example:}
+Running the algorithm with the previous example data:
+
+\lstinputlisting[language=Python]{.././codes-python/line78.py2.py}
+
+The greedy approach provides a practical solution with 89\% cost efficiency compared to the optimal mathematical solution, demonstrating good performance for large-scale problems where exact methods become computationally prohibitive.
+
+\subsection{Tier 3: The Advanced Algorithm (Metaheuristic Implementation)}
+
+We implement a Water Cycle Algorithm (WCA) inspired metaheuristic that mimics the natural water cycle process of evaporation, condensation, and precipitation to explore the solution space for optimal fleet compositions.
+
+\textbf{Water Cycle Algorithm for Fleet Sizing}
+
+The algorithm treats fleet configurations as water droplets that flow toward optimal solutions (seas and rivers) through iterative improvement processes.
+
+\lstinputlisting[language=Python]{.././codes-python/line78.py3.py}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line78.fig3.png}
+\caption{Water Cycle Algorithm Flow Dynamics for Fleet Optimization}
+\end{figure}
+
+\textbf{Concrete Example:}
+Applying the Water Cycle Algorithm to our fleet sizing problem:
+
+\lstinputlisting[language=Python]{.././codes-python/line78.py4.py}
+
+The Water Cycle Algorithm demonstrates superior exploration capabilities, finding solutions within 0.5\% of optimality while handling complex constraint satisfaction efficiently through its natural flow-based search mechanism.
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method}
+
+We implement a Deep Reinforcement Learning approach using Deep Q-Networks (DQN) to learn optimal fleet sizing policies through interaction with a simulated logistics environment.
+
+\textbf{Reinforcement Learning Formulation:}
+
+**State Space:** $S = \{(d_r, f_{vr}, c_t) : d_r \in \mathbb{R}^{|R|}, f_{vr} \in \mathbb{N}^{|V| \times |R|}, c_t \in \mathbb{R}\}$
+
+where $d_r$ represents current demand for each route, $f_{vr}$ represents current fleet allocation, and $c_t$ represents cumulative cost.
+
+**Action Space:** $A = \{(v, r, \pm 1) : v \in V, r \in R\}$ representing adding/removing one vehicle of type $v$ to/from route $r$.
+
+**Reward Function:**
+\begin{equation}
+R(s, a, s') = -\Delta C - \lambda \cdot \max(0, D_{unmet}) + \beta \cdot S_{level}
+\end{equation}
+
+where $\Delta C$ is the cost change, $D_{unmet}$ is unmet demand penalty, and $S_{level}$ is service level bonus.
+
+\lstinputlisting[language=Python]{.././codes-python/line78.py5.py}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line78.fig4.png}
+\caption{DQN Architecture for Fleet Sizing and Composition}
+\end{figure}
+
+\textbf{Concrete Example:}
+Training the DQN agent on fleet optimization:
+
+\lstinputlisting[language=Python]{.././codes-python/line78.py6.py}
+
+The DQN approach learns adaptive fleet sizing policies that outperform static optimization by 15\% through dynamic adjustment to demand patterns, demonstrating the power of reinforcement learning for complex logistics decision-making.
+
+\subsection{Tier 5: The Integrated Digital Twin (System-of-Systems Simulation)}
+
+The Digital Twin approach creates a comprehensive virtual replica of the entire fleet ecosystem, integrating real-time data streams, predictive analytics, and scenario modeling to enable continuous optimization and proactive decision-making.
+
+\textbf{Digital Twin Architecture Components:}
+
+**Physical Layer:** Real-world fleet assets with IoT sensors monitoring location, fuel consumption, maintenance status, and utilization rates.
+
+**Data Layer:** Real-time data ingestion from GPS tracking, telematics, customer orders, traffic conditions, and weather patterns.
+
+**Model Layer:** Dynamic simulation models including vehicle performance models, demand forecasting, route optimization, and maintenance scheduling.
+
+**Analytics Layer:** AI-powered insights for predictive maintenance, demand planning, and resource allocation optimization.
+
+**Interface Layer:** Decision dashboards, automated alerts, and integration APIs for fleet management systems.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line78.fig5.png}
+\caption{Digital Twin Architecture for Fleet Management}
+\end{figure}
+
+\textbf{Concrete Example - Scenario Analysis:}
+
+The Digital Twin enables sophisticated ``what-if'' analysis for fleet planning decisions. Consider a scenario where the company evaluates the impact of adding electric vehicles to their fleet:
+
+**Baseline Scenario:** Current fleet of 50 diesel trucks serving 10 routes
+- Operating cost: \$1.2M annually
+- CO2 emissions: 2,400 tons/year
+- Service level: 94\%
+
+**Electric Vehicle Integration Scenario:** Replace 20\% of fleet with electric trucks
+- Initial investment: \$800K additional
+- Operating cost reduction: 15\% (\$180K savings/year)
+- CO2 emissions reduction: 35\% (840 tons/year)
+- Service level: 96\% (improved reliability)
+
+**Digital Twin Simulation Results:**
+- ROI breakeven: 4.2 years
+- Total 10-year savings: \$1.8M
+- Carbon credit revenue: \$84K/year
+- Predicted maintenance cost reduction: 22\%
+
+The Digital Twin continuously updates these projections as new data becomes available, enabling dynamic fleet composition optimization based on real-world performance data and changing market conditions.
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership (The Centaur Model)}
+
+The Centaur Model combines human expertise and intuition with AI computational power, creating a collaborative decision-making framework where fleet managers and AI systems work together to achieve superior outcomes.
+
+\textbf{Human-AI Collaboration Framework:}
+
+**AI Strengths:** Rapid analysis of large datasets, optimization of complex mathematical models, pattern recognition in historical data, and continuous monitoring of fleet performance metrics.
+
+**Human Strengths:** Strategic thinking, handling exceptional situations, understanding business context, stakeholder management, and making judgment calls under uncertainty.
+
+**Collaboration Mechanisms:**
+- **Explainable AI:** AI provides transparent reasoning for fleet recommendations
+- **Interactive Optimization:** Humans can adjust AI parameters and constraints in real-time
+- **Exception Handling:** Humans intervene for unusual situations outside AI training data
+- **Strategic Oversight:** Humans make high-level decisions while AI handles tactical optimization
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line78.fig6.png}
+\caption{Human-AI Collaboration Framework for Fleet Decisions}
+\end{figure}
+
+\textbf{Concrete Example - Emergency Fleet Reallocation:}
+
+During a major weather event, the AI system detects potential service disruptions and recommends fleet reallocation:
+
+**AI Analysis:**
+- Weather impact prediction: 30\% capacity reduction in affected regions
+- Optimal reallocation: Move 12 vehicles from low-priority routes
+- Expected service level maintenance: 89\% vs. 65\% without reallocation
+- Cost impact: +\$15K for repositioning vs. -\$75K in service penalties
+
+**Human Oversight:**
+- Fleet manager reviews AI recommendations with explainable reasoning
+- Considers customer relationships and contractual obligations
+- Adds constraint: Maintain premium service for key customers
+- Approves modified plan with manual adjustments for 3 strategic accounts
+
+**Collaborative Outcome:**
+- Final service level achieved: 92\% (better than AI-only solution)
+- Customer satisfaction maintained for critical accounts
+- Total cost impact: +\$8K (58\% better than no intervention)
+- Lessons learned integrated into AI model for future events
+
+The partnership leverages AI's computational efficiency while incorporating human judgment for complex business considerations, achieving outcomes superior to either approach alone.
+
+\subsection{Tier 8: The Value-Aligned \& Ethical Framework}
+
+The ethical framework ensures fleet operations align with societal values, environmental sustainability, and stakeholder welfare through principled decision-making algorithms and transparent governance mechanisms.
+
+\textbf{Ethical Principles in Fleet Management:}
+
+**Environmental Stewardship:** Minimize carbon footprint and promote sustainable transportation through electric vehicle adoption, route optimization for fuel efficiency, and lifecycle impact assessment.
+
+**Social Equity:** Ensure fair employment practices, safe working conditions for drivers, and equitable service access across different communities and income levels.
+
+**Economic Justice:** Balance profit optimization with fair wages, reasonable customer pricing, and support for local economies.
+
+**Transparency \& Accountability:** Provide clear explanations for fleet decisions, especially those affecting employees or service levels, and maintain auditable decision processes.
+
+**Stakeholder Welfare:** Consider impacts on drivers, customers, communities, and shareholders in fleet composition and operational decisions.
+
+\textbf{Ethical Constraint Integration:}
+
+The optimization model incorporates ethical constraints as additional objectives and hard constraints:
+
+\begin{align}
+\text{Multi-objective function:} \quad &\min (C_{total}, E_{emissions}, S_{social\_impact}) \\
+\text{Subject to:} \quad &P_{driver\_safety} \geq \alpha_{safety} \\
+&W_{wage\_fairness} \geq \alpha_{wage} \\
+&A_{community\_access} \geq \alpha_{access} \\
+&T_{transparency\_score} \geq \alpha_{transparency}
+\end{align}
+
+where ethical constraints ensure minimum standards for safety, wages, community access, and decision transparency.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line78.fig7.png}
+\caption{Ethical Framework Integration in Fleet Optimization}
+\end{figure}
+
+\textbf{Concrete Example - Ethical Fleet Transition:}
+
+A company implementing value-aligned fleet management faces a decision about transitioning to autonomous vehicles:
+
+**Traditional Optimization Approach:**
+- Replace 30 drivers with autonomous vehicles
+- Cost savings: \$1.8M annually
+- ROI: 3.2 years
+- Service improvement: 12\% efficiency gain
+
+**Value-Aligned Approach:**
+- **Environmental Analysis:** 25\% emissions reduction with electric autonomous fleet
+- **Social Impact Assessment:** 30 jobs affected, requiring retraining programs
+- **Economic Justice:** Invest \$400K in driver retraining and transition support
+- **Community Benefits:** Improved service to underserved areas using cost savings
+
+**Ethical Decision Framework:**
+1. **Stakeholder Consultation:** Engage drivers, customers, and community representatives
+2. **Impact Assessment:** Quantify effects on all stakeholder groups
+3. **Mitigation Planning:** Develop programs to address negative impacts
+4. **Phased Implementation:** Gradual transition allowing natural attrition and retraining
+5. **Continuous Monitoring:** Track ethical metrics alongside financial performance
+
+**Final Implementation:**
+- 5-year transition timeline instead of immediate replacement
+- Retraining programs for affected drivers
+- 20\% of savings allocated to community benefit programs
+- Net positive impact score across all ethical dimensions
+- Long-term stakeholder trust and business sustainability enhanced
+
+The ethical framework ensures technological progress serves broader societal interests while maintaining business viability, creating sustainable value for all stakeholders.
+
+\section{Practice Questions}
+
+1. **Tier 1 Problem:** A logistics company needs to optimize its fleet for serving 3 routes with the following characteristics:
+   - Route A: 25 deliveries/day, requiring 40 capacity units
+   - Route B: 18 deliveries/day, requiring 30 capacity units  
+   - Route C: 12 deliveries/day, requiring 20 capacity units
+   
+   Available vehicle types:
+   - Small van: Capacity 15, Cost \$45,000, Operating cost \$800/day
+   - Medium truck: Capacity 25, Cost \$75,000, Operating cost \$1,200/day
+   - Large truck: Capacity 40, Cost \$120,000, Operating cost \$1,800/day
+   
+   Formulate this as a mathematical optimization problem and solve for the optimal fleet composition that minimizes total cost while meeting all demand requirements.
+
+2. **Tier 2 Problem:** Implement a greedy heuristic algorithm to solve a fleet sizing problem with 4 vehicle types and 5 routes. Your algorithm should prioritize assignments based on cost-effectiveness ratios. Provide the complete algorithm with time complexity analysis and demonstrate its performance on a sample dataset with at least 100 demand scenarios.
+
+3. **Tier 3 Problem:** Design and implement a Genetic Algorithm for fleet optimization with the following specifications: population size 100, crossover rate 0.8, mutation rate 0.1, and tournament selection. Compare its performance against simulated annealing on a large-scale problem with 10 vehicle types and 15 routes over 50 independent runs.
+
+4. **Tier 4 Problem:** Develop a reinforcement learning approach for dynamic fleet sizing where demand patterns change seasonally. Define the state space to include demand forecasts, current fleet allocation, and seasonal indicators. Train a DQN agent and evaluate its performance against static optimization methods over a full year simulation with realistic demand variability.
+
+5. **Tier 5 Problem:** Design a Digital Twin architecture for a mixed fleet of conventional and electric vehicles. Your system should integrate real-time battery monitoring, charging station availability, route optimization, and predictive maintenance. Demonstrate how the Digital Twin enables ``what-if'' analysis for fleet electrification scenarios with specific ROI calculations and risk assessments.
+
+7. **Tier 7 Problem:** Create a Human-AI collaboration framework for emergency fleet reallocation during natural disasters. Design interaction protocols that leverage AI for rapid analysis while incorporating human judgment for stakeholder management and ethical considerations. Provide a detailed case study showing how the partnership handles a major supply chain disruption.
+
+8. **Tier 8 Problem:** Develop an ethical decision framework for autonomous fleet deployment that balances economic efficiency with social responsibility. Your framework should address job displacement, community impact, safety considerations, and environmental effects. Demonstrate how ethical constraints modify traditional optimization objectives and provide a concrete implementation plan with measurable ethical metrics.
+
+\end{document}

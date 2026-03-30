@@ -1,0 +1,478 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+% Professional CMYK color palette
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{lightcyan}{cmyk}{0.3,0,0,0.05}
+\definecolor{lightorange}{cmyk}{0,0.3,0.5,0.1}
+
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Supplier Selection \& Order Allocation Problem}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{The Supplier Selection \& Order Allocation Problem}
+
+The Supplier Selection and Order Allocation Problem (SSOAP) represents one of the most critical strategic decisions in supply chain management, where organizations must simultaneously determine which suppliers to engage and how to distribute orders among them. This dual optimization challenge directly impacts cost efficiency, supply chain resilience, and overall operational performance.
+
+\subsection{The Scenario: Global Electronics Manufacturing Crisis}
+
+TechFlow Industries, a leading electronics manufacturer, faces a critical supply chain disruption following geopolitical tensions that have affected their primary component suppliers. The company requires immediate sourcing of five key electronic components: microprocessors, memory modules, power supplies, display panels, and circuit boards. They have identified twelve potential suppliers across different regions, each offering varying combinations of price, quality, delivery reliability, and sustainability credentials.
+
+The challenge intensifies as TechFlow must maintain production schedules for three major product lines while balancing multiple conflicting objectives: minimizing total procurement costs, ensuring supply continuity, meeting quality standards, maintaining environmental sustainability goals, and supporting supplier diversity initiatives. Each supplier has different capacity constraints, pricing structures, and risk profiles, making the optimization problem multidimensional and complex.
+
+With quarterly production targets of 100,000 units across product lines and supplier capacities ranging from 5,000 to 50,000 units per quarter, TechFlow must develop a comprehensive supplier selection and order allocation strategy that considers both immediate operational needs and long-term strategic partnerships.
+
+\subsection{Tier 1: The Pen \& Paper Method}
+
+The mathematical foundation of the Supplier Selection and Order Allocation Problem can be formulated as a mixed-integer programming model that simultaneously optimizes supplier selection decisions and order quantity allocations across multiple criteria.
+
+\textbf{Mathematical Formulation}
+
+Let us define the following sets and parameters:
+\begin{align}
+I &= \{1, 2, \ldots, m\} \text{ set of potential suppliers} \\
+J &= \{1, 2, \ldots, n\} \text{ set of products/materials} \\
+T &= \{1, 2, \ldots, p\} \text{ set of time periods}
+\end{align}
+
+\textbf{Parameters:}
+\begin{align}
+c_{ij} &= \text{ unit cost of product } j \text{ from supplier } i \\
+f_i &= \text{ fixed cost of engaging supplier } i \\
+d_{jt} &= \text{ demand for product } j \text{ in period } t \\
+k_{ij} &= \text{ capacity of supplier } i \text{ for product } j \\
+q_{i} &= \text{ quality score of supplier } i \\
+r_{i} &= \text{ reliability score of supplier } i \\
+s_{i} &= \text{ sustainability score of supplier } i \\
+\text{MinSup} &= \text{ minimum number of suppliers required} \\
+\text{MaxSup} &= \text{ maximum number of suppliers allowed}
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+x_{ijt} &\quad \text{ quantity of product } j \text{ ordered from supplier } i \text{ in period } t \\
+y_i &= \begin{cases} 
+1 & \text{if supplier } i \text{ is selected} \\
+0 & \text{otherwise}
+\end{cases}
+\end{align}
+
+\textbf{Objective Functions:}
+
+The multi-objective formulation considers cost minimization, quality maximization, and risk minimization:
+
+\textbf{Minimize Total Cost:}
+\begin{equation}
+\text{Minimize } Z_1 = \sum_{i \in I} f_i y_i + \sum_{i \in I} \sum_{j \in J} \sum_{t \in T} c_{ij} x_{ijt}
+\end{equation}
+
+\textbf{Maximize Weighted Performance:}
+\begin{equation}
+\text{Maximize } Z_2 = \sum_{i \in I} (w_1 q_i + w_2 r_i + w_3 s_i) \sum_{j \in J} \sum_{t \in T} x_{ijt}
+\end{equation}
+
+\textbf{Subject to Constraints:}
+
+\textbf{Demand Satisfaction:}
+\begin{equation}
+\sum_{i \in I} x_{ijt} \geq d_{jt} \quad \forall j \in J, t \in T
+\end{equation}
+
+\textbf{Supplier Capacity:}
+\begin{equation}
+\sum_{j \in J} \sum_{t \in T} x_{ijt} \leq k_{ij} y_i \quad \forall i \in I
+\end{equation}
+
+\textbf{Supplier Selection Bounds:}
+\begin{equation}
+\text{MinSup} \leq \sum_{i \in I} y_i \leq \text{MaxSup}
+\end{equation}
+
+\textbf{Non-negativity and Binary Constraints:}
+\begin{align}
+x_{ijt} &\geq 0 \quad \forall i \in I, j \in J, t \in T \\
+y_i &\in \{0, 1\} \quad \forall i \in I
+\end{align}
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line88.fig1.png}
+\caption{Figure 1 for line88 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\textbf{Concrete Example:}
+
+Consider TechFlow's simplified scenario with 3 suppliers and 2 products:
+
+\textbf{Given Data:}
+- Supplier 1: Cost = \$50/unit, Quality = 85\%, Capacity = 10,000, Fixed cost = \$10,000
+- Supplier 2: Cost = \$45/unit, Quality = 80\%, Capacity = 15,000, Fixed cost = \$15,000  
+- Supplier 3: Cost = \$55/unit, Quality = 90\%, Capacity = 8,000, Fixed cost = \$8,000
+- Product A demand = 12,000 units, Product B demand = 8,000 units
+
+\textbf{Solution Process:}
+
+Using weighted scoring where $w_1 = 0.4$ (cost), $w_2 = 0.4$ (quality), $w_3 = 0.2$ (capacity):
+
+Supplier scores: $S_1 = 0.4(0.9) + 0.4(0.85) + 0.2(0.67) = 0.834$
+$S_2 = 0.4(1.0) + 0.4(0.80) + 0.2(1.0) = 0.920$
+$S_3 = 0.4(0.82) + 0.4(0.90) + 0.2(0.53) = 0.794$
+
+\textbf{Optimal Solution:}
+- Select Suppliers 1, 2, and 3 ($y_1 = y_2 = y_3 = 1$)
+- Allocation: $x_{11} = 5,000$, $x_{21} = 7,000$, $x_{32} = 8,000$
+- Total cost: \$1,050,000, Average quality: 83.5\%
+
+\subsection{Tier 2: The Classic Heuristic}
+
+The weighted scoring heuristic provides an effective approach for solving medium-scale supplier selection and order allocation problems by combining multiple criteria into unified supplier rankings and applying greedy allocation strategies.
+
+\textbf{Algorithm Overview:}
+
+The heuristic operates in two phases: supplier evaluation using weighted multi-criteria scoring, followed by demand-driven order allocation with capacity and constraint checking. This approach provides near-optimal solutions with $O(nm \log m)$ time complexity where $n$ is the number of products and $m$ is the number of suppliers.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line88.fig2.png}
+\caption{Figure 2 for line88 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\textbf{Pseudocode Implementation:}
+
+\lstinputlisting[language=Python]{.././codes-python/line88.py1.py}
+
+\textbf{Concrete Example Results:}
+
+Running the heuristic on TechFlow's expanded scenario with 5 suppliers and 3 products:
+
+\textbf{Input Parameters:}
+\begin{itemize}
+\item Suppliers: 5 potential vendors with varying cost/quality profiles
+\item Products: Microprocessors (demand: 25,000), Memory (demand: 30,000), Displays (demand: 15,000)
+\item Weights: Cost (30\%), Quality (25\%), Reliability (20\%), Capacity (15\%), Sustainability (10\%)
+\end{itemize}
+
+\textbf{Algorithm Output:}
+\begin{itemize}
+\item Selected Suppliers: 4 out of 5 (Suppliers 1, 2, 4, 5)
+\item Total Allocation Cost: \$2,150,000
+\item Average Quality Score: 87.3\%
+\item Demand Fulfillment: 100\% for all products
+\item Execution Time: 0.045 seconds
+\item Solution Quality: 94.7\% of optimal (compared to exact MIP solution)
+\end{itemize}
+
+The heuristic successfully balanced multiple objectives while maintaining computational efficiency, making it suitable for real-time decision-making scenarios where rapid supplier selection responses are required.
+
+\subsection{Tier 3: The Advanced Algorithm}
+
+Particle Swarm Optimization (PSO) provides a powerful metaheuristic approach for solving the complex, multi-objective supplier selection and order allocation problem by mimicking the social behavior of bird flocks to explore the solution space efficiently.
+
+\textbf{PSO Adaptation for SSOAP:}
+
+Each particle in the swarm represents a complete solution encoding both supplier selection decisions and order allocations. The particle position vector contains continuous values that are decoded into discrete supplier selections and allocation quantities through specialized mapping functions.
+
+\textbf{Solution Encoding:}
+- Position vector: $\vec{X}_i = [x_{i1}, x_{i2}, \ldots, x_{iD}]$ where $D = |I| \times |J|$  
+- Velocity vector: $\vec{V}_i = [v_{i1}, v_{i2}, \ldots, v_{iD}]$
+- Each $x_{ij}$ represents allocation ratio for supplier-product pair
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line88.fig3.png}
+\caption{Figure 3 for line88 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\textbf{Multi-Objective Fitness Function:}
+
+The fitness evaluation combines multiple objectives using dynamic weighting:
+
+\begin{align}
+f(\vec{X}_i) &= \alpha \cdot f_{cost}(\vec{X}_i) + \beta \cdot f_{quality}(\vec{X}_i) + \gamma \cdot f_{risk}(\vec{X}_i) \\
+\text{where } f_{cost}(\vec{X}_i) &= \frac{1}{1 + TotalCost(\vec{X}_i)} \\
+f_{quality}(\vec{X}_i) &= \frac{WeightedQuality(\vec{X}_i)}{MaxPossibleQuality} \\
+f_{risk}(\vec{X}_i) &= \frac{1}{1 + SupplyRisk(\vec{X}_i)}
+\end{align}
+
+\textbf{Enhanced PSO Pseudocode:}
+
+\lstinputlisting[language=Python]{.././codes-python/line88.py2.py}
+
+\textbf{Concrete Example Results:}
+
+Applying PSO to TechFlow's expanded scenario with 8 suppliers and 5 products:
+
+\textbf{PSO Configuration:}
+- Swarm size: 50 particles
+- Maximum iterations: 1000  
+- Adaptive inertia: $w \in [0.4, 0.9]$
+- Cognitive/Social coefficients: $c_1 = c_2 = 2.0$
+
+\textbf{Optimization Results:}
+- Convergence achieved at iteration 347
+- Final fitness score: 0.847 (84.7\% of theoretical maximum)
+- Selected suppliers: 5 out of 8 candidates  
+- Total procurement cost: \$3,850,000 (12\% reduction from initial allocation)
+- Average quality score: 89.2\% (3.5\% improvement)
+- Supply risk diversification: Excellent (5 suppliers across 3 regions)
+- Demand fulfillment: 100\% for all products with 8\% capacity buffer
+
+The PSO algorithm demonstrated superior performance compared to the heuristic approach, achieving better cost-quality trade-offs while maintaining solution feasibility and providing robust supplier diversification strategies.
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method}
+
+Multi-Agent Reinforcement Learning (MARL) revolutionizes supplier selection and order allocation by modeling the problem as a collaborative game where intelligent agents representing different organizational units learn optimal procurement strategies through environmental interaction and reward-based learning.
+
+\textbf{MARL Problem Formulation:}
+
+The SSOAP environment consists of multiple learning agents: Procurement Agent (PA), Quality Agent (QA), Risk Management Agent (RMA), and Sustainability Agent (SA). Each agent optimizes its specific objectives while learning to coordinate with others for global supply chain performance.
+
+\textbf{State Space Definition:}
+Each agent observes a comprehensive state vector $s_t \in \mathbb{R}^d$:
+
+\begin{align}
+s_t^{PA} &= [supplier\_costs, current\_allocations, budget\_remaining, demand\_forecasts] \\
+s_t^{QA} &= [quality\_scores, defect\_rates, customer\_complaints, quality\_trends] \\
+s_t^{RMA} &= [supplier\_reliability, geographic\_risks, capacity\_utilization, disruption\_history] \\
+s_t^{SA} &= [sustainability\_scores, carbon\_footprint, social\_impact, regulatory\_compliance]
+\end{align}
+
+\textbf{Action Space Design:}
+Actions represent allocation decisions and negotiation strategies:
+$a_t \in \mathbb{R}^{|I| \times |J|}$ where each element indicates the allocation percentage for supplier-product pairs.
+
+\textbf{Reward Function Architecture:}
+
+The multi-objective reward function balances competing goals:
+
+\begin{align}
+R_t &= w_1 R_{cost} + w_2 R_{quality} + w_3 R_{risk} + w_4 R_{sustainability} + w_5 R_{cooperation} \\
+R_{cost} &= -\frac{(C_t - C_{target})^2}{C_{max}} + \epsilon_{savings} \\
+R_{quality} &= \frac{Q_t - Q_{min}}{Q_{max} - Q_{min}} - \lambda \cdot defect\_penalty \\
+R_{risk} &= 1 - \frac{risk\_concentration}{max\_risk} + \mu \cdot diversification\_bonus \\
+R_{cooperation} &= \sum_{j \neq i} similarity(a_t^i, a_t^j) \cdot collaboration\_weight
+\end{align}
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line88.fig4.png}
+\caption{Figure 4 for line88 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\textbf{Deep Q-Network Architecture:}
+
+Each agent employs a specialized DQN with shared experience replay and coordinated exploration:
+
+\lstinputlisting[language=Python]{.././codes-python/line88.py3.py}
+
+\textbf{Concrete Example Results:}
+
+Implementing MARL for TechFlow's complex multi-period procurement scenario:
+
+\textbf{Training Configuration:}
+- Training episodes: 5,000
+- Environment periods: 12 months
+- State dimensions: 64 (market, supplier, demand, inventory features)  
+- Action dimensions: 40 (8 suppliers $\times$ 5 products)
+- Agent specializations: Cost, Quality, Risk, Sustainability
+
+\textbf{Learning Performance:}
+- Convergence achieved after 2,800 episodes
+- Final average reward: 847.3 (vs. 623.1 random baseline)  
+- Policy stability: 96.2\% (low variance in final 500 episodes)
+- Coordination efficiency: 89.7\% (measured by action similarity in cooperative scenarios)
+
+\textbf{Operational Results:}
+- Total annual procurement cost: \$42.3M (18\% reduction vs. traditional methods)
+- Average quality score: 91.4\% (consistent across all periods)
+- Supply disruption resilience: 94\% (weathered 3 major supplier disruptions)
+- Sustainability compliance: 97\% (exceeded regulatory requirements)
+- Adaptation speed: 2.3 periods (average time to adapt to market changes)
+
+The MARL system demonstrated remarkable ability to learn complex coordination patterns, adapt to changing market conditions, and balance multiple conflicting objectives while maintaining robust performance across diverse scenarios.
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership}
+
+The Human-AI Symbiotic Partnership transforms supplier selection from a purely algorithmic process into a collaborative intelligence system where human expertise and AI capabilities combine to achieve superior procurement decisions through explainable AI and interactive decision support.
+
+\textbf{The Centaur Model Architecture:}
+
+The symbiotic system operates as a ``Centaur Intelligence'' where human procurement experts provide strategic insight, relationship knowledge, and contextual understanding while AI systems handle complex optimization, pattern recognition, and scenario analysis. This partnership leverages the complementary strengths of human intuition and machine precision.
+
+\textbf{Explainable AI Framework:}
+
+The system employs SHAP (SHapley Additive exPlanations) values and LIME (Local Interpretable Model-agnostic Explanations) to provide transparency in AI recommendations, enabling procurement managers to understand, validate, and refine algorithmic decisions based on their domain expertise.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line88.fig5.png}
+\caption{Figure 5 for line88 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\textbf{Interactive Decision Support System:}
+
+\lstinputlisting[language=Python]{.././codes-python/line88.py4.py}
+
+\textbf{Concrete Example Results:}
+
+Implementing the Human-AI Symbiotic Partnership at TechFlow Industries:
+
+\textbf{System Configuration:}
+- AI Model: Random Forest with 100 trees + SHAP/LIME explainers
+- Human Experts: 3 senior procurement managers with 15+ years experience
+- Collaboration Interface: Interactive dashboard with real-time explanations
+- Decision Frequency: Weekly supplier evaluations across 5 product categories
+
+\textbf{Performance Outcomes (6-month pilot):}
+- Decision accuracy improvement: 34\% (vs. pure AI or pure human decisions)
+- Expert confidence in AI recommendations: 89\% (up from 45\% with black-box AI)
+- Time to decision: 3.2 hours (vs. 8.5 hours for traditional committee approach)
+- Human-AI agreement rate: 87\% (indicating effective collaboration)
+- Cost savings: \$2.3M (through better supplier mix optimization)
+- Risk incident reduction: 67\% (through combined human intuition and AI analytics)
+
+\textbf{Key Success Factors:}
+- \textbf{Transparency}: SHAP explanations enabled experts to validate and trust AI reasoning
+- \textbf{Complementarity}: AI handled complex optimization while humans provided contextual knowledge
+- \textbf{Continuous Learning}: System improved through feedback loops and outcome tracking
+- \textbf{Domain Integration}: Explanations were presented in procurement-specific terminology
+- \textbf{Interactive Control}: Experts could adjust AI recommendations based on tacit knowledge
+
+The Human-AI partnership demonstrated that collaborative intelligence significantly outperforms either purely automated or purely manual approaches, creating a synergistic effect where the combined system exceeds the capabilities of its individual components.
+
+\subsection{Tier 8: The Value-Aligned \& Ethical Framework}
+
+The Value-Aligned and Ethical Framework transforms supplier selection from a purely performance-driven process into a morally grounded system that ensures procurement decisions align with organizational values, societal responsibilities, and ethical principles while maintaining economic viability.
+
+\textbf{Ethical AI Architecture:}
+
+The framework implements Constitutional AI principles where supplier selection algorithms are constrained by explicit ethical rules and value hierarchies. This approach ensures that optimization processes respect human rights, environmental sustainability, fair trade practices, and social justice considerations throughout the decision-making process.
+
+\textbf{Multi-Stakeholder Value Integration:}
+
+The system incorporates diverse stakeholder perspectives including employees, customers, local communities, environmental advocates, and shareholders, creating a balanced optimization that considers long-term societal impact alongside short-term business metrics.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line88.fig6.png}
+\caption{Figure 6 for line88 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\textbf{Constitutional AI Implementation:}
+
+\lstinputlisting[language=Python]{.././codes-python/line88.py5.py}
+
+\textbf{Concrete Example Results:}
+
+Implementing the Value-Aligned Framework at TechFlow Industries with focus on ethical sourcing:
+
+\textbf{Ethical Framework Configuration:}
+- Hard Constraints: Zero child labor, minimum safety standards, regulatory compliance
+- Soft Constraints: Living wage (80\% threshold), gender diversity (40\% target), community investment (2\% revenue)
+- Stakeholder Weights: Shareholders (25\%), Environmental (20\%), Community (20\%), Workers (20\%), Customers (15\%)
+
+\textbf{Ethical Optimization Results:}
+- \textbf{Supplier Exclusions}: 2 out of 12 potential suppliers excluded for child labor violations
+- \textbf{Final Selection}: 6 suppliers meeting all hard constraints and optimizing soft constraints
+- \textbf{Ethical Compliance Score}: 87.3\% (weighted average across all constraints)
+- \textbf{Economic Impact}: 8.2\% cost increase vs. purely economic optimization
+- \textbf{Stakeholder Value}: 94.1\% satisfaction across all stakeholder groups
+
+\textbf{Impact Measurement (Annual Results):}
+- \textbf{Human Rights}: 15,000 workers in supply chain earning living wages (95\% compliance)
+- \textbf{Environmental}: 23\% reduction in carbon footprint, 67\% renewable energy usage
+- \textbf{Community}: \$1.2M invested in local education and healthcare programs
+- \textbf{Transparency}: 100\% Tier-1 and 78\% Tier-2 supplier visibility and auditing
+- \textbf{Innovation}: 12 collaborative sustainability projects launched with suppliers
+
+\textbf{Bias Mitigation Outcomes:}
+- \textbf{Geographic Diversification}: Supply base across 4 continents (vs. 2 previously)  
+- \textbf{Supplier Size Balance}: 35\% allocation to small/medium enterprises (vs. 8\% previously)
+- \textbf{New Supplier Integration}: 4 new suppliers successfully onboarded annually
+- \textbf{Gender-Inclusive Sourcing}: 67\% of suppliers have women in senior leadership
+
+The Value-Aligned Framework demonstrated that ethical procurement practices, while requiring initial investment, generate long-term value through improved risk management, stakeholder trust, regulatory compliance, and sustainable competitive advantage while maintaining economic viability and operational excellence.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 - Mathematical Formulation:}
+Given a manufacturer with 4 potential suppliers and 3 products, where Supplier 1 offers products at \$40, \$35, \$50 per unit with capacities of 8,000, 12,000, 6,000 respectively, and has a quality score of 85\%. The demands are 15,000, 18,000, and 10,000 units for products A, B, and C. Formulate the mixed-integer programming model to minimize cost while ensuring at least 80\% average quality and maximum 3 suppliers selected. Calculate the optimal solution.
+
+\textbf{Tier 2 - Heuristic Algorithm:}
+Implement a weighted scoring heuristic for 6 suppliers across 4 products with the following criteria weights: Cost (35\%), Quality (30\%), Delivery Reliability (20\%), Sustainability (15\%). Given supplier scores and capacity constraints, determine the allocation sequence and calculate the total procurement cost. Compare your solution quality against the theoretical lower bound.
+
+\textbf{Tier 3 - Metaheuristic Approach:}
+Design a Particle Swarm Optimization algorithm for the multi-objective supplier selection problem with 10 suppliers and 5 products. Configure swarm size, iteration limits, and adaptive parameters. Analyze the convergence behavior and report the Pareto front for cost-quality trade-offs. Discuss the solution diversity and computational efficiency.
+
+\textbf{Tier 4 - AI/ML Integration:}
+Develop a Multi-Agent Reinforcement Learning system where four specialized agents (Cost, Quality, Risk, Sustainability) collaborate on supplier selection. Define the state space, action space, and reward functions for each agent. Train the system on a dynamic environment with seasonal demand patterns and report the learning curves and final performance metrics.
+
+\textbf{Tier 7 - Human-AI Partnership:}
+Create an explainable AI interface that provides SHAP-based explanations for supplier recommendations. Demonstrate how human procurement experts can provide feedback to adjust AI decisions based on relationship intelligence and market knowledge. Calculate the improvement in decision quality when combining human expertise with AI optimization.
+
+\textbf{Tier 8 - Ethical Framework:}
+Design a value-aligned supplier selection system that incorporates hard constraints (no child labor), soft constraints (living wage compliance), and stakeholder preferences. Given 8 suppliers with varying ethical compliance scores, optimize the allocation while measuring the trade-off between economic efficiency and ethical alignment. Report the comprehensive impact assessment across all stakeholder dimensions.
+
+\end{document}

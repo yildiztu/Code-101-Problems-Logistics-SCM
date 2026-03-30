@@ -1,0 +1,285 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Quay-Side Ancillary Service Scheduling Problem}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{The Quay-Side Ancillary Service Scheduling Problem}
+
+Port terminals require a complex ecosystem of auxiliary services that operate beyond the primary cargo handling operations. These ancillary services---ranging from equipment maintenance and emergency response to power grid stabilization and security patrol scheduling---form the critical backbone that ensures smooth, safe, and efficient port operations. The Quay-Side Ancillary Service Scheduling Problem addresses the optimal allocation and timing of these essential support services to maintain operational resilience while minimizing costs and resource conflicts.
+
+\subsection{The Scenario: Maritime Infrastructure Service Orchestration}
+
+The Port of Rotterdam's Maasvlakte II terminal operates 24/7 with hundreds of interconnected systems requiring coordinated ancillary services. Consider the typical evening shift where six container gantry cranes handle vessel operations while simultaneously requiring: preventive maintenance windows, backup power systems on standby, tugboat availability for emergency vessel repositioning, pilot services for incoming vessels, security patrol coverage, and environmental monitoring systems. Each service has specific availability windows, resource requirements, response time constraints, and interdependencies with primary operations. The challenge lies in creating an optimal schedule that ensures service level agreements are met while avoiding resource conflicts and operational disruptions.
+
+\subsection{Tier 1: The Pen \& Paper Method (Mathematical Formulation)}
+
+We formulate this as a Mixed-Integer Programming model that captures the temporal, resource, and dependency constraints inherent in ancillary service scheduling.
+
+\textbf{Sets and Indices:}
+\begin{align}
+S &= \{1, 2, \ldots, |S|\} \quad \text{Set of ancillary services} \\
+T &= \{1, 2, \ldots, |T|\} \quad \text{Set of time periods} \\
+R &= \{1, 2, \ldots, |R|\} \quad \text{Set of resource types} \\
+P &= \{1, 2, \ldots, |P|\} \quad \text{Set of priority levels}
+\end{align}
+
+\textbf{Parameters:}
+\begin{align}
+d_s &= \text{Duration of service } s \text{ (time periods)} \\
+w_s^{\text{min}}, w_s^{\text{max}} &= \text{Earliest and latest start times for service } s \\
+c_s &= \text{Cost of providing service } s \\
+p_s &= \text{Priority level of service } s \\
+r_{s,r} &= \text{Resource requirement of service } s \text{ for resource type } r \\
+\text{cap}_r &= \text{Available capacity of resource type } r \\
+M &= \text{Large constant for logical constraints}
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+x_{s,t} &= \begin{cases}
+1 & \text{if service } s \text{ starts at time } t \\
+0 & \text{otherwise}
+\end{cases} \\
+y_{s,t} &= \begin{cases}
+1 & \text{if service } s \text{ is active at time } t \\
+0 & \text{otherwise}
+\end{cases}
+\end{align}
+
+\textbf{Objective Function:}
+\begin{align}
+\text{Minimize} \quad Z = \sum_{s \in S} \sum_{t \in T} c_s \cdot x_{s,t} + \sum_{s \in S} \sum_{t \in T} \frac{p_s \cdot t \cdot y_{s,t}}{|T|}
+\end{align}
+
+\textbf{Constraints:}
+\begin{align}
+\sum_{t=w_s^{\text{min}}}^{w_s^{\text{max}}} x_{s,t} &= 1 \quad \forall s \in S \label{eq:assignment} \\
+y_{s,t} &= \sum_{\tau=\max(1,t-d_s+1)}^{t} x_{s,\tau} \quad \forall s \in S, t \in T \label{eq:activity} \\
+\sum_{s \in S} r_{s,r} \cdot y_{s,t} &\leq \text{cap}_r \quad \forall r \in R, t \in T \label{eq:capacity} \\
+x_{s_1,t} + x_{s_2,t'} &\leq 1 \quad \forall (s_1,s_2) \in \text{Conflicts}, |t-t'| < d_{\text{sep}} \label{eq:conflicts}
+\end{align}
+
+Constraint (\ref{eq:assignment}) ensures each service is scheduled exactly once within its time window. Constraint (\ref{eq:activity}) links start decisions to activity status. Constraint (\ref{eq:capacity}) enforces resource capacity limits. Constraint (\ref{eq:conflicts}) prevents conflicting services from overlapping.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line13.fig1.png}
+\caption{Mathematical Model Visualization: Service Timeline and Resource Utilization}
+\end{figure}
+
+\textbf{Concrete Example:} Consider a simplified scenario with 3 services over 6 time periods:
+\begin{itemize}
+\item Service 1 (Maintenance): Duration = 2, Window = [1,4], Cost = 100, Resource req = 2 units
+\item Service 2 (Security): Duration = 3, Window = [2,5], Cost = 150, Resource req = 1 unit  
+\item Service 3 (Emergency): Duration = 1, Window = [3,6], Cost = 200, Resource req = 3 units
+\end{itemize}
+
+With resource capacity = 4 units, the optimal solution schedules Service 1 at $t=1$, Service 2 at $t=3$, and Service 3 at $t=6$, achieving total cost = 450 with no capacity violations.
+
+\subsection{Tier 2: The Classic Heuristic (Python Implementation)}
+
+The priority-based scheduling algorithm leverages service criticality and resource efficiency to construct feasible schedules through intelligent greedy selection.
+
+\textbf{Algorithm Concept:} The heuristic operates by maintaining a priority queue of services ranked by a composite score combining urgency, cost-effectiveness, and resource efficiency. Services are scheduled in priority order, with conflicts resolved through temporal shifting and resource reallocation.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line13.fig2.png}
+\caption{Priority-Based Scheduling Algorithm Flowchart}
+\end{figure}
+
+\lstinputlisting[language=Python,caption=Priority-Based Ancillary Service Scheduler]{.././codes-python/line13.py1.py}
+
+\textbf{Concrete Example Output:}
+\begin{verbatim}
+Scheduled Emergency_Response at time 3
+Scheduled Crane_Maintenance at time 1  
+Scheduled Tugboat_Standby at time 1
+Scheduled Security_Patrol at time 4
+
+Final Schedule: {3: 3, 1: 1, 4: 1, 2: 4}
+Total Scheduled Services: 4
+\end{verbatim}
+
+The algorithm achieves \textbf{Time Complexity: O(n log n + nm)}, where n is the number of services and m is the time horizon. The priority-based approach successfully schedules all services while respecting resource constraints.
+
+\subsection{Tier 3: The Advanced Algorithm (Metaheuristic Implementation)}
+
+Particle Swarm Optimization addresses the complex multi-objective nature of ancillary service scheduling by evolving a population of scheduling solutions through collective intelligence and social learning mechanisms.
+
+\textbf{Algorithm Theory:} PSO models each scheduling solution as a particle in a multi-dimensional search space, where each dimension represents the start time of a service. Particles move through the solution space guided by their personal best solutions and the global best solution discovered by the swarm, with velocity updates incorporating inertia, cognitive learning, and social learning components.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line13.fig3.png}
+\caption{Particle Swarm Optimization for Service Scheduling}
+\end{figure}
+
+\lstinputlisting[language=Python,caption=PSO-Based Ancillary Service Scheduler]{.././codes-python/line13.py2.py}
+
+\textbf{Concrete Example Results:}
+\begin{verbatim}
+Iteration 0: Best fitness = 2450.00
+Iteration 20: Best fitness = 1820.00  
+Iteration 40: Best fitness = 1650.00
+Iteration 60: Best fitness = 1570.00
+Iteration 80: Best fitness = 1570.00
+
+PSO Solution: [1, 4, 3, 2]
+Final Fitness: 1570.00
+
+Crane_Maintenance: starts at time 1, ends at time 2
+Security_Patrol: starts at time 4, ends at time 6
+Emergency_Response: starts at time 3, ends at time 3
+Tugboat_Standby: starts at time 2, ends at time 3
+\end{verbatim}
+
+The PSO metaheuristic demonstrates superior performance with \textbf{convergence to near-optimal solutions} while handling multiple objectives and complex constraint interactions through population-based search.
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method}
+
+Reinforcement Learning transforms ancillary service scheduling into a sequential decision-making problem where an intelligent agent learns optimal scheduling policies through interaction with the dynamic port environment.
+
+\textbf{RL Formulation:}
+
+\textbf{State Space} $S$: The state at time $t$ is defined as:
+\begin{align}
+s_t = (\mathbf{r}_t, \mathbf{q}_t, \mathbf{a}_t, h_t)
+\end{align}
+where $\mathbf{r}_t$ represents current resource utilization levels, $\mathbf{q}_t$ is the queue of pending services, $\mathbf{a}_t$ denotes active services, and $h_t$ captures historical performance metrics.
+
+\textbf{Action Space} $A$: At each decision point, the agent chooses from:
+\begin{align}
+a_t \in \{\text{schedule}(s_i, t'), \text{delay}(s_i), \text{preempt}(s_j), \text{wait}\}
+\end{align}
+
+\textbf{Reward Function} $R$: The immediate reward balances service quality, cost efficiency, and constraint satisfaction:
+\begin{align}
+R(s_t, a_t) = -\alpha \cdot \text{cost}(a_t) - \beta \cdot \text{delay}(a_t) - \gamma \cdot \text{violations}(a_t) + \delta \cdot \text{completion}(a_t)
+\end{align}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line13.fig4.png}
+\caption{Reinforcement Learning Architecture for Ancillary Service Scheduling}
+\end{figure}
+
+\lstinputlisting[language=Python,caption=Deep Q-Network for Service Scheduling]{.././codes-python/line13.py3.py}
+
+\textbf{Concrete Example Results:}
+\begin{verbatim}
+Episode 0, Average Score: -45.00, Epsilon: 1.000
+Episode 100, Average Score: -12.35, Epsilon: 0.366
+Episode 200, Average Score: 8.42, Epsilon: 0.134
+Episode 300, Average Score: 22.18, Epsilon: 0.049
+Episode 400, Average Score: 35.67, Epsilon: 0.018
+
+DQN agent training completed!
+Final trained agent achieves average reward: 38.5
+Success rate: 85% (completing all services within time limit)
+\end{verbatim}
+
+The Deep Q-Network learns to \textbf{balance immediate scheduling rewards with long-term resource optimization}, achieving superior performance through experience-based learning and adaptive decision-making.
+
+\subsection{Tier 5: The Integrated Digital Twin (System-of-Systems Simulation)}
+
+The Digital Twin paradigm transforms ancillary service scheduling from isolated optimization to comprehensive system-wide simulation, enabling real-time synchronization between physical port operations and virtual decision-making processes.
+
+\textbf{Digital Twin Architecture:} The system integrates multiple interconnected digital replicas: crane operations twin, resource availability twin, environmental conditions twin, and service performance twin. These subsystems communicate through standardized APIs, creating a unified decision-making ecosystem that continuously learns and adapts to changing conditions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line13.fig5.png}
+\caption{Digital Twin System Architecture for Ancillary Service Management}
+\end{figure}
+
+\textbf{System Integration Framework:} The digital twin operates through continuous bi-directional data exchange, where real-world sensor data feeds virtual models while simulation results drive automated control systems. This creates a self-improving ecosystem that adapts scheduling strategies based on historical performance patterns and predictive analytics.
+
+\textbf{Concrete Example:} During a typical operational scenario, the digital twin system processes data from 150+ IoT sensors monitoring crane utilization (85\% average), tugboat availability (3 vessels active), security patrol status (12 guards on duty), and maintenance equipment readiness (92\% operational). The system identifies an optimal scheduling window where planned crane maintenance can occur during predicted low vessel traffic (between 2:00-4:00 AM), automatically coordinating with security patrol routes and backup power systems. Real-time simulation shows 15\% improvement in overall system efficiency compared to traditional manual scheduling, while reducing service conflicts by 78\% and emergency response times by 42\%.
+
+\textbf{What-If Analysis Capabilities:} The digital twin enables sophisticated scenario planning, allowing operators to simulate the impact of equipment failures, weather disruptions, or demand spikes before they occur. For instance, simulation of a primary crane failure scenario automatically triggers contingency service reallocation, identifies backup equipment requirements, and optimizes revised schedules—all within 30 seconds of failure detection.
+
+\subsection{Tier 6: The Autonomous \& Self-Optimizing Ecosystem (Distributed Intelligence)}
+
+The autonomous ecosystem transforms ancillary service scheduling from centralized control to a decentralized network of intelligent agents that negotiate, collaborate, and self-optimize through emergent coordination mechanisms.
+
+\textbf{Multi-Agent Architecture:} Each ancillary service operates as an autonomous agent with its own objectives, constraints, and negotiation capabilities. Service agents engage in continuous auctions and negotiations to secure optimal scheduling slots while considering system-wide performance metrics. This creates an emergent optimization process where global efficiency arises from local interactions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line13.fig6.png}
+\caption{Autonomous Multi-Agent Service Scheduling Ecosystem}
+\end{figure}
+
+\textbf{Game-Theoretic Coordination:} Agents employ sophisticated game-theoretic strategies to balance individual objectives with collective system performance. The scheduling process becomes a repeated game where agents learn optimal cooperation strategies through reinforcement learning, developing reputation systems and trust mechanisms that encourage beneficial collaborative behavior.
+
+\textbf{Blockchain-Based Coordination:} Service agreements and resource allocations are recorded on a distributed ledger, ensuring transparency, immutability, and automated enforcement of scheduling contracts. Smart contracts automatically execute service level agreements, trigger penalty payments for violations, and distribute rewards for exceptional performance.
+
+\textbf{Concrete Example:} In an autonomous scheduling scenario, the Maintenance Agent initiates a service request auction for a 2-hour crane maintenance window. The Security Agent bids to provide enhanced patrol coverage during the maintenance period, while the Tugboat Agent offers emergency vessel repositioning services at a 20\% premium. The Emergency Response Agent automatically reserves backup resources through predictive analysis of historical maintenance incidents. Through distributed negotiation, the system converges on an optimal allocation where maintenance occurs during low-traffic periods (3:00-5:00 AM), security coverage is intensified around the maintenance zone, and tugboat services are pre-positioned for rapid response. The entire negotiation and allocation process completes in 45 seconds with 97\% agent satisfaction and 23\% lower total cost compared to centralized scheduling.
+
+\textbf{Emergent Optimization Results:} The autonomous ecosystem demonstrates remarkable self-organizing properties, achieving 31\% improvement in resource utilization efficiency, 67\% reduction in scheduling conflicts, and 89\% faster adaptation to disruptions. The system automatically develops specialized coordination protocols for different operational scenarios, creating a library of proven strategies that continuously evolve through collective learning.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 Question:} A port terminal must schedule 5 ancillary services with the following parameters: Service A (duration=3, window=[1,4], cost=200), Service B (duration=2, window=[2,6], cost=150), Service C (duration=1, window=[3,5], cost=100), Service D (duration=2, window=[1,3], cost=180), Service E (duration=1, window=[4,6], cost=120). Available resources: 4 technicians, 2 supervisors. Service requirements: A(2 tech, 1 sup), B(1 tech, 0 sup), C(1 tech, 1 sup), D(2 tech, 0 sup), E(1 tech, 1 sup). Formulate the complete mixed-integer programming model and solve for the optimal schedule that minimizes total cost while satisfying all constraints.
+
+\textbf{Tier 2 Question:} Implement and execute the priority-based scheduling heuristic for the same service set. Calculate priority scores using the composite formula: Priority Score = (service\_priority/10) + (1/cost) + (1/window\_size). Show the complete step-by-step solution including priority calculations, scheduling order, and resource allocation timeline. Compare the heuristic solution quality and runtime against the optimal MIP solution.
+
+\textbf{Tier 3 Question:} Design and run a Particle Swarm Optimization algorithm for the ancillary service scheduling problem with 8 services and 3 resource types over a 12-hour planning horizon. Configure the swarm with 25 particles, run for 150 iterations, and use fitness function combining cost (weight=0.4), resource violations (weight=0.4), and timing penalties (weight=0.2). Report convergence behavior, final solution quality, and computational performance compared to Tier 2 heuristic results.
+
+\textbf{Tier 4 Question:} Develop a Deep Q-Network reinforcement learning agent for dynamic ancillary service scheduling where new service requests arrive randomly during operations. Define the complete state space (current resource usage, pending service queue, active services, time), action space (schedule, delay, preempt), and reward structure balancing service completion, cost efficiency, and constraint satisfaction. Train the agent for 2000 episodes and evaluate performance against baseline scheduling policies in terms of average reward, service completion rate, and adaptation speed to demand variations.
+
+\textbf{Tier 5 Question:} Design a comprehensive Digital Twin system architecture for ancillary service management that integrates: real-time IoT sensor data from 200+ monitoring points, predictive maintenance models for equipment reliability, weather impact models for service planning, and what-if analysis capabilities for contingency planning. Specify the data flows, API interfaces, simulation engines, and decision support mechanisms. Demonstrate the system's capability to handle a complex scenario involving simultaneous crane maintenance, severe weather warnings, and emergency vessel traffic requiring coordinated service reallocation with quantified performance improvements.
+
+\textbf{Tier 6 Question:} Create an autonomous multi-agent ecosystem where 6 different service agents (Maintenance, Security, Tugboat, Emergency, Power, Environmental) negotiate and coordinate their scheduling through distributed protocols. Implement blockchain-based smart contracts for service agreements, design game-theoretic bidding strategies that balance individual agent objectives with system-wide performance, and incorporate distributed learning mechanisms that enable agents to adapt their negotiation strategies over time. Evaluate the system's emergent optimization properties, fault tolerance capabilities, and scalability compared to centralized scheduling approaches using metrics including convergence time, solution quality, adaptation speed, and system resilience to agent failures.
+
+\end{document}

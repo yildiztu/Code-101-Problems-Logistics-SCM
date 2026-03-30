@@ -1,0 +1,430 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{longtable}
+
+% pspicture color definitions
+% Professional CMYK color palette
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{lightcyan}{cmyk}{0.3,0,0,0.05}
+\definecolor{lightorange}{cmyk}{0,0.3,0.5,0.1}
+
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+% Listings style definition
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+\title{The Logistics \& Supply Chain Problem-Solving Playbook\\Problem 98: The Green Vehicle Routing Problem}
+\author{LaTeX-Bot}
+\date{\today}
+\maketitle
+
+\section{The Green Vehicle Routing Problem}
+
+The Green Vehicle Routing Problem (G-VRP) is a critical extension of the classic Vehicle Routing Problem (VRP). While traditional VRPs focus primarily on minimizing operational costs (like total distance or number of vehicles), the G-VRP incorporates environmental factors into the optimization process. This includes minimizing fuel consumption, greenhouse gas emissions (like CO$_2$), or air pollutants. The problem becomes particularly complex when dealing with alternative fuel vehicles, such as Electric Vehicles (EVs), which introduce constraints related to battery capacity, range anxiety, and the strategic use of charging stations. Balancing economic viability with environmental responsibility is the core challenge of the G-VRP.
+
+\subsection{The Scenario: A Courier's Eco-Dilemma}
+
+A city-based courier company, ``EcoDeliver,'' wants to revamp its delivery routes to be more environmentally friendly. Their fleet consists of both conventional diesel vans and a new fleet of EVs. For diesel vans, they've observed that fuel consumption is not just a function of distance but also of vehicle load, speed, and traffic congestion. For the EVs, the primary constraint is the limited battery range and the time required for recharging. The company's goal is to create daily route plans that not only ensure all packages are delivered on time but also explicitly minimize the fleet's overall carbon footprint, even if it sometimes means choosing a route that isn't the absolute shortest in distance.
+
+\subsection{Tier 1: The Pen \& Paper Method (Multi-Objective Mathematical Formulation)}
+
+The most direct way to tackle the G-VRP is to frame it as a multi-objective optimization problem. Instead of a single objective (minimize cost), we have at least two, often conflicting, objectives: minimize operational cost and minimize environmental impact.
+
+\subsubsection{Mathematical Model}
+
+Let's define a model that balances total distance (as a proxy for cost) and total emissions.
+
+\paragraph{Sets and Indices:}
+\begin{itemize}
+    \item $V$: Set of available vehicles, indexed by $k$.
+    \item $N$: Set of customer nodes, indexed by $i, j$.
+    \item $N_0$: Set of all nodes, including the depot (node 0), so $N_0 = N \cup \{0\}$.
+\end{itemize}
+
+\paragraph{Parameters:}
+\begin{itemize}
+    \item $d_{ij}$: Distance from node $i$ to node $j$.
+    \item $e_{ij}$: Emissions generated when traveling from node $i$ to node $j$. This can be a complex function of distance, load, and speed, but here we simplify it to a fixed value per edge.
+    \item $q_i$: Demand of customer $i$.
+    \item $Q_k$: Capacity of vehicle $k$.
+\end{itemize}
+
+\paragraph{Decision Variables:}
+\begin{itemize}
+    \item $x_{ijk}$: A binary variable, which is 1 if vehicle $k$ travels directly from node $i$ to node $j$, and 0 otherwise.
+\end{itemize}
+
+\paragraph{Objective Functions:}
+We have two objectives to minimize simultaneously.
+\begin{enumerate}
+    \item \textbf{Minimize Total Distance (Cost):}
+    \begin{equation}
+        \text{Minimize } Z_{\text{cost}} = \sum_{k \in V} \sum_{i \in N_0} \sum_{j \in N_0, i \neq j} d_{ij} \cdot x_{ijk}
+    \end{equation}
+    \item \textbf{Minimize Total Emissions:}
+    \begin{equation}
+        \text{Minimize } Z_{\text{emissions}} = \sum_{k \in V} \sum_{i \in N_0} \sum_{j \in N_0, i \neq j} e_{ij} \cdot x_{ijk}
+    \end{equation}
+\end{enumerate}
+
+\paragraph{Constraints:}
+\begin{enumerate}[label=\textbf{C\arabic*:}, wide, labelwidth=!, labelindent=0pt]
+    \item Each customer is visited exactly once:
+    \begin{equation*}
+        \sum_{k \in V} \sum_{i \in N_0, i \neq j} x_{ijk} = 1 \quad \forall j \in N
+    \end{equation*}
+    \item Flow conservation at each customer node:
+    \begin{equation*}
+        \sum_{i \in N_0, i \neq h} x_{ihk} - \sum_{j \in N_0, j \neq h} x_{hjk} = 0 \quad \forall h \in N, \forall k \in V
+    \end{equation*}
+    \item Each vehicle must leave the depot:
+    \begin{equation*}
+        \sum_{j \in N} x_{0jk} = 1 \quad \forall k \in V
+    \end{equation*}
+    \item Each vehicle must return to the depot:
+    \begin{equation*}
+        \sum_{i \in N} x_{i0k} = 1 \quad \forall k \in V
+    \end{equation*}
+    \item Vehicle capacity must not be exceeded:
+    \begin{equation*}
+        \sum_{i \in N} q_i \left( \sum_{j \in N_0, j \neq i} x_{jik} \right) \leq Q_k \quad \forall k \in V
+    \end{equation*}
+    \item Sub-tour elimination (Miller-Tucker-Zemlin formulation, requires additional continuous variables $u_{ik}$ representing the order of visit):
+    \begin{equation*}
+        u_{ik} - u_{jk} + |N| \cdot x_{ijk} \leq |N| - 1 \quad \forall i, j \in N, i \neq j, \forall k \in V
+    \end{equation*}
+\end{enumerate}
+
+\subsubsection{Concrete Example: The Trade-Off}
+Consider one vehicle, a depot (D), and two customers (C1, C2).
+\begin{itemize}
+    \item Distances: $d_{D,C1}=10, d_{D,C2}=12, d_{C1,C2}=8$.
+    \item Emissions: $e_{D,C1}=15, e_{D,C2}=10, e_{C1,C2}=12$. (Maybe D-C2 is a highway, while C1-C2 is city traffic).
+\end{itemize}
+Two possible routes:
+\begin{enumerate}
+    \item \textbf{Route A (Shortest Distance):} D $\rightarrow$ C1 $\rightarrow$ C2 $\rightarrow$ D
+        \begin{itemize}
+            \item Cost: $d_{D,C1} + d_{C1,C2} + d_{C2,D} = 10 + 8 + 12 = 30$ units.
+            \item Emissions: $e_{D,C1} + e_{C1,C2} + e_{D,C2} = 15 + 12 + 10 = 37$ units.
+        \end{itemize}
+    \item \textbf{Route B (Greener):} D $\rightarrow$ C2 $\rightarrow$ C1 $\rightarrow$ D
+        \begin{itemize}
+            \item Cost: $d_{D,C2} + d_{C2,C1} + d_{C1,D} = 12 + 8 + 10 = 30$ units.
+            \item Emissions: $e_{D,C2} + e_{C2,C1} + e_{C1,D} = 10 + 12 + 15 = 37$ units.
+        \end{itemize}
+\end{enumerate}
+In this symmetric example, the costs are identical. Let's change the emissions to show a trade-off: $e_{D,C1}=15, e_{D,C2}=20, e_{C1,C2}=5$.
+\begin{enumerate}
+    \item \textbf{Route A (D $\rightarrow$ C1 $\rightarrow$ C2 $\rightarrow$ D):} Cost = 30, Emissions = $15 + 5 + 20 = 40$.
+    \item \textbf{Route B (D $\rightarrow$ C2 $\rightarrow$ C1 $\rightarrow$ D):} Cost = 30, Emissions = $20 + 5 + 15 = 40$.
+\end{enumerate}
+Let's finally define $d_{C2,D} = 15, e_{C2,D} = 11$.
+\begin{enumerate}
+    \item \textbf{Route A (D $\rightarrow$ C1 $\rightarrow$ C2 $\rightarrow$ D):}
+        \begin{itemize}
+            \item Cost: $10 + 8 + 15 = 33$.
+            \item Emissions: $15 + 5 + 11 = 31$.
+        \end{itemize}
+    \item \textbf{Route B (D $\rightarrow$ C2 $\rightarrow$ C1 $\rightarrow$ D):}
+        \begin{itemize}
+            \item Cost: $12 + 8 + 10 = 30$.
+            \item Emissions: $20 + 5 + 15 = 40$.
+        \end{itemize}
+\end{enumerate}
+Here, Route B is cheaper by 3 units, but Route A is greener by 9 units of emissions. This exposes the core trade-off.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line98.fig1.png}
+\caption{Visualization of the trade-off between a greener route (solid green) and a cheaper route (dashed red).}
+\end{figure}
+
+\subsection{Tier 2: The Classic Heuristic (Modified Savings Algorithm)}
+For larger problems, exact mathematical models are too slow. The Clarke and Wright Savings algorithm is a popular heuristic for the VRP, which can be adapted for the G-VRP. The core idea is to start with every customer being served by a dedicated vehicle and then iteratively merge routes that offer the highest "saving."
+
+\subsubsection{Algorithm Modification}
+The standard saving $s_{ij}$ from merging the routes for customers $i$ and $j$ is calculated based on distance: $s_{ij} = d_{0i} + d_{0j} - d_{ij}$. To incorporate environmental factors, we create a composite saving formula:
+\begin{equation}
+s_{ij}^{\text{green}} = w_{\text{cost}} \cdot (d_{0i} + d_{0j} - d_{ij}) + w_{\text{emissions}} \cdot (e_{0i} + e_{0j} - e_{ij})
+\end{equation}
+Here, $w_{\text{cost}}$ and $w_{\text{emissions}}$ are weights that reflect the company's priority. For a purely green focus, one might set $w_{\text{cost}}=0$ and $w_{\text{emissions}}=1$.
+
+\subsubsection{Pseudocode}
+\begin{enumerate}
+    \item \textbf{Initialization:} For each customer $i$, create a route (0 $\rightarrow$ $i$ $\rightarrow$ 0).
+    \item \textbf{Calculate Savings:} For every pair of customers $(i, j)$, calculate the composite saving $s_{ij}^{\text{green}}$.
+    \item \textbf{Sort Savings:} Create a list of all savings in descending order.
+    \item \textbf{Merge Routes:} Iterate through the sorted savings list. For a saving $s_{ij}$:
+        \begin{itemize}
+            \item If customer $i$ and customer $j$ are in different routes,
+            \item And if $i$ is the last customer in its route and $j$ is the first in its route,
+            \item And if the merged route does not violate vehicle capacity (and/or range constraints),
+            \item Then merge the two routes into a single route (0 $\rightarrow$ ... $\rightarrow$ $i$ $\rightarrow$ $j$ $\rightarrow$ ... $\rightarrow$ 0).
+        \end{itemize}
+    \item \textbf{Termination:} Stop when no more merges can be made.
+\end{enumerate}
+
+\subsubsection{Example with Python}
+
+\lstinputlisting[language=Python, caption=Modified savings algorithm concept.]{.././codes-python/line98.py1.py}
+
+\subsection{Tier 3: The Advanced Algorithm (Sine Cosine Algorithm)}
+The Sine Cosine Algorithm (SCA) is a population-based metaheuristic inspired by the mathematical properties of sine and cosine functions. It's effective for global optimization and can be adapted to solve the G-VRP.
+
+\paragraph{Core Concepts}
+SCA creates a set of random initial solutions (search agents) and iteratively moves them towards the best solution found so far using a simple transition equation involving sine and cosine.
+
+\begin{itemize}
+    \item \textbf{Solution Representation:} A solution can be represented as a permutation of customers, e.g., `[3, 1, 4, 2]`. This permutation is then decoded into routes using a "split" procedure, where vehicles are filled sequentially respecting capacity constraints. For the G-VRP, we also check fuel/range constraints during decoding.
+    \item \textbf{Fitness Function:} The quality of a solution is evaluated using a weighted sum of the normalized objectives:
+    \begin{equation}
+        \text{Fitness} = w_{\text{cost}} \cdot \frac{Z_{\text{cost}}}{Z_{\text{cost}}^{\text{max}}} + w_{\text{emissions}} \cdot \frac{Z_{\text{emissions}}}{Z_{\text{emissions}}^{\text{max}}}
+    \end{equation}
+    where max values are used for normalization. The goal is to minimize this fitness score.
+    \item \textbf{Position Update:} Each agent's position (vector) $X_i$ is updated based on the position of the best-found solution $P_i$ (the destination point):
+    \begin{align}
+        X_{i}^{t+1} &= X_{i}^{t} + r_1 \times \sin(r_2) \times |r_3 P_{i}^{t} - X_{i}^{t}| \\
+        X_{i}^{t+1} &= X_{i}^{t} + r_1 \times \cos(r_2) \times |r_3 P_{i}^{t} - X_{i}^{t}|
+    \end{align}
+    The algorithm switches between these two equations. The parameters $r_1, r_2, r_3$ introduce randomness and control the movement towards or away from the best solution, balancing exploration and exploitation. $r_1$ is particularly important, as it decreases over iterations to gradually focus the search.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line98.fig2.png}
+\caption{Conceptual view of SCA search agents moving towards the best-found solution ($P_{best}$).}
+\end{figure}
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method (Reinforcement Learning Agent)}
+Reinforcement Learning (RL) can be used to train an agent to build green routes dynamically. The problem is modeled as a Markov Decision Process (MDP), where an agent (a vehicle or a central dispatcher) learns an optimal policy by interacting with the environment.
+
+\paragraph{MDP Formulation for a Single EV Agent}
+\begin{itemize}
+    \item \textbf{State ($S$):} A complete description of the current situation. A practical state representation could be a tuple:
+    \texttt{(current\_location, battery\_level, set\_of\_unvisited\_customers)}. For more complex scenarios, remaining vehicle capacity and current time could be included.
+    
+    \item \textbf{Actions ($A$):} The set of possible moves from a state. This would be to travel to any of the unvisited customers or to a charging station. \texttt{Action = \{visit\_customer\_i | i is unvisited\} $\cup$ \{visit\_charger\_j\}}.
+    
+    \item \textbf{Reward ($R$):} The feedback from the environment after taking an action. A good reward function for G-VRP aligns with the objectives:
+    \begin{equation*}
+    R(s, a, s') = - \left( w_{\text{cost}} \cdot \text{cost}(a) + w_{\text{emissions}} \cdot \text{emissions}(a) \right)
+    \end{equation*}
+    where `cost(a)` and `emissions(a)` are the cost and emissions of taking action `a`. A large negative reward is given for illegal actions, like running out of battery before reaching a destination. A positive reward can be given for completing the tour.
+\end{itemize}
+
+An RL algorithm like Q-Learning or Deep Q-Networks (DQN) can be used to learn a policy $\pi(s) \rightarrow a$ that maximizes the cumulative future reward, effectively learning how to build efficient and green routes.
+
+\subsubsection{Conceptual Q-Learning Example}
+The agent learns a Q-table, $Q(s, a)$, which estimates the expected future reward of taking action $a$ in state $s$.
+\begin{enumerate}
+    \item Initialize Q-table with zeros: $Q(s, a)=0$ for all $s, a$.
+    \item For many episodes:
+    \begin{enumerate}
+        \item Start at the depot (initial state $s$).
+        \item While the episode is not done (all customers visited):
+        \begin{enumerate}
+            \item Choose an action $a$ from state $s$ (e.g., using $\epsilon$-greedy strategy).
+            \item Take action $a$, observe the reward $R$ and the new state $s'$.
+            \item Update the Q-table using the Bellman equation:
+            $Q(s, a) \leftarrow Q(s, a) + \alpha [R + \gamma \max_{a'} Q(s', a') - Q(s, a)]$
+            \item Update state: $s \leftarrow s'$.
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+After training, the optimal policy is to always choose the action $a$ that maximizes $Q(s,a)$ for any given state $s$.
+
+\subsection{Tier 5: The Integrated Digital Twin (Fleet Simulation Engine)}
+A digital twin for G-VRP is a high-fidelity virtual replica of the entire logistics environment. It's not just a static map but a dynamic simulation incorporating:
+\begin{itemize}
+\item \textbf{Digital Vehicle Models:} Each vehicle's digital twin includes its type (diesel, EV), current load, fuel/battery level, and real-time GPS location. For EVs, it models battery degradation and charging speed. For diesel trucks, it models load- and speed-dependent fuel consumption.
+\item \textbf{Live Traffic \& Weather:} Integration with real-time traffic APIs and weather forecasts allows the twin to predict travel times and energy consumption more accurately (e.g., headwinds increase fuel burn).
+\item \textbf{Energy Grid Data:} For EV fleets, the twin can connect to energy market data, identifying periods of low-cost or high-renewable-energy electricity for charging.
+\end{itemize}
+
+\paragraph{Concrete Example: "What-If" Analysis}
+\textbf{Scenario:} A city announces a new ``Low Emission Zone'' (LEZ) effective next month, with heavy fines for diesel vehicles entering the zone between 8 AM and 6 PM.
+\textbf{Digital Twin Application:}
+\begin{enumerate}
+    \item Planners model the LEZ in the digital twin.
+    \item They run a simulation of a typical day's operations with the new constraint. The twin immediately shows massive projected fines and delivery failures as diesel vans are blocked.
+    \item They test mitigation strategies:
+        \begin{itemize}
+            \item \textbf{Strategy A (Rescheduling):} Run the simulation again, but have diesel vans service customers inside the LEZ during nighttime hours. The twin quantifies the extra cost of nighttime driver shifts versus the fines saved.
+            \item \textbf{Strategy B (Re-routing):} Simulate reassigning all LEZ customers to the EV fleet. The twin identifies if the current EV fleet has enough range and capacity. It highlights the need for two additional EVs and a new charging station near the LEZ boundary.
+\end{itemize}
+The digital twin provides quantified data on costs, emissions, and service levels for each strategy, enabling data-driven decision-making long before the LEZ is active.
+
+\subsection{Tier 6: The Autonomous \& Self-Optimizing Ecosystem (Multi-Agent Negotiation)}
+In this tier, control is decentralized. Each vehicle becomes an autonomous agent that collaborates and negotiates with other agents to achieve a global objective (low emissions) while pursuing its own goals (completing its assigned tasks).
+
+\paragraph{Architecture: The Contract Net Protocol}
+Agents use a market-like mechanism to distribute tasks dynamically.
+\begin{enumerate}
+    \item \textbf{Task Announcement:} An agent (e.g., a vehicle) that cannot efficiently complete a task (e.g., a delivery that would force it to consume too much fuel or go far out of its way) broadcasts a "contract" for that task to nearby agents. The announcement includes task details (location, size) and constraints (delivery window).
+    \item \textbf{Bidding:} Other agents receive the announcement. They calculate the marginal cost and emissions to add this task to their current route. They submit a "bid" to the announcing agent. A bid from an EV might be `(cost: \$5, emissions: 0.1kg CO2e)`, while a bid from a diesel van might be `(cost: \$3, emissions: 2.5kg CO2e)`.
+    \item \textbf{Awarding:} The announcing agent evaluates the bids based on a green-focused utility function (e.g., minimizing emissions). It awards the contract to the agent with the best bid (e.g., the EV, despite the slightly higher monetary cost). The task is dynamically re-assigned.
+\end{enumerate}
+
+\paragraph{Concrete Example: Dynamic Response to Low Battery}
+\textbf{Scenario:} EV-1 is on its route but encounters unexpected traffic, draining its battery faster than planned. Its state prediction shows it cannot reach its last customer, C5, and return to the depot.
+\begin{enumerate}
+    \item EV-1 (Manager) broadcasts a task announcement for C5.
+    \item EV-2 and DieselVan-4 are nearby and receive the broadcast.
+    \item EV-2 calculates it can add C5 to its route with only 2 extra km and 0.5 kWh of energy. Its bid is `(emissions\_impact: low)`.
+    \item DieselVan-4 is closer but would need to divert through heavy stop-start traffic. Its bid is `(emissions\_impact: high)`.
+    \item EV-1's policy is to strictly minimize emissions. It awards the C5 contract to EV-2.
+\end{enumerate}
+The result is emergent optimization: the system as a whole avoids a high-emission scenario (DieselVan-4) or a costly delay (EV-1 having to find a charger) without central intervention.
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership (The Green Dispatch Advisor)}
+The Centaur model combines the computational power of AI with the intuition and contextual knowledge of a human expert (the dispatcher). The AI is not a black-box command system but an "advisor" that illuminates trade-offs.
+
+\paragraph{System: Pareto Frontier Visualization}
+Instead of providing a single "optimal" plan, the AI generates a set of Pareto-optimal solutions. These are solutions where you cannot improve one objective (e.g., emissions) without worsening another (e.g., cost). These are presented to the dispatcher on a chart.
+
+\paragraph{Concrete Example: The Dispatcher's Choice}
+A dispatcher is planning the day's routes. The AI advisor presents the following options on an interactive dashboard:
+\begin{itemize}
+    \item \textbf{Plan A (Cost-Optimal):} Total Cost: `\$1200`. Total Emissions: 350 kg CO$_2$. The AI adds an `XAI Note`: ``This plan achieves low cost by using diesel vans on shorter, congested city routes, which have high idle emissions.''
+    \item \textbf{Plan B (Eco-Optimal):} Total Cost: `\$1550`. Total Emissions: 210 kg CO$_2$. `XAI Note`: ``This plan uses EVs for all city routes, requiring one vehicle to perform a mid-day fast charge, increasing cost and risk of delay.''
+    \item \textbf{Plan C (Balanced):} Total Cost: `\$1350`. Total Emissions: 245 kg CO$_2$. `XAI Note`: ``This plan is a hybrid, using EVs for the most sensitive downtown areas and diesel vans for longer, highway-based routes where they are more efficient.''
+\end{itemize}
+The human dispatcher knows that the customer requiring the mid-day charge in Plan B is a high-priority client who cannot tolerate delays. However, they also know some customers in Plan A's diesel routes are part of a corporate "green partnership." Using this contextual knowledge, the dispatcher selects Plan C as the best real-world compromise and has the justification to explain the decision.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line98.fig3.png}
+\caption{The human dispatcher reviews a Pareto frontier of solutions and selects the best compromise (Plan C), guided by AI-provided explanations.}
+\end{figure}
+
+\subsection{Tier 8: The Value-Aligned \& Ethical Framework (Algorithmic Fairness)}
+When optimizing for cost and emissions, an unconstrained AI might create solutions that are ethically problematic. A key risk in G-VRP is "environmental redlining" or creating "sacrifice zones," where more polluting vehicles are systematically routed through lower-income or less politically powerful neighborhoods to save time or avoid fees elsewhere.
+
+\paragraph{Architecture: Constitutional AI}
+To prevent this, the routing algorithm is wrapped in an ethical framework or "constitution." These are hard constraints based on principles of fairness.
+
+\textbf{Constitution Article Example:}
+\begin{enumerate}
+    \item \textit{Principle of Equitable Exposure:} No residential census tract shall be exposed to more than 120\% of the city-wide average of fleet-generated particulate matter (PM2.5) on a rolling 30-day basis.
+    \item \textit{Principle of Vehicle Equity:} The percentage of zero-emission vehicle miles traveled (VMT) within historically disadvantaged communities must be at least equal to the fleet-wide average.
+\end{enumerate}
+
+\paragraph{Concrete Example: Rerouting for Fairness}
+\textbf{Initial AI Solution:} The G-VRP algorithm produces a route plan that is highly efficient. It sends all EVs into the affluent downtown core (with its LEZ) and routes all older diesel trucks through a low-income industrial neighborhood on the periphery because the roads are wide and have no tolls.
+\textbf{Constitutional Review:} The plan is automatically checked against the constitution.
+\begin{itemize}
+    \item \textbf{Violation Found:} The plan violates the "Principle of Equitable Exposure." The projected PM2.5 concentration in the industrial neighborhood is 180\% of the city average.
+    \item \textbf{Remediation:} The system flags the solution as invalid. It adds a new penalty term to the optimization objective function for violating the fairness constraint.
+    \item \textbf{New AI Solution:} The optimizer runs again. The new, slightly more expensive solution now routes two EVs to the industrial neighborhood and sends one diesel truck on a longer highway route around it. The plan now satisfies the constitution. The extra cost is logged as the "Cost of Fairness."
+\end{itemize}
+
+\subsection{Tier 9: The Quantum Leap (QUBO Formulation)}
+The VRP and its variants are NP-hard, making them prime candidates for quantum computing, which excels at combinatorial optimization. One popular approach is to formulate the problem as a Quadratic Unconstrained Binary Optimization (QUBO) problem, suitable for quantum annealers.
+
+\paragraph{QUBO Formulation}
+A QUBO problem aims to find the minimum of an objective function of the form:
+\begin{equation}
+    f(x_1,...,x_N) = \sum_{i \leq j} Q_{ij} x_i x_j
+\end{equation}
+where $x_i$ are binary variables (0 or 1) and $Q$ is a matrix of quadratic coefficients. The G-VRP must be translated into this format.
+
+\paragraph{Mapping G-VRP to QUBO}
+This involves two parts: an objective part and a constraint part.
+
+1.  \textbf{Binary Variables:} Let $x_{i,p,k} = 1$ if vehicle $k$ visits customer $i$ at position $p$ in its tour, and 0 otherwise.
+
+2.  \textbf{Objective Hamiltonian ($H_{obj}$):} This term represents what we want to minimize (a blend of distance and emissions).
+    \begin{equation*}
+    H_{obj} = \sum_{i,j,p,k} (w_d d_{ij} + w_e e_{ij}) \cdot x_{i,p,k} \cdot x_{j,p+1,k}
+    \end{equation*}
+
+3.  \textbf{Constraint Hamiltonians ($H_{constr}$):} These terms add a high energy penalty if a rule is broken.
+    \begin{itemize}
+        \item Each customer must be visited once: $H_{c1} = A \sum_i (1 - \sum_{p,k} x_{i,p,k})^2$
+        \item Each tour position for a vehicle is filled by at most one customer: $H_{c2} = A \sum_{p,k} (\sum_i x_{i,p,k} - 1)^2$
+        \item Capacity/Range constraints are more complex and involve penalty terms that "activate" if the sum of demands/distances exceeds the limit.
+    \end{itemize}
+The complete QUBO is $H = H_{obj} + H_{c1} + H_{c2} + ...$, where $A$ is a large penalty coefficient. The quantum annealer is then tasked with finding the binary configuration of $x_{i,p,k}$ that minimizes the energy of $H$.
+
+\paragraph{Concrete Example: A 2-Customer Subproblem}
+For Vehicle 1 visiting customers C1 and C2, we need variables like $x_{1,1,1}$ (C1 at pos 1), $x_{2,1,1}$ (C2 at pos 1), $x_{1,2,1}$ (C1 at pos 2), etc.
+\begin{itemize}
+    \item The term $(w_d d_{12} + w_e e_{12})x_{1,1,1}x_{2,2,1}$ in $H_{obj}$ adds the green cost of traveling from C1 to C2 if C1 is at position 1 and C2 is at position 2.
+    \item The constraint $(1 - (x_{1,1,1} + x_{1,2,1}))^2$ ensures that customer C1 is visited at either position 1 or 2. If it's visited at both or neither, the squared term becomes non-zero, adding a huge penalty to the energy, making that solution highly undesirable.
+\end{itemize}
+The quantum ground state corresponds to the optimal, valid green route.
+
+\newpage
+\section{Practice Questions}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, wide, labelwidth=!, labelindent=0pt]
+    \item \textbf{(Tier 1)} A vehicle has two possible routes to visit customers A and B.
+    \begin{itemize}
+        \item \textbf{Route 1:} Depot $\rightarrow$ A $\rightarrow$ B $\rightarrow$ Depot. Total distance: 40 km, Total emissions: 15 kg CO$_2$.
+        \item \textbf{Route 2:} Depot $\rightarrow$ B $\rightarrow$ A $\rightarrow$ Depot. Total distance: 45 km, Total emissions: 12 kg CO$_2$.
+    \end{itemize}
+    If the company uses a weighted objective function $Z = 0.5 \times (\text{distance}) + 0.5 \times (\text{emissions})$, which route should be chosen?
+
+    \item \textbf{(Tier 2)} A modified savings algorithm for G-VRP produces a sorted list of composite savings: `[(('C2','C4'), 25.5), (('C1','C3'), 22.1), (('C3','C4'), 18.9)]`. The initial routes are {D-C1-D}, {D-C2-D}, {D-C3-D}, {D-C4-D}. The combined demand of C2 and C4 is within vehicle capacity. What are the routes after the first merge operation?
+
+    \item \textbf{(Tier 3)} In adapting a metaheuristic like the Sine Cosine Algorithm for a G-VRP with 50 customers and 5 vehicles, how might you represent a complete solution as a single vector of numbers that the algorithm can operate on?
+
+    \item \textbf{(Tier 4)} Define the State, Actions, and a plausible Reward function for a Reinforcement Learning agent controlling an electric truck that must visit 10 customers. The agent needs to decide not only the next customer but also when to visit a charging station. The goal is to minimize delivery time and electricity consumption.
+
+    \item \textbf{(Tier 5)} A city is considering implementing dynamic road pricing, where tolls on major arteries change based on congestion. Propose a `what-if' scenario you could run on a G-VRP digital twin to evaluate the impact of this policy on your fleet's costs and total emissions.
+
+    \item \textbf{(Tier 6)} In a multi-agent system for G-VRP, Vehicle A (a diesel van) and Vehicle B (an EV) both bid for a last-minute, urgent delivery task. Vehicle A's bid is `(time: 15 min, cost: \$4, emissions: 2 kg CO2)`. Vehicle B's bid is `(time: 25 min, cost: \$6, emissions: 0.1 kg CO2)`. If the central task manager's utility function is to minimize a weighted sum $0.2 \cdot (\text{time}) + 0.3 \cdot (\text{cost}) + 0.5 \cdot (\text{emissions})$, which vehicle wins the contract?
+
+    \item \textbf{(Tier 7)} An AI advisor shows a dispatcher a Pareto-optimal set of route plans on a cost-vs-emissions graph. What kind of `Explainable AI` (XAI) information could the system provide about a specific point on the graph to help the dispatcher make a more informed decision?
+
+    \item \textbf{(Tier 8)} Besides environmental justice for neighborhoods, what is another potential ethical problem that a G-VRP optimization algorithm might create if not properly constrained? (Hint: consider the drivers).
+
+    \item \textbf{(Tier 9)} In a QUBO formulation for G-VRP, we add a penalty term like $A(1 - \sum_p x_{i,p,k})^2$ to ensure a customer is visited. What would happen to the solutions found by a quantum annealer if the penalty coefficient `A` is set too low relative to the coefficients in the objective part of the Hamiltonian?
+\end{enumerate}
+
+\end{document}

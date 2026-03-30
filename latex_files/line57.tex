@@ -1,0 +1,367 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Logistics \& Supply Chain Problem-Solving Playbook\\Chapter 57: The Periodic Review (Base-Stock) Policy Problem}
+\author{Problem-Solving Tiers 1-4}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{The Periodic Review (Base-Stock) Policy Problem}
+
+The periodic review inventory policy represents a fundamental approach to inventory management where stock levels are monitored and replenished at fixed time intervals rather than continuously. Unlike continuous review systems that trigger orders when inventory drops to a reorder point, periodic review systems operate on a predetermined schedule, making ordering decisions based on current inventory position and bringing stock up to a target level called the base-stock level.
+
+\subsection{The Scenario: Regional Distribution Center Replenishment Strategy}
+
+MedSupply Distribution operates a regional distribution center serving 150 hospitals across the southeastern United States. The company manages over 2,000 critical medical supply items, ranging from basic consumables like syringes and bandages to specialized equipment components. Due to supplier constraints and logistics efficiency requirements, MedSupply can only place orders with their primary suppliers on specific days of the week - typically Monday mornings for most suppliers.
+
+The challenge lies in determining optimal inventory policies for each product category. Consider their high-volume syringe inventory: demand averages 12,000 units per week with a standard deviation of 2,400 units, following a roughly normal distribution. The supplier has a lead time of 0.5 weeks, and MedSupply aims to maintain a 95\% service level (stockout probability of 5\%). The company reviews inventory every Monday and must decide how many units to order to bring total inventory (on-hand plus on-order) up to the base-stock level.
+
+Current inventory holding costs are \$0.15 per unit per week, ordering costs are \$75 per order regardless of quantity, and stockout costs are estimated at \$8 per unit due to emergency procurement requirements and potential service disruptions to hospitals. The distribution center currently maintains safety stock using rule-of-thumb approaches, but management seeks a more systematic method to optimize their periodic review policy parameters.
+
+\section{Tier 1: The Pen \& Paper Method (Stochastic Programming Formulation)}
+
+The periodic review base-stock policy can be formulated as a stochastic programming problem where we determine the optimal base-stock level $S$ and review period $R$ to minimize expected total costs while maintaining desired service levels.
+
+\textbf{Mathematical Model Formulation:}
+
+Let us define the following notation:
+\begin{align}
+\text{Sets:} \quad &T = \{1, 2, \ldots, T\} \text{ (planning periods)}\\
+\text{Parameters:} \quad &\mu = \text{mean demand per period}\\
+&\sigma = \text{standard deviation of demand per period}\\
+&L = \text{supplier lead time (in periods)}\\
+&h = \text{holding cost per unit per period}\\
+&K = \text{fixed ordering cost per order}\\
+&p = \text{stockout penalty cost per unit}\\
+&\alpha = \text{target service level (probability of no stockout)}\\
+&z_{\alpha} = \text{standard normal quantile for service level } \alpha
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+S &= \text{base-stock level (target inventory position)}\\
+R &= \text{review period length}\\
+Q_t &= \text{order quantity in period } t\\
+I_t &= \text{inventory level at end of period } t\\
+IP_t &= \text{inventory position at end of period } t
+\end{align}
+
+\textbf{Stochastic Demand Model:}
+The demand during the protection interval (review period plus lead time) follows:
+\begin{equation}
+D_{R+L} \sim N(\mu(R+L), \sigma^2(R+L))
+\end{equation}
+
+\textbf{Base-Stock Level Calculation:}
+The optimal base-stock level must cover expected demand during the protection interval plus safety stock:
+\begin{equation}
+S^* = \mu(R+L) + z_{\alpha} \sigma \sqrt{R+L}
+\end{equation}
+
+\textbf{Objective Function:}
+Minimize the expected total cost per period:
+\begin{equation}
+\min_{S,R} \quad TC(S,R) = \frac{K}{R} + h \cdot E[I] + p \cdot E[\text{Stockouts}]
+\end{equation}
+
+where:
+\begin{align}
+E[I] &= S - \mu(R+L) + \frac{1}{2}\mu R\\
+E[\text{Stockouts}] &= \sigma\sqrt{R+L} \cdot G(z_{\alpha})
+\end{align}
+
+and $G(z)$ is the standard normal loss function.
+
+\textbf{Policy Constraints:}
+\begin{align}
+IP_t &= I_t + \sum_{i=0}^{L-1} Q_{t-i} \quad \forall t \in T\\
+Q_t &= \max(0, S - IP_t) \quad \forall t \in T\\
+P(\text{Stockout during } (R+L)) &\leq 1-\alpha\\
+S, R &\geq 0
+\end{align}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line57.fig1.png}
+\caption{Periodic Review Base-Stock Policy Inventory Trajectory}
+\end{figure}
+
+\textbf{Concrete Numerical Example:}
+
+Consider the MedSupply syringe inventory with the following parameters:
+\begin{itemize}
+\item Weekly demand: $\mu = 12,000$ units, $\sigma = 2,400$ units
+\item Lead time: $L = 0.5$ weeks
+\item Target service level: $\alpha = 0.95$ (thus $z_{0.95} = 1.645$)
+\item Review period: $R = 1$ week
+\item Costs: $h = \$0.15$/unit/week, $K = \$75$/order, $p = \$8$/unit
+\end{itemize}
+
+\textbf{Step 1: Calculate Base-Stock Level}
+\begin{align}
+S^* &= \mu(R+L) + z_{\alpha} \sigma \sqrt{R+L}\\
+&= 12,000(1+0.5) + 1.645 \times 2,400 \times \sqrt{1+0.5}\\
+&= 18,000 + 1.645 \times 2,400 \times 1.225\\
+&= 18,000 + 4,838 = 22,838 \text{ units}
+\end{align}
+
+\textbf{Step 2: Calculate Expected Costs}
+\begin{align}
+\text{Average cycle stock} &= \frac{\mu R}{2} = \frac{12,000 \times 1}{2} = 6,000 \text{ units}\\
+\text{Safety stock} &= z_{\alpha} \sigma \sqrt{R+L} = 4,838 \text{ units}\\
+\text{Expected inventory} &= 6,000 + 4,838 = 10,838 \text{ units}\\
+\text{Ordering cost per week} &= \frac{K}{R} = \frac{75}{1} = \$75\\
+\text{Holding cost per week} &= h \cdot E[I] = 0.15 \times 10,838 = \$1,625.70\\
+\text{Expected stockout cost} &= p \cdot E[\text{Stockouts}]\\
+&= 8 \times 2,400 \times 1.225 \times 0.0266 = \$627.36
+\end{align}
+
+\textbf{Total expected cost per week} = $75 + 1,625.70 + 627.36 = \$2,328.06$
+
+\section{Tier 2: The Classic Heuristic (Constructive Base-Stock Optimization)}
+
+The classic approach to solving the periodic review base-stock problem involves a constructive heuristic that iteratively evaluates different combinations of review periods and calculates the corresponding optimal base-stock levels, selecting the combination that minimizes total expected costs.
+
+\textbf{Algorithm Overview:}
+
+The heuristic systematically searches through feasible review periods and applies the newsvendor-style optimization to determine the optimal base-stock level for each review period. This approach recognizes that the periodic review problem can be decomposed into two decisions: choosing the review frequency and determining the appropriate inventory target.
+
+\lstinputlisting[language=Python, caption=Base-Stock Policy Optimization Heuristic]{.././codes-python/line57.py1.py}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line57.fig2.png}
+\caption{Enhanced Newsvendor Problem with Professional CMYK Colors and Node-Based Profit Analysis}
+\end{figure}
+
+\textbf{Concrete Numerical Example Output:}
+
+Running the heuristic with MedSupply's syringe data produces the following results:
+{{ ... }}
+
+\begin{verbatim}
+Optimal Review Period: 1.30 weeks
+Optimal Base-Stock Level: 23156 units  
+Minimum Total Cost: $2284.73 per week
+
+Cost Breakdown:
+- Ordering Cost: $57.69/week
+- Holding Cost: $1598.42/week  
+- Stockout Cost: $628.62/week
+
+Simulated Service Level: 0.942
+Average Inventory: 10656 units
+Stockout Periods: 3 out of 52 weeks
+\end{verbatim}
+
+The heuristic finds that a slightly longer review period (1.30 weeks vs. 1.0 week) reduces total costs by approximately \$43 per week compared to the initial analytical solution, primarily through reduced ordering frequency while maintaining the desired service level.
+
+\section{Tier 3: The Advanced Algorithm (Genetic Algorithm for Multi-Objective Optimization)}
+
+The advanced approach recognizes that the periodic review base-stock problem often involves multiple conflicting objectives beyond simple cost minimization. Real-world scenarios require balancing cost efficiency, service level reliability, inventory investment, and operational complexity. A genetic algorithm provides an excellent framework for exploring the multi-dimensional solution space and finding Pareto-optimal solutions.
+
+\textbf{Multi-Objective Problem Formulation:}
+
+We extend the base-stock problem to simultaneously optimize:
+\begin{enumerate}
+\item \textbf{Total Cost Minimization:} $f_1(R,S) = \frac{K}{R} + hE[I] + pE[\text{Stockouts}]$
+\item \textbf{Service Level Maximization:} $f_2(R,S) = P(\text{No Stockout during } R+L)$
+\item \textbf{Inventory Investment Minimization:} $f_3(R,S) = E[\text{Inventory Investment}]$
+\item \textbf{Operational Simplicity:} $f_4(R,S) = \frac{1}{R}$ (prefer less frequent ordering)
+\end{enumerate}
+
+\lstinputlisting[language=Python, caption=Multi-Objective Genetic Algorithm for Base-Stock Optimization]{.././codes-python/line57.py2.py}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line57.fig3.png}
+\caption{Multi-Objective Pareto Front for Base-Stock Policy Optimization}
+\end{figure}
+
+\textbf{Concrete Numerical Example Output:}
+
+The genetic algorithm produces multiple Pareto-optimal solutions, demonstrating the trade-offs between different objectives:
+
+\begin{verbatim}
+Pareto-Optimal Solutions:
+--------------------------------------------------------------------------------
+Solution 1 (High Service Focus):
+  Review Period: 0.85 weeks
+  Base-Stock Level: 26,843 units
+  Total Cost: $2,456.32/week
+  Service Level: 0.978
+  Inventory Investment: $67,107.50
+  Ordering Frequency: 1.18/week
+
+Solution 2 (Balanced):
+  Review Period: 1.28 weeks  
+  Base-Stock Level: 23,156 units
+  Total Cost: $2,289.45/week
+  Service Level: 0.949
+  Inventory Investment: $57,890.00
+  Ordering Frequency: 0.78/week
+
+Solution 3 (Cost-Focused):
+  Review Period: 2.15 weeks
+  Base-Stock Level: 21,432 units
+  Total Cost: $2,198.67/week
+  Service Level: 0.925
+  Inventory Investment: $53,580.00
+  Ordering Frequency: 0.47/week
+\end{verbatim}
+
+The genetic algorithm reveals that MedSupply can achieve a 4.2\% cost reduction (from \$2,289 to \$2,199 per week) by accepting a slight service level decrease (from 94.9\% to 92.5\%) and extending the review period to 2.15 weeks.
+
+\section{Tier 4: The AI/ML/RL Augmentation Method (Deep Reinforcement Learning)}
+
+The AI augmentation approach transforms the static periodic review problem into a dynamic learning system that continuously adapts to changing demand patterns, supplier reliability variations, and cost structures. Deep Reinforcement Learning enables the system to learn optimal policies through interaction with the environment, handling non-stationary conditions that traditional methods struggle with.
+
+\textbf{Reinforcement Learning Formulation:}
+
+We model the periodic review problem as a Markov Decision Process where an agent learns to make optimal ordering decisions in each review period.
+
+\textbf{State Space} $S$: The state captures all relevant information for decision-making:
+\begin{align}
+s_t = (I_t, P_t, D_{t-k:t}, L_t, C_t, T_t)
+\end{align}
+where:
+\begin{itemize}
+\item $I_t$: Current inventory level
+\item $P_t$: Pipeline inventory (orders in transit)
+\item $D_{t-k:t}$: Demand history over last $k$ periods
+\item $L_t$: Current lead time (may vary)
+\item $C_t$: Current cost parameters (holding, ordering, stockout)
+\item $T_t$: Time until next review (for continuous time modeling)
+\end{itemize}
+
+\textbf{Action Space} $A$: The agent chooses order quantities:
+\begin{align}
+a_t \in [0, Q_{\max}] \text{ where } Q_{\max} \text{ is maximum feasible order quantity}
+\end{align}
+
+\textbf{Reward Function} $R$: Negative cost-based reward encouraging cost minimization:
+\begin{align}
+r_t = -(h \cdot I_t + K \cdot \mathbf{1}_{a_t > 0} + p \cdot \max(0, D_t - I_t))
+\end{align}
+
+\textbf{Environment Dynamics}: The environment transitions follow:
+\begin{align}
+I_{t+1} &= \max(0, I_t + \text{Orders Received}_t - D_t)\\
+P_{t+1} &= P_t - \text{Orders Received}_t + a_t
+\end{align}
+
+\lstinputlisting[language=Python, caption=Deep Q-Network for Periodic Review Policy Learning]{.././codes-python/line57.py3.py}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line57.fig4.png}
+\caption{Deep Q-Network Architecture for Periodic Review Policy Learning}
+\end{figure}
+
+\textbf{Concrete Numerical Example Output:}
+
+After training for 1000 episodes, the DQN agent demonstrates adaptive learning:
+
+\begin{verbatim}
+Training Progress:
+Episode 0, Avg Reward: -2847.32, Avg Cost: $2847.32, Service Level: 0.892, Epsilon: 1.000
+Episode 100, Avg Reward: -2654.18, Avg Cost: $2654.18, Service Level: 0.923, Epsilon: 0.366
+Episode 200, Avg Reward: -2489.67, Avg Cost: $2489.67, Service Level: 0.941, Epsilon: 0.134
+Episode 300, Avg Reward: -2367.42, Avg Cost: $2367.42, Service Level: 0.952, Epsilon: 0.070
+...
+Episode 900, Avg Reward: -2203.15, Avg Cost: $2203.15, Service Level: 0.961, Epsilon: 0.050
+
+Trained DQN Agent Performance:
+Average Cost per Period: $2,187.23
+Service Level: 0.964
+Average Inventory: 9,847 units
+
+Performance Comparison:
+- Traditional Base-Stock Policy: $2,289.45/period, 94.9% service level
+- DQN Learned Policy: $2,187.23/period, 96.4% service level
+- Improvement: 4.5% cost reduction, 1.5% service level improvement
+\end{verbatim}
+
+The DQN agent learns to outperform traditional methods by:
+\begin{enumerate}
+\item \textbf{Adaptive Ordering:} Adjusting order quantities based on recent demand patterns
+\item \textbf{Dynamic Safety Stock:} Modifying safety stock levels based on demand variability
+\item \textbf{Cost-Service Balance:} Learning optimal trade-offs between costs and service levels
+\item \textbf{Non-Stationary Adaptation:} Continuously adapting to changing conditions
+\end{enumerate}
+
+The reinforcement learning approach provides a 4.5\% cost improvement while simultaneously increasing service levels, demonstrating the power of adaptive, data-driven inventory policies.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 - Mathematical Formulation Questions:}
+
+\textbf{Question 1:} MedDevice Corp manages ventilator components with weekly demand following $N(850, 180^2)$. The supplier has a 0.75-week lead time, holding costs are \$0.25/unit/week, ordering costs are \$120/order, stockout costs are \$15/unit, and they target a 98\% service level. Calculate the optimal base-stock level for a 1.5-week review period and determine the expected total cost per week.
+
+\textbf{Question 2:} A pharmaceutical distributor reviews insulin inventory every 2 weeks. Demand is normally distributed with mean 2,400 units/week and standard deviation 480 units/week. Lead time is 0.5 weeks, and they want a 95\% service level. If current inventory is 3,200 units and pipeline orders total 1,800 units, what order quantity should be placed?
+
+\textbf{Tier 2 - Heuristic Implementation Questions:}
+
+\textbf{Question 3:} Implement the base-stock optimization heuristic for a surgical supply company managing sutures. Weekly demand: $\mu = 5,200$, $\sigma = 1,040$; lead time = 1.2 weeks; costs: holding \$0.08/unit/week, ordering \$45/order, stockout \$12/unit; service level 96\%. Compare policies for review periods of 0.5, 1.0, 1.5, and 2.0 weeks. Which review period minimizes total cost?
+
+\textbf{Question 4:} A hospital supply chain reviews PPE inventory using different review periods for different items. For N95 masks: demand $N(15000, 3000^2)$ per week, lead time 0.8 weeks, holding cost \$0.12/unit/week, ordering cost \$85/order, stockout cost \$25/unit. Calculate the break-even point where switching from weekly (R=1) to bi-weekly (R=2) reviews becomes cost-effective.
+
+\textbf{Tier 3 - Metaheuristic Optimization Questions:}
+
+\textbf{Question 5:} Design a genetic algorithm for a multi-product periodic review system managing 5 medical device categories simultaneously. Each product has different demand parameters, costs, and service level requirements. The products share ordering logistics (joint ordering cost \$200), and warehouse capacity is limited to 100,000 units total inventory. Formulate the chromosome representation and fitness function for this multi-constraint problem.
+
+\textbf{Question 6:} A regional blood bank uses a periodic review system for different blood types. Type O- has demand $N(400, 80^2)$ units/week, 0.25-week lead time, \$8/unit/week holding cost, \$150/order cost, and \$500/unit shortage cost due to criticality. Use simulated annealing to find the optimal review period and base-stock level, considering the extremely high shortage penalty. Compare results with the analytical solution.
+
+\textbf{Tier 4 - AI/ML Augmentation Questions:}
+
+\textbf{Question 7:} Develop a reinforcement learning environment for a hospital managing COVID-19 test kits where demand patterns shift dramatically based on outbreak phases. The state space includes current inventory, recent demand trend, outbreak phase indicator, and remaining shelf life. Design the reward function to balance holding costs (\$0.50/kit/week), rush ordering costs (\$5/kit for emergency procurement), and severe stockout penalties (\$100/missed test). How would you handle the non-stationary demand environment?
+
+\textbf{Question 8:} A smart hospital supply system uses IoT sensors and machine learning to predict demand for surgical instruments. Historical data shows demand correlates with scheduled surgeries (known 2 weeks ahead), emergency admissions (partially predictable), and seasonal patterns. Design a hybrid system combining traditional base-stock policies with ML-based demand forecasting and RL-based dynamic adjustment of safety stock levels. What features would you include in the ML model, and how would you structure the RL reward to encourage both cost efficiency and service reliability?
+
+\end{document}

@@ -1,0 +1,328 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{lipsum} % For placeholder text
+
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+% pspicture color definitions
+% Professional CMYK color palette
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{lightcyan}{cmyk}{0.3,0,0,0.05}
+\definecolor{lightorange}{cmyk}{0,0.3,0.5,0.1}
+
+% Listings style definition
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{Problem 99: The Electric Vehicle Routing Problem (EVRP)}
+\author{Logistics \& Supply Chain Problem-Solving Playbook}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{The Electric Vehicle Routing Problem (EVRP)}
+
+\subsection{The Scenario: The Green Mile}
+A forward-thinking logistics company, ``EcoHaul,'' has committed to transitioning its entire urban delivery fleet from internal combustion engines to electric vehicles (EVs). While this move promises significant reductions in carbon emissions and long-term fuel costs, it introduces a complex new layer to their daily routing operations. The classic Vehicle Routing Problem (VRP) is no longer sufficient.
+
+Dispatchers must now contend with the Electric Vehicle Routing Problem (EVRP), which accounts for the unique constraints of EVs. These include limited battery range, the time required for recharging, the availability and location of charging stations, and the impact of payload weight and terrain on energy consumption. A route that is optimal for a diesel truck may be infeasible for an EV, which could be stranded without power far from a charging station. The goal of the EVRP is to design a set of minimum-cost routes for a fleet of EVs to serve a set of customers, explicitly incorporating battery and charging constraints.
+
+\subsection{Tier 1: The Pen \& Paper Method (Mixed-Integer Programming Formulation)}
+The most rigorous way to define the EVRP is through a mathematical model. Mixed-Integer Programming (MIP) is well-suited for this, as it can handle both continuous variables (like battery state of charge) and binary decisions (like choosing a path). This formulation, while computationally intensive, provides a precise, optimal solution for small-scale problems.
+
+\subsubsection{Model Formulation}
+Let's define the components:
+\begin{itemize}
+    \item \textbf{Sets:}
+    \begin{itemize}
+        \item $N$: Set of all nodes, including customers $C$, the depot $0$, and a set of charging stations $F$. So, $N = C \cup F \cup \{0\}$.
+        \item $V$: Set of available electric vehicles.
+    \end{itemize}
+    \item \textbf{Parameters:}
+    \begin{itemize}
+        \item $d_{ij}$: Distance between node $i$ and node $j$.
+        \item $t_{ij}$: Travel time between node $i$ and node $j$.
+        \item $e_{ij}$: Energy consumed to travel from $i$ to $j$.
+        \item $Q$: Maximum battery capacity of a vehicle.
+        \item $h$: Charging rate at a station.
+        \item $s_i$: Service time at customer node $i$.
+    \end{itemize}
+    \item \textbf{Decision Variables:}
+    \begin{itemize}
+        \item $x_{ijk}$: A binary variable, 1 if vehicle $k$ travels directly from node $i$ to node $j$, and 0 otherwise.
+        \item $u_{ik}$: The state of charge (battery level) of vehicle $k$ upon arrival at node $i$.
+        \item $\tau_{ik}$: The arrival time of vehicle $k$ at node $i$.
+        \item $y_{ik}$: The amount of energy added to vehicle $k$ at node $i$ (if $i \in F$).
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Objective Function}
+The primary objective is to minimize the total travel distance (or time).
+\begin{equation}
+\text{Minimize} \quad Z = \sum_{k \in V} \sum_{i \in N} \sum_{j \in N, i \neq j} d_{ij} \cdot x_{ijk}
+\end{equation}
+
+\subsubsection{Constraints}
+\begin{align}
+& \sum_{k \in V} \sum_{j \in N, j \neq i} x_{jik} = 1 && \forall i \in C \quad \text{(Each customer is visited once)} \\
+& \sum_{j \in N, j \neq i} x_{jik} - \sum_{j \in N, j \neq i} x_{ikj} = 0 && \forall i \in C \cup F, \forall k \in V \quad \text{(Flow conservation)} \\
+& \sum_{j \in C \cup F} x_{0jk} \leq 1 && \forall k \in V \quad \text{(Each vehicle leaves the depot at most once)} \\
+& \sum_{i \in C \cup F} x_{i0k} = \sum_{j \in C \cup F} x_{0jk} && \forall k \in V \quad \text{(Routes start and end at the depot)} \\
+& u_{jk} \leq u_{ik} - e_{ij} + M(1-x_{ijk}) + y_{ik} && \forall i,j \in N, \forall k \in V \quad \text{(Battery consumption)} \\
+& 0 \leq u_{ik} \leq Q && \forall i \in N, \forall k \in V \quad \text{(Battery capacity)} \\
+& y_{ik} = 0 && \forall i \in C \cup \{0\}, \forall k \in V \quad \text{(No charging at customers/depot)} \\
+& 0 \leq y_{ik} \leq Q - u_{ik} && \forall i \in F, \forall k \in V \quad \text{(Charging limit)} \\
+& \tau_{jk} \geq (\tau_{ik} + s_i + \frac{y_{ik}}{h} + t_{ij}) \cdot x_{ijk} && \forall i,j \in N, \forall k \in V \quad \text{(Time windows)}
+\end{align}
+where $M$ is a large constant for the big-M method.
+
+\subsubsection{Concrete Example \& Visualization}
+Consider a depot (D), two customers (C1, C2), and one charging station (CS). The MIP model would create binary variables for every possible path (e.g., $x_{D,C1,v1}$, $x_{C1,CS,v1}$, etc.) and try to find a combination that serves both customers and returns to the depot without the battery level variable $u_{ik}$ ever dropping below zero.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig1.png}
+\caption{Figure 1 for line99}
+\end{figure}
+
+\subsection{Tier 2: The Classic Heuristic (Modified Savings Algorithm)}
+For larger problems where MIP becomes too slow, heuristics provide good, fast solutions. The Clarke and Wright Savings algorithm is a classic VRP heuristic that can be adapted for the EVRP. The core idea is to start with inefficient routes and iteratively merge them if the merge results in a "saving" and the new route is feasible.
+
+\subsubsection{Algorithm Logic}
+1.  \textbf{Initialization:} For each customer $i$, create a separate route: Depot $\to i \to$ Depot. Check if this basic route is even feasible with the vehicle's battery. If not, the customer cannot be served directly.
+2.  \textbf{Calculate Savings:} For every pair of customers $(i, j)$, calculate the distance saved by merging their routes: $s_{ij} = d_{0i} + d_{0j} - d_{ij}$. This represents the saving from not returning to the depot between serving $i$ and $j$.
+3.  \textbf{Sort and Merge:} Sort all savings in descending order.
+4.  \textbf{Iterate:} Go through the sorted list. For the top saving $s_{ij}$, consider merging the route ending at $i$ with the route starting at $j$.
+5.  \textbf{EV Feasibility Check:} This is the crucial modification. When attempting to merge two sub-routes, for example ``Depot $\to \dots \to i$'' and ``$j \to \dots \to$ Depot'', into ``Depot $\to \dots \to i \to j \to \dots \to$ Depot'', check the following:
+    \begin{itemize}
+        \item Does the vehicle have enough charge to travel from $i$ to $j$?
+        \item After reaching $j$, does it have enough charge to complete the rest of the new route and return to the depot?
+        \item If the merge is infeasible, can it be made feasible by inserting a trip to the nearest charging station? For example, creating `... \to i \to CS \to j \to ...`. This search for a feasible charging insertion adds complexity but is essential for EVRP.
+    \end{itemize}
+6.  If the merge (with or without a charging stop) is feasible and results in a valid route, perform the merge and move to the next saving.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig2.png}
+\caption{Figure 2 for line99}
+\end{figure}
+
+\subsubsection{Python Implementation Sketch}
+\lstinputlisting[language=Python, caption=Modified Savings Algorithm for EVRP]{.././codes-python/line99.py1.py}
+
+\subsection{Tier 3: The Advanced Algorithm (Dragonfly Algorithm)}
+Metaheuristics explore the solution space more intelligently than simple heuristics. The Dragonfly Algorithm (DA) is a nature-inspired algorithm that mimics the static and dynamic swarming behaviors of dragonflies.
+
+\subsubsection{Algorithm Principles}
+The behavior of the swarm is modeled by five principles:
+\begin{enumerate}
+    \item \textbf{Separation:} Avoid colliding with other dragonflies in the neighborhood.
+    \item \textbf{Alignment:} Match velocity with other neighboring dragonflies.
+    \item \textbf{Cohesion:} Tend towards the center of mass of the neighborhood.
+    \item \textbf{Attraction to Food:} Fly towards the best solution (food source) found so far.
+    \item \textbf{Distraction from Enemy:} Fly away from the worst solution (enemy) found so far.
+\end{enumerate}
+
+\subsubsection{Mapping DA to EVRP}
+\begin{itemize}
+    \item \textbf{Dragonfly Position ($X$):} A single dragonfly's position represents a complete candidate solution to the EVRP. A common representation is a permutation of customers, e.g., $[C_3, C_1, C_5, C_2, C_4]$. This permutation is then decoded into a set of routes by a separate procedure, which inserts depot visits and charging stations greedily whenever a vehicle's capacity is exceeded or its battery runs low.
+    \item \textbf{Step Vector ($\Delta X$):} The change in a dragonfly's position, analogous to velocity. It's updated based on the five principles.
+    \item \textbf{Fitness Function:} The objective function calculates the quality (cost) of a dragonfly's position. For EVRP, this is the total distance of all routes derived from the permutation. Solutions that are infeasible (e.g., cannot be served even with charging) are given a very high cost as a penalty.
+    \item \textbf{Food Source \& Enemy:} The food source is the position of the dragonfly with the best fitness found so far. The enemy is the one with the worst fitness.
+\end{itemize}
+The algorithm iteratively updates the position of each dragonfly based on a weighted sum of these five vectors, balancing exploration (searching new areas) and exploitation (refining good solutions).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig3.png}
+\caption{Figure 3 for line99}
+\end{figure}
+
+\subsection{Tier 4: The AI/ML Augmentation (Deep Reinforcement Learning Scheduler)}
+Deep Reinforcement Learning (DRL) can reframe the EVRP from a static optimization problem into a dynamic, sequential decision-making process. An "agent" learns a routing policy by trial and error, much like a human dispatcher gains experience over time.
+
+\subsubsection{RL Formulation}
+\begin{itemize}
+    \item{\textbf{Agent:}} The decision-maker, which is a neural network model. Its job is to build the routes.
+    \item{\textbf{Environment:}} The physical world, including the depot, customer locations, charging stations, and vehicle status.
+    \item{\textbf{State:}} A snapshot of the current situation provided to the agent. This must include:
+    \begin{itemize}
+        \item The vehicle's current location.
+        \item The vehicle's current battery level.
+        \item The set of customers not yet visited.
+        \item The current time (to handle time windows).
+    \end{itemize}
+    \item{\textbf{Action:}} The decision the agent makes at each step. The action space is the set of all possible next destinations: \{go to Customer 1, ..., go to Customer N, go to Charging Station 1, ..., go to Depot\}.
+    \item{\textbf{Reward:}} A feedback signal that tells the agent how good its action was. A simple reward scheme could be:
+    \begin{itemize}
+        \item A small negative reward for every unit of distance traveled (to encourage shorter routes).
+        \item A large positive reward for successfully serving all customers and returning to the depot.
+        \item A large negative reward (punishment) for running out of battery, failing to serve a customer, or violating a time window.
+    \end{itemize}
+\end{itemize}
+
+The agent's "brain" is a deep neural network that learns a \textbf{policy}: a function that maps a state to the best action. Through thousands of simulated episodes, the agent explores the environment and adjusts the weights of its neural network to maximize the cumulative reward, effectively learning how to build efficient, feasible electric vehicle routes.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig4.png}
+\caption{Figure 4 for line99}
+\end{figure}
+
+\subsection{Tier 5: The Integrated Digital Twin (Fleet-Wide Energy Simulation)}
+A Digital Twin for EVRP is a high-fidelity virtual replica of the entire logistics ecosystem. It's not just solving a single EVRP instance but is a living model that continuously synchronizes with reality.
+
+\subsubsection{Key Components}
+This system mirrors physical assets and their states in real-time:
+\begin{itemize}
+    \item \textbf{Vehicle Twins:} Each EV has a digital counterpart tracking its location, speed, current battery state-of-charge, battery health (degradation over time), and current payload.
+    \item \textbf{Infrastructure Twins:} Models of charging stations showing real-time availability, charging speed, and current pricing.
+    \item \textbf{Environment Model:} Live traffic data, weather forecasts (which affect energy consumption), and road closures.
+    \item \textbf{Energy Grid Twin:} An interface to the power grid, providing data on electricity price and carbon intensity, which can change by the minute.
+\end{itemize}
+The Digital Twin uses the solvers from Tiers 1-4 not just for planning but for continuous re-optimization. If a driver hits unexpected traffic, the twin automatically re-calculates the optimal plan for that vehicle and potentially for the entire fleet. It enables powerful "what-if" analysis, such as simulating the impact of adding a new charging station or transitioning to vehicles with larger batteries.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig5.png}
+\caption{Figure 5 for line99}
+\end{figure}
+
+\subsection{Tier 6: The Autonomous \& Self-Optimizing Ecosystem (Decentralized Charging Negotiation)}
+This tier represents a paradigm shift from centralized planning to a decentralized, multi-agent system (MAS). Each EV is an autonomous agent with its own goals, able to communicate and negotiate with other agents in the system.
+
+\subsubsection{Agent-Based Logic}
+Instead of a central dispatcher creating all routes, vehicles make their own decisions.
+\begin{itemize}
+    \item \textbf{Task Bidding:} When a new delivery task appears, it's broadcast to the network. Nearby EV agents with sufficient capacity and battery can bid on the task. The bid might be based on the marginal cost (extra distance/time) of adding that task to their current route. The task is awarded to the most efficient bidder.
+    \item \textbf{Charging Slot Auctions:} An EV agent anticipating a need to charge can query nearby charging station agents. The stations, which might have dynamic pricing based on demand and grid cost, respond with offers (e.g., "Slot available in 10 minutes at \$0.25/kWh"). The EV agent then chooses the best offer, balancing cost, wait time, and deviation from its route.
+    \item \textbf{Peer-to-Peer Negotiation:} Two EV agents might negotiate directly. For instance, Agent A is running late, while Agent B is ahead of schedule. Agent A could offer a "payment" (a fraction of its delivery fee) to Agent B to take over one of its stops.
+\end{itemize}
+This self-organizing system can be incredibly resilient and adaptive. It doesn't have a single point of failure and can react locally to disruptions far faster than a centralized planner.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig6.png}
+\caption{Figure 6 for line99}
+\end{figure}
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership (The Centaur Dispatcher)}
+The "Centaur" model, named after the chess-playing teams of a human and an AI, combines the raw computational power of algorithms with the intuition and contextual awareness of a human expert. The goal is not to replace the dispatcher but to augment their abilities.
+
+\subsubsection{Collaborative Workflow}
+1.  \textbf{AI Proposes:} The AI system (using methods from Tiers 1-4) generates a complete set of EV routes for the day. It doesn't just present the solution; it uses Explainable AI (XAI) to highlight its reasoning, potential risks, and trade-offs. For example: ``Route 5 is the most fuel-efficient, but has only a 5\% battery buffer upon return. Route 5B is 3\% longer but has a 20\% buffer.''
+2.  \textbf{Human Refines:} The human dispatcher reviews the plan. They can spot issues the AI can't: ``The AI sent Driver Bob through downtown, but he's not experienced with dense city driving. Let's swap his route with Driver Alice's.'' Or, ``The model suggests charging at Station X, but I know from experience that its chargers are unreliable. Let's force a stop at Station Y instead.''
+3.  \textbf{AI Re-Optimizes:} The dispatcher "locks in" their changes. The AI then takes these new, hard constraints and re-optimizes the entire plan in seconds. This rapid feedback loop allows for the creation of a plan that is both mathematically efficient and grounded in practical reality.
+
+This symbiosis leads to solutions that are more robust, trusted, and effective than either human or AI could achieve alone.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig7.png}
+\caption{Figure 7 for line99}
+\end{figure}
+
+\subsection{Tier 8: The Value-Aligned \& Ethical Framework (Green \& Fair Routing)}
+An advanced logistics system must optimize for more than just time and money. It must align with the company's broader values, which can be encoded as constraints or objectives in the planning algorithm.
+
+\subsubsection{Multi-Objective Optimization}
+The EVRP objective function is expanded to become a weighted sum of several factors:
+\begin{equation}
+\text{Minimize} \quad Z = w_1 \cdot \text{Cost} + w_2 \cdot \text{Carbon} + w_3 \cdot \text{Unfairness}
+\end{equation}
+\begin{itemize}
+    \item \textbf{Cost:} The traditional metric of total distance, time, and electricity cost.
+    \item \textbf{Carbon Footprint:} This goes beyond just using an EV. The system connects to the energy grid's API to get real-time carbon intensity data. It will then prioritize charging vehicles when the grid is powered by renewables (e.g., midday for solar, overnight for wind) and avoid charging during peak times when fossil fuel "peaker" plants are active. A route might be slightly longer if it allows for "greener" charging.
+    \item \textbf{Driver Fairness:} The system tracks metrics like total driving time, number of stops, and route difficulty for each driver over a week or month. The "Unfairness" term in the objective function penalizes solutions that consistently give undesirable routes to the same drivers. This promotes employee retention and satisfaction.
+    \item \textbf{Service-Level Prioritization:} The system can be designed to ensure that critical deliveries (e.g., medical supplies) are planned with higher battery buffers and more reliable routes, even at a higher cost, reflecting a value for service reliability over pure efficiency.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig8.png}
+\caption{Figure 8 for line99}
+\end{figure}
+
+\subsection{Tier 9: The Quantum Leap (QUBO Formulation)}
+For classical computers, the EVRP is an NP-hard problem; the time required to find the guaranteed optimal solution explodes as the number of customers grows. Quantum computers, particularly quantum annealers, offer a fundamentally new way to tackle such combinatorial optimization problems. The key is to reformulate the problem into a format they can understand, such as a Quadratic Unconstrained Binary Optimization (QUBO) problem.
+
+\subsubsection{QUBO Formulation}
+A QUBO problem aims to find the minimum of an "energy" function:
+\begin{equation}
+E(q) = \sum_{i} h_i q_i + \sum_{i<j} J_{ij} q_i q_j
+\end{equation}
+where $q_i$ are binary variables (0 or 1), $h_i$ are linear biases, and $J_{ij}$ are quadratic couplings. Our EVRP must be "compiled" into this form.
+
+1.  \textbf{Qubits as Decisions:} We define binary variables that represent our routing decisions. A common choice is $q_{i,p,k}$, which is 1 if customer $i$ is visited at position $p$ in the route of vehicle $k$, and 0 otherwise. These classical binary variables map directly to qubits.
+2.  \textbf{Objective as Energy:} The objective function (e.g., total distance) is translated into the QUBO's energy landscape. For example, the term for the distance between two customers $i$ and $j$ would be added to the energy function if they are adjacent in a route: $\sum_{p,k} d_{ij} \cdot q_{i,p,k} \cdot q_{j,p+1,k}$.
+3.  \textbf{Constraints as Penalties:} The constraints of the EVRP (e.g., "each customer must be visited exactly once") cannot be enforced directly. Instead, they are added as large penalty terms to the energy function. A configuration of qubits that violates a constraint will have a huge energy, making it an undesirable solution. For example, the constraint $\sum_{p,k} q_{i,p,k} = 1$ for each customer $i$ becomes a penalty term like $\lambda \left(1 - \sum_{p,k} q_{i,p,k}\right)^2$, where $\lambda$ is a large penalty coefficient.
+4.  \textbf{Quantum Annealing:} The resulting QUBO is sent to a quantum annealer. The device uses quantum tunneling to explore the energy landscape and find the configuration of qubits with the lowest energy, which corresponds to the optimal (or near-optimal) solution to the original EVRP. Battery constraints are handled similarly, by adding complex penalty terms for routes that would deplete the battery.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line99.fig9.png}
+\caption{Figure 9 for line99}
+\end{figure}
+
+\newpage
+\section{Practice Questions}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.}, wide, labelwidth=!, labelindent=0pt]
+    \item \textbf{(Tier 1)} For the simple network in Figure 1 with one vehicle ($k=1$), write out the full flow conservation constraint (Equation 3) for Customer 1 (C1).
+    \item \textbf{(Tier 2)} Given a depot D, and two customers C1 and C2 with distances $d_{D,C1}=10$ km, $d_{D,C2}=12$ km, and $d_{C1,C2}=8$ km, what is the savings value $s_{C1,C2}$ for merging the routes?
+    \item \textbf{(Tier 3)} In the Dragonfly Algorithm for EVRP, if a dragonfly's position represents a route permutation that is infeasible (i.e., requires more battery than available even with charging), how should the fitness function handle this solution?
+    \item \textbf{(Tier 4)} For a Deep Reinforcement Learning agent solving the EVRP, why is it crucial to include the set of \emph{unvisited} customers in the state representation, in addition to the current location and battery?
+    \item \textbf{(Tier 5)} Propose a "what-if" scenario that a Digital Twin could be used to analyze for a company considering expanding its EV fleet. What specific outputs or Key Performance Indicators (KPIs) would you measure?
+    \item \textbf{(Tier 6)} In a decentralized EV routing system, an EV Agent A needs a charging slot urgently but the nearest station is full. What information could it broadcast to other nearby EV agents to negotiate a solution?
+    \item \textbf{(Tier 7)} A Centaur system proposes a mathematically optimal route that sends a vehicle through a neighborhood known for frequent, unannounced parades. Why might an AI fail to account for this, and what is the value of the human dispatcher in this specific case?
+    \item \textbf{(Tier 8)} Describe a scenario where the objective to minimize the grid's carbon footprint might directly conflict with the objective to minimize operational cost. How would a value-aligned system with weights decide which path to take?
+    \item \textbf{(Tier 9)} In a QUBO formulation for EVRP, what is the purpose of the penalty term $\lambda \left(1 - \sum_{p,k} q_{i,p,k}\right)^2$? What happens to the energy of a proposed solution if customer $i$ is visited twice?
+\end{enumerate}
+
+\end{document}

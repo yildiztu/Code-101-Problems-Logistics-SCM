@@ -1,0 +1,391 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{lipsum} % For placeholder text
+
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+% Listings style definition
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+\section*{Problem 23: The AGV Dispatching \& Battery Management Problem}
+
+\subsection*{The Scenario: The Pulse of the Automated Terminal}
+In a modern automated container terminal, the silent, tireless workhorses are the Automated Guided Vehicles (AGVs). These electric vehicles form the circulatory system of the terminal, transporting containers between the quay cranes (ship-to-shore), the yard stacks, and truck loading zones. The efficiency of the entire terminal hinges on a complex ballet: dispatching the right AGV to the right task at the right time.
+
+However, this is not just a routing problem. Each AGV is powered by a battery with a finite life. A perfectly timed dispatch is useless if the AGV runs out of power midway. This creates a dual optimization challenge:
+\begin{enumerate}
+    \item \textbf{Dispatching:} Assigning transport tasks to AGVs to minimize container wait times and maximize overall throughput.
+    \item \textbf{Battery Management:} Proactively routing AGVs to charging stations to prevent operational failure, without creating queues at chargers or taking too many vehicles out of service at once.
+\end{enumerate}
+Solving this problem means balancing immediate transport demands against the long-term energy needs of the fleet, a critical task for maintaining the terminal's operational rhythm and profitability.
+
+\subsection*{Tier 1: The Pen \& Paper Method (Vehicle Routing Formulation)}
+At its core, the AGV problem can be modeled as a variation of the Vehicle Routing Problem with Time Windows (VRPTW), incorporating battery constraints. This approach provides a rigorous mathematical foundation. For this problem, we select a VRP mathematical model formulation to capture the routing and resource constraints inherent in AGV operations.
+
+\subsubsection*{Mathematical Model}
+\noindent \textbf{Sets and Indices:}
+\begin{itemize}
+    \item $V$: Set of AGVs, indexed by $k$.
+    \item $N$: Set of all nodes in the terminal. $N = P \cup D \cup C \cup \{O\}$, where:
+    \item $P$: Set of pickup nodes for transport jobs, indexed by $i$.
+    \item $D$: Set of drop-off nodes for transport jobs, indexed by $j$. Each pickup $i \in P$ is paired with a drop-off $j \in D$.
+    \item $C$: Set of charging station nodes, indexed by $s$.
+    \item $O$: The central depot/idle location.
+\end{itemize}
+
+\noindent \textbf{Parameters:}
+\begin{itemize}
+    \item $t_{ij}$: Travel time from node $i$ to node $j$.
+    \item $e_{ij}$: Energy consumed to travel from node $i$ to node $j$.
+    \item $B_{max}$: Maximum battery capacity of an AGV.
+    \item $B_{min}$: Minimum safe battery level for an AGV.
+    \item $[E_i, L_i]$: Time window for service at node $i$ (earliest arrival, latest arrival).
+    \item $S_i$: Service time at node $i$.
+    \item $R_s$: Charging rate at station $s \in C$.
+\end{itemize}
+
+\noindent \textbf{Decision Variables:}
+\begin{itemize}
+    \item $x_{ijk}$: Binary variable. 1 if AGV $k$ travels from node $i$ to node $j$; 0 otherwise.
+    \item $a_{ik}$: Arrival time of AGV $k$ at node $i$.
+    \item $b_{ik}$: Battery level of AGV $k$ upon arrival at node $i$.
+    \item $c_{sk}$: Time AGV $k$ spends charging at station $s$.
+\end{itemize}
+
+\noindent \textbf{Objective Function:}
+The primary goal is to minimize the total travel time for all AGVs, which is a proxy for maximizing efficiency.
+\begin{equation}
+\min \sum_{k \in V} \sum_{i \in N} \sum_{j \in N} t_{ij} \cdot x_{ijk}
+\end{equation}
+
+\noindent \textbf{Constraints:}
+\begin{enumerate}
+    \item \textbf{Task Assignment:} Every transport job (pickup-dropoff pair) must be served.
+    \item \textbf{Flow Conservation:} Each AGV that arrives at a node must also depart, except for the start and end of its route at the depot.
+    \item \textbf{Time Windows:} An AGV must arrive at a node within its specified time window.
+    \begin{equation}
+    E_i \leq a_{ik} \leq L_i, \quad \forall i \in P \cup D, k \in V
+    \end{equation}
+    \item \textbf{Time Propagation:} The arrival time at node $j$ is based on the arrival time, service time, and travel time from the previous node $i$.
+    \begin{equation}
+    (a_{ik} + S_i + t_{ij} - a_{jk}) \cdot x_{ijk} \leq 0, \quad \forall i, j \in N, k \in V
+    \end{equation}
+    \item \textbf{Battery Consumption:} The battery level at the next node is the level at the current node minus the energy consumed.
+    \begin{equation}
+    b_{jk} \leq b_{ik} - e_{ij} + M(1-x_{ijk}), \quad \forall i,j \in N, k \in V \quad \text{(M is a large number)}
+    \end{equation}
+    \item \textbf{Battery Charging:} When an AGV visits a charging station, its battery level increases.
+    \begin{equation}
+    b_{jk} \leq b_{ik} - e_{ij} + R_i \cdot c_{ik} + M(1-x_{ijk}), \quad \forall i \in C, j \in N, k \in V
+    \end{equation}
+    \item \textbf{Battery Limits:} Battery level must remain within safe operational limits.
+    \begin{equation}
+    B_{min} \leq b_{ik} \leq B_{max}, \quad \forall i \in N, k \in V
+    \end{equation}
+\end{enumerate}
+
+\subsubsection*{Example and Visualization}
+Consider two tasks: T1 (P1 $\to$ D1) and T2 (P2 $\to$ D2), one charging station (C1), and one AGV. The AGV starts at 100\% battery. The VRP model would find the optimal path that completes both tasks while ensuring the battery never drops below a threshold, inserting a visit to C1 if necessary.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig1.png}
+\caption{A network representation for the AGV problem. Nodes represent pickups, drop-offs, and charging stations. The model finds the optimal route (e.g., solid blue line) that completes tasks while respecting battery constraints.}
+\end{figure}
+
+\subsection*{Tier 2: The Classic Heuristic (Insertion Heuristic)}
+For real-time dispatching, solving a full VRP model is too slow. A faster, "good enough" approach is needed. An insertion heuristic provides a pragmatic solution by building AGV routes incrementally. We select this method for its simplicity and speed in dynamic environments.
+
+\subsubsection*{Algorithm: Battery-Aware Cheapest Insertion}
+The algorithm iteratively assigns tasks to the most suitable AGV by inserting them into existing routes.
+\begin{enumerate}
+    \item \textbf{Initialization:} Create an empty route for each available AGV, starting at the depot with a full battery. Maintain a list of unassigned transport tasks.
+    \item \textbf{Task Selection:} Select the next task to assign from the unassigned list. A common rule is to pick the highest-priority task (e.g., one for an urgent reefer container) or the one with the earliest deadline.
+    \item \textbf{Find Best Insertion:} For the selected task (Pickup $\to$ Dropoff), evaluate all possible insertion positions in every AGV's current route. An insertion means adding `... -> Pickup -> Dropoff -> ...` into the sequence.
+    \item \textbf{Cost Calculation:} The "cost" of an insertion is the extra travel time required. Crucially, the algorithm must verify if the AGV has enough battery for the modified route.
+    \item \textbf{Charging Insertion:} If a proposed route is not feasible due to battery limitations, the algorithm attempts to insert a visit to the nearest charging station. The cost of this new route (with charging) is then recalculated.
+    \item \textbf{Commit Insertion:} Select the AGV and insertion position (with or without charging) that results in the minimum cost increase. Update the AGV's route and battery projection.
+    \item \textbf{Repeat:} Continue until all tasks are assigned.
+\end{enumerate}
+
+\subsubsection*{Pseudocode and Visualization}
+The diagram below illustrates inserting a new task (P2 $\to$ D2) into an AGV's existing route. The heuristic checks both direct insertion and insertion with a detour to a charging station (C1).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig2.png}
+\caption{Enhanced Insertion Heuristic with Node-Based Structure: Professional evaluation of inserting new task (P2 $\to$ D2) with cost analysis and battery feasibility verification}
+\end{figure}
+
+\lstinputlisting[language=Python, caption=Python sketch of the insertion heuristic.]{.././codes-python/line23.py1.py}
+
+\subsection*{Tier 3: The Advanced Algorithm (Ant Colony Optimization)}
+To find higher-quality solutions than simple heuristics, we can use a metaheuristic. Ant Colony Optimization (ACO) is exceptionally well-suited for routing problems. It uses a population of "ants" (simulated agents) to explore the solution space, mimicking how real ants find paths to food by laying down and following pheromone trails. This approach is chosen for its natural mapping to graph-based routing problems.
+
+\subsubsection*{ACO for AGV Dispatching}
+\begin{enumerate}
+    \item \textbf{The Graph:} The terminal is represented as a graph where nodes are tasks (pickup/dropoff pairs) and charging stations. Edges represent feasible transitions between nodes, with weights for travel time and energy cost.
+    \item \textbf{Ants as AGVs:} Each "ant" represents an AGV and constructs a complete tour of tasks. When an ant at node $i$ decides where to go next (node $j$), the choice is probabilistic. The probability depends on:
+    \begin{itemize}
+        \item \textbf{Pheromone Trail ($\tau_{ij}$):} The accumulated "scent" on the edge from $i$ to $j$. Stronger pheromone indicates that this path has been part of good solutions in the past.
+        \item \textbf{Heuristic Information ($\eta_{ij}$):} A greedy measure, such as the inverse of the travel time (shorter distances are more attractive).
+    \end{itemize}
+    \item \textbf{Battery Management:} An ant's "memory" tracks its current simulated battery level. If the battery is low, the probability of choosing a path to a charging station is artificially increased. A solution is invalid (and heavily penalized) if an ant's battery drops below zero.
+    \item \textbf{Pheromone Update:} After all ants have built their routes, the pheromone trails are updated.
+    \begin{itemize}
+        \item \textbf{Evaporation:} A fraction of all pheromones evaporates, preventing convergence to suboptimal solutions.
+        \item \textbf{Deposition:} Ants that found high-quality solutions (e.g., low total travel time) deposit pheromone on the edges they used. The amount deposited is inversely proportional to the solution's cost.
+    \end{itemize}
+    \item \textbf{Iteration:} This process is repeated for many generations, gradually reinforcing the paths that form the best overall dispatching plans.
+\end{enumerate}
+
+\subsubsection*{Visualization and Pseudocode}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig3.png}
+\caption{ACO visualization. Ants build routes, and successful routes are reinforced with pheromones, guiding future ants toward optimal solutions.}
+\end{figure}
+
+\lstinputlisting[language=Python, caption=Python sketch for Ant Colony Optimization.]{.././codes-python/line23.py2.py}
+
+\subsection*{Tier 4: The AI/ML/RL Augmentation Method}
+The AGV problem is highly dynamic: new tasks arrive continuously, travel times fluctuate with congestion, and unexpected delays occur. This is an ideal scenario for Reinforcement Learning (RL), where an "agent" learns an optimal decision-making policy through trial and error. A Deep RL approach, using neural networks, can handle the complex state space of a real terminal.
+
+\subsubsection*{Deep Reinforcement Learning (DRL) for Dispatching}
+We model each AGV as an independent agent, or have a central agent controlling the whole fleet. The agent learns a policy $\pi(a|s)$ that maps a given state $s$ to an optimal action $a$.
+
+\begin{itemize}
+    \item \textbf{State Space ($S$):} A snapshot of the system, which could include:
+        \begin{itemize}
+            \item For each AGV: its current location, battery level, and assigned task (if any).
+            \item A representation of all pending tasks (e.g., pickup/dropoff locations, priorities).
+            \item The status of all charging stations (occupied or free, current queue length).
+            \item A map of current terminal congestion.
+        \end{itemize}
+    \item \textbf{Action Space ($A$):} The set of possible decisions the agent can make at each step. For a central agent, this is complex. For a single AGV agent, it could be:
+        \begin{itemize}
+            \item \texttt{accept\_task(task\_id)}: Accept a specific new transport task.
+            \item \texttt{go\_to\_charge(station\_id)}: Stop current activity and travel to a charging station.
+            \item \texttt{wait\_idle()}: Remain idle at the current location.
+        \end{itemize}
+    \item \textbf{Reward Function ($R$):} This is critical for guiding the learning process. The agent's goal is to maximize cumulative rewards.
+        \begin{itemize}
+            \item \textbf{Positive Reward:} Large reward for successfully completing a transport task.
+            \item \textbf{Negative Reward (Penalty):}
+                \begin{itemize}
+                    \item Small penalty for every time step passed (to encourage speed).
+                    \item Larger penalty for being idle when tasks are available.
+                    \item Very large penalty for the battery level dropping below the critical threshold ($B_{min}$).
+                    \item Penalty for waiting in a queue at a busy charging station.
+                \end{itemize}
+        \end{itemize}
+\end{itemize}
+The agent, powered by a Deep Q-Network (DQN) or similar architecture, learns to balance the immediate reward of completing a task against the potential future penalty of running out of battery.
+
+\subsubsection*{RL Agent-Environment Interaction}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig4.png}
+\caption{The RL agent observes the state of the terminal, takes an action (dispatch command), and receives a reward and the new state, learning over time.}
+\end{figure}
+
+\subsection*{Tier 5: The Integrated Digital Twin}
+A Digital Twin of the terminal creates a high-fidelity, real-time virtual replica of the entire operation. It's not just a static model; it's a living simulation that evolves with its physical counterpart.
+
+\subsubsection*{System Architecture}
+\begin{enumerate}
+    \item \textbf{Physical Layer:} The actual terminal, with its fleet of AGVs, cranes, containers, and charging stations. Each physical asset is equipped with sensors (GPS, battery monitors, RFID/OCR readers) that stream data.
+    \item \textbf{Data Integration Layer:} This layer aggregates data from the physical assets and other systems like the Terminal Operating System (TOS). Data is cleaned, synchronized, and fed into the twin.
+    \item \textbf{Digital Twin Model:} The core of the system. It contains:
+        \begin{itemize}
+            \item \textbf{3D Visualization:} A graphical model of the terminal for human operators.
+            \item \textbf{Physics Engine:} Simulates AGV movement, kinematics, and battery depletion based on load and terrain.
+            \item \textbf{Logic Engine:} Encapsulates the business rules, task dependencies, and operational constraints.
+            \item \textbf{Predictive Models:} AI/ML models (like the RL agent from Tier 4) that forecast future states (e.g., potential bottlenecks, future battery levels).
+        \end{itemize}
+    \item \textbf{Analysis \& Control Layer:} The twin is used for:
+        \begin{itemize}
+            \item \textbf{Real-time Monitoring:} Operators see a holistic view of the operation.
+            \item \textbf{What-If Analysis:} The twin can run "what-if" scenarios offline. For example: "What happens to throughput if we add 3 charging stations at location X?" or "How would a different dispatching algorithm have handled yesterday's peak load?"
+            \item \textbf{Optimized Control:} The optimal dispatch and charging strategy, determined by models running within the twin, is fed back as commands to the physical AGVs.
+        \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Digital Twin Ecosystem Visualization}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig5.png}
+\caption{The Digital Twin synchronizes with the physical terminal, using data to run predictive models and send optimized control commands back to the AGV fleet.}
+\end{figure}
+
+\subsection*{Tier 6: The Autonomous \& Self-Optimizing Ecosystem}
+This tier moves beyond a central "brain" (like the RL dispatcher or Digital Twin) and envisions the AGV fleet as a multi-agent system (MAS). Each AGV is an intelligent, autonomous agent that negotiates for tasks and resources with its peers.
+
+\subsubsection*{Multi-Agent System (MAS) for AGV Operations}
+\begin{enumerate}
+    \item \textbf{AGV as an Agent:} Each AGV is a software agent with its own goals, state, and decision-making capability. Its primary goal is to maximize its own utility (e.g., by completing tasks efficiently), which is aligned with the global goal of terminal efficiency. Its state includes its location, battery level, maintenance schedule, etc.
+    \item \textbf{Decentralized Task Allocation:} Instead of a central dispatcher, tasks are broadcast to the network. A common mechanism is the \textbf{Contract Net Protocol}:
+        \begin{itemize}
+            \item \textbf{Task Announcement:} The Terminal Operating System acts as a "manager" and announces a new transport task with its requirements (pickup, dropoff, deadline).
+            \item \textbf{Bidding:} Available AGV agents evaluate the task based on their own state. An AGV close to the pickup location with a high battery level will submit a low "bid" (e.g., estimated time to complete). An AGV that is far away or needs to charge soon will submit a high bid or no bid at all.
+            \item \textbf{Awarding:} The manager awards the task "contract" to the AGV with the best bid.
+        \end{itemize}
+    \item \textbf{Negotiated Charging:} AGV agents also negotiate for resources. An AGV needing a charge could query charging station agents about their queue lengths and expected wait times. It might even negotiate with a lower-battery AGV to take its place in a queue if it's servicing a higher-priority container.
+    \item \textbf{Emergent Behavior:} The global "optimal" dispatch plan emerges from the local interactions of these self-interested agents. The system is robust and scalable; adding a new AGV simply means adding a new agent to the network.
+\end{enumerate}
+
+\subsubsection*{MAS Communication Architecture}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig6.png}
+\caption{AGV agents bid on tasks posted to a central blackboard. The contract is awarded to the best bidder, leading to emergent, decentralized optimization.}
+\end{figure}
+
+\subsection*{Tier 7: The Human-AI Symbiotic Partnership (The Centaur Model)}
+Even the most advanced autonomous system can benefit from human oversight and intuition. The "Centaur" model (named after the chess-playing concept) combines the raw computational power of AI with the strategic reasoning and exception-handling skills of a human operator.
+
+\subsubsection*{The Control Tower Concept}
+The human operator does not manually dispatch AGVs. Instead, they manage the autonomous system itself from a "control tower" dashboard. The AI handles all routine dispatching and battery management decisions. The human's role is transformed.
+
+\begin{enumerate}
+    \item \textbf{Goal-Oriented Instructions:} The operator sets high-level goals for the AI, such as "Prioritize clearing Reefer containers from Vessel X" or "Reduce average energy consumption by 5\% during the night shift." The AI then adjusts its policy to meet these goals.
+    \item \textbf{Explainable AI (XAI):} The AI's decisions are not a black box. The dashboard uses XAI to explain its reasoning. For example: "I am sending AGV-12 to charge now, despite it having 40\% battery, because my forecast predicts a charging station queue will form in 60 minutes, and this preemptive action will increase overall fleet availability during the peak."
+    \item \textbf{Anomaly Detection and Intervention:} The AI is the first line of defense, flagging anomalies to the human operator.
+        \begin{itemize}
+            \item \textbf{Prediction:} "Warning: Heavy congestion predicted near stack 7B in 20 minutes due to clustered arrivals."
+            \item \textbf{Diagnosis:} "Alert: AGV-08 has been stationary for 5 minutes, which is abnormal. Potential malfunction."
+            \item \textbf{Prescription:} "Suggestion: Three AGVs will require charging simultaneously. I can either delay non-urgent Task Y by 15 minutes or temporarily reduce the minimum battery threshold to 15\% for AGV-05. Please approve a course of action."
+        \end{itemize}
+    \item \textbf{Strategic Override:} The human holds the ultimate authority to intervene. If a last-minute, high-value client request comes in, the operator can manually re-task an AGV, and the AI will dynamically re-optimize the rest of the fleet's plan around this new constraint.
+\end{enumerate}
+
+\subsubsection*{Human-in-the-Loop Workflow}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig7.png}
+\caption{The AI manages routine operations, providing insights and alerts to the human operator, who in turn provides high-level goals and handles critical exceptions.}
+\end{figure}
+
+\subsection*{Tier 9: The Quantum Leap (QUBO Formulation)}
+For certain classes of optimization problems, quantum computers promise to find solutions that are intractable for classical machines. The AGV dispatching problem can be framed as a Quadratic Unconstrained Binary Optimization (QUBO) problem, making it suitable for quantum annealers.
+
+\subsubsection*{QUBO Formulation for AGV Assignment}
+A QUBO problem aims to minimize a quadratic polynomial of binary variables. We simplify the problem to a static assignment of $N$ tasks to $M$ AGVs.
+
+\noindent \textbf{Binary Variables:}
+Let $x_{ik}$ be a binary variable, where:
+\[
+x_{ik} = 
+\begin{cases} 
+1, & \text{if AGV } k \text{ is assigned to task } i \\
+0, & \text{otherwise}
+\end{cases}
+\]
+
+\noindent \textbf{Objective Function (Cost):}
+We want to minimize the total cost (e.g., travel time or energy). Let $C_{ik}$ be the pre-calculated cost for AGV $k$ to perform task $i$. The objective part of our QUBO is:
+\begin{equation}
+H_{obj} = \sum_{i=1}^{N} \sum_{k=1}^{M} C_{ik} x_{ik}
+\end{equation}
+
+\noindent \textbf{Constraints (Penalties):}
+Constraints are enforced by adding penalty terms to the objective function. These terms are constructed to be zero when the constraint is met and a large positive value (a penalty) when it is violated. Let $P$ be a large penalty coefficient.
+
+\begin{enumerate}
+    \item \textbf{Each task must be assigned to exactly one AGV:}
+    For each task $i$, the sum of assignments over all AGVs must be 1. The penalty term is:
+    \begin{equation}
+    H_{task} = P \sum_{i=1}^{N} \left( \sum_{k=1}^{M} x_{ik} - 1 \right)^2
+    \end{equation}
+    This quadratic term is zero only if $\sum_k x_{ik} = 1$.
+    
+    \item \textbf{(Optional) Each AGV can perform at most one task:}
+    For each AGV $k$, the sum of assigned tasks must be less than or equal to 1.
+    \begin{equation}
+    H_{agv} = P \sum_{k=1}^{M} \left( \sum_{i=1}^{N} x_{ik} \right) \left( \sum_{i=1}^{N} x_{ik} - 1 \right)
+    \end{equation}
+    This term is zero if the AGV does 0 or 1 task, and positive otherwise.
+
+    \item \textbf{Battery Constraint:}
+    A simplified battery constraint can be added. Let $E_i$ be the energy for task $i$ and $B_k$ be the available battery for AGV $k$. If $E_i > B_k$, the assignment $(i,k)$ is impossible. We can set the cost $C_{ik}$ to infinity, or add a penalty term using an indicator variable.
+\end{enumerate}
+
+\noindent \textbf{Full QUBO Model:}
+The final QUBO to be minimized by the quantum annealer is the sum of the objective and penalty terms:
+\begin{equation}
+H_{QUBO} = H_{obj} + H_{task} (+ H_{agv} \text{ if needed})
+\end{equation}
+When expanded, this equation is a quadratic polynomial of the binary variables $x_{ik}$, which quantum annealers are designed to solve by finding the ground state (minimum energy configuration).
+
+\subsubsection*{QUBO Matrix Visualization}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line23.fig8.png}
+\caption{Conceptual structure of a QUBO matrix. The diagonal elements hold the linear coefficients (costs), while the off-diagonal elements capture the quadratic interactions between variables, which enforce the constraints.}
+\end{figure}
+
+\newpage
+\section*{Practice Questions}
+\begin{enumerate}
+    \item \textbf{(Tier 1)} You have two AGVs (k1, k2) and one task (P1 $\to$ D1). The travel time from the depot to P1 is 10 minutes for k1 and 12 minutes for k2. Formulate the objective function and the single-task-assignment constraint using the mathematical notation from Tier 1.
+    
+    \item \textbf{(Tier 2)} An AGV has an existing route: Depot $\to$ Task A. A new high-priority task, Task B, becomes available. The travel time from Task A to Task B's pickup location is 5 minutes, but this trip will leave the AGV with insufficient battery to complete Task B. The nearest charging station is 8 minutes from Task A. Describe the two main options the insertion heuristic must evaluate to assign Task B to this AGV.
+    
+    \item \textbf{(Tier 3)} In the Ant Colony Optimization model, suppose a route found by an "ant" causes the AGV's battery to deplete before completing all its tasks. How should the ACO framework handle this invalid solution, and what is the long-term effect of this handling on the pheromone trails?
+
+    \item \textbf{(Tier 4)} Define a simple, effective reward function for a Reinforcement Learning agent controlling a single AGV. Your function should incentivize task completion while penalizing both battery depletion and idleness.
+    
+    \item \textbf{(Tier 5)} You are designing a Digital Twin for your terminal. What specific "what-if" scenario would you run to evaluate the return on investment of purchasing five new, faster-charging AGVs? What key metrics would you measure in the simulation?
+    
+    \item \textbf{(Tier 6)} In a Multi-Agent System where AGVs bid for tasks, describe the "bid" an AGV would submit for a task that is very far from its current location but is located right next to a charging station it needs to visit soon. How does this bid reflect a trade-off?
+
+    \item \textbf{(Tier 7)} An AGV control AI flags an alert to the human operator: "Risk of task starvation in Zone C in 45 minutes." What does this mean, and what two different high-level commands could the operator give the AI to mitigate this situation?
+
+    \item \textbf{(Tier 9)} Formulate the QUBO penalty term for a scenario with two tasks (T1, T2) and one AGV (k1). The AGV can only perform one task. Use the binary variables $x_{1,1}$ (AGV k1 does T1) and $x_{2,1}$ (AGV k1 does T2). The expression should be zero if the AGV does 0 or 1 task, and a positive penalty otherwise.
+
+\end{enumerate}
+
+\end{document}

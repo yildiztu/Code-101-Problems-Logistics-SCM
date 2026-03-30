@@ -1,0 +1,399 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{lettrine}
+
+% pspicture color definitions
+% Professional CMYK color palette
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{lightcyan}{cmyk}{0.3,0,0,0.05}
+\definecolor{lightorange}{cmyk}{0,0.3,0.5,0.1}
+
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+% Listings style definition
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{\textbf{Problem 94: The Multi-Echelon Inventory Optimization Problem}}
+\author{LaTeX-Bot}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{The Multi-Echelon Inventory Optimization Problem}
+
+\subsection{The Scenario: Balancing Stock Across a Global Network}
+
+\lettrine[lines=3]{A}{ny} large-scale retail, manufacturing, or distribution company faces a daunting challenge: how much inventory should be held at each point in its sprawling supply chain? A multi-echelon supply chain consists of multiple levels, or echelons, such as central warehouses that supply regional distribution centers (DCs), which in turn supply retail stores. The inventory decisions at each level are deeply interconnected. Holding too much stock at a central warehouse might reduce transportation costs through bulk shipments but inflates holding costs and risks obsolescence. Conversely, keeping inventory lean throughout the network reduces holding costs but increases the risk of stock-outs at the retail level, leading to lost sales and dissatisfied customers.
+
+The Multi-Echelon Inventory Optimization (MEIO) problem is the complex task of determining the optimal inventory levels (specifically, reorder points and safety stocks) for every Stock Keeping Unit (SKU) at every location in the network. A key phenomenon is a ``risk pooling'' effect, where holding centralized stock can buffer against demand uncertainty more efficiently than decentralized stock. Furthermore, the ``bullwhip effect''---where demand variability amplifies as one moves upstream from the customer to the supplier---is a direct consequence of uncoordinated inventory policies. Solving the MEIO problem is critical for balancing service levels against costs and creating a resilient, efficient supply chain.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig1.png}
+\caption{Figure 1 for line94}
+\end{figure}
+    \caption{A typical four-echelon supply chain network structure.}
+    \label{fig:meio_structure}
+
+\subsection{Tier 1: The Pen \& Paper Method (Stochastic Programming Formulation)}
+
+For a problem defined by uncertainty, like MEIO with its fluctuating demand, stochastic programming provides a powerful mathematical framework. We can formulate a two-stage stochastic linear program. In the first stage, we decide the inventory policy (e.g., base stock levels) before demand is known. In the second stage, after a specific demand scenario unfolds, we calculate the resulting costs (holding, backordering, transportation). The goal is to set a first-stage policy that minimizes the sum of first-stage costs and the \emph{expected} second-stage costs over all possible demand scenarios.
+
+\subsubsection{Model Formulation}
+\textbf{Sets and Indices}
+\begin{itemize}
+    \item $i, j \in L$: Set of locations in the supply chain network.
+    \item $s \in S$: Set of possible demand scenarios, each with a probability $p_s$.
+    \item $t \in T$: Set of time periods.
+\end{itemize}
+
+\textbf{Parameters}
+\begin{itemize}
+    \item $h_i$: Holding cost per unit per period at location $i$.
+    \item $b_i$: Backorder cost (penalty) per unit at a customer-facing location $i$.
+    \item $c_{ij}$: Transportation cost per unit from location $i$ to $j$.
+    \item $d_{is}$: Demand at customer-facing location $i$ under scenario $s$.
+    \item $LT_{ij}$: Lead time for shipments from $i$ to $j$.
+\end{itemize}
+
+\textbf{Decision Variables}
+\begin{itemize}
+    \item $S_i$: Base stock level at location $i$ (First-stage variable). This is the inventory position we aim to maintain.
+    \item $I_{it}^s$: Inventory on hand at location $i$ at the end of period $t$ under scenario $s$ (Second-stage variable).
+    \item $B_{it}^s$: Backordered units at location $i$ at the end of period $t$ under scenario $s$ (Second-stage variable).
+    \item $X_{ijt}^s$: Units shipped from $i$ to $j$ in period $t$ under scenario $s$ (Second-stage variable).
+\end{itemize}
+
+\textbf{Objective Function}
+The objective is to minimize the total expected cost, which includes holding costs and backorder penalties across all locations, time periods, and scenarios.
+\begin{equation}
+\min \sum_{s \in S} p_s \left( \sum_{t \in T} \sum_{i \in L} (h_i I_{it}^s + b_i B_{it}^s) \right)
+\end{equation}
+
+\textbf{Constraints}
+\begin{enumerate}
+    \item \textbf{Inventory Balance:} The inventory at the end of a period is the previous period's inventory plus incoming shipments, minus outgoing shipments. For simplicity, let's consider echelon stock.
+    \begin{equation}
+    I_{it}^s - B_{it}^s = I_{i,t-1}^s - B_{i,t-1}^s + \sum_{j \in \text{Suppliers}(i)} X_{jit-LT_{ji}}^s - \sum_{k \in \text{Customers}(i)} X_{ikt}^s
+    \end{equation}
+    \item \textbf{Demand Fulfillment:} For customer-facing locations, outgoing shipments equal demand in that period.
+    \begin{equation}
+    \sum_{k \in \text{Customers}(i)} X_{ikt}^s = d_{it}^s \quad \forall i \in \text{Retail}, t \in T, s \in S
+    \end{equation}
+    \item \textbf{Inventory Policy (Order-Up-To Level):} Replenishment orders are placed to bring the inventory position (on-hand + in-transit - backorders) up to the base stock level $S_i$. The logic is implicitly handled by the model trying to minimize backorder and holding costs. We can make it explicit.
+    \begin{equation}
+    I_{i,t-1}^s + \text{InTransit}_{it}^s - B_{i,t-1}^s + \text{Order}_{it}^s = S_i
+    \end{equation}
+    \item \textbf{Non-negativity:} All variables must be non-negative.
+    \begin{equation}
+    S_i, I_{it}^s, B_{it}^s, X_{ijt}^s \geq 0
+    \end{equation}
+\end{enumerate}
+
+\subsubsection{Concrete Example}
+Consider a simple two-echelon system: 1 Warehouse (W) supplies 1 Retailer (R).
+\begin{itemize}
+    \item Costs: $h_W = \$1, h_R = \$2$, $b_R = \$10$. Lead time $LT_{WR} = 1$ period.
+    \item Demand Scenarios: 
+    \begin{itemize}
+        \item Scenario 1 (Low Demand): $d_{R}^1 = 10$ units, with probability $p_1 = 0.5$.
+        \item Scenario 2 (High Demand): $d_{R}^2 = 20$ units, with probability $p_2 = 0.5$.
+    \end{itemize}
+\end{itemize}
+We need to find the optimal base stock levels $S_W$ and $S_R$. A solver would explore different values. Let's say it tests a policy of $S_R = 15$ and $S_W=25$.
+
+\begin{itemize}
+    \item \textbf{Scenario 1 (Demand=10):}
+    The retailer needs 10 units. If its initial inventory is, say, 15, it satisfies demand. Ending inventory is $15 - 10 = 5$. Holding cost at retailer: $5 \times \$2 = \$10$. The retailer orders 10 units from the warehouse to bring its inventory position back to 15. The warehouse ships 10 units. Its ending inventory might be, e.g., $25-10=15$. Holding cost at warehouse: $15 \times \$1 = \$15$. Total cost: $\$25$.
+    
+    \item \textbf{Scenario 2 (Demand=20):}
+    The retailer needs 20 units. With initial inventory 15, it has a shortfall of 5 units. Backorder cost: $5 \times \$10 = \$50$. Ending inventory is 0. Retailer orders 20 units. Warehouse ships 20. Its ending inventory might be $25-20=5$. Holding cost at warehouse: $5 \times \$1 = \$5$. Total cost: $\$55$.
+\end{itemize}
+\textbf{Expected Cost for this policy:} $0.5 \times (\$25) + 0.5 \times (\$55) = \$12.50 + \$27.50 = \$40$.
+The stochastic programming solver would systematically evaluate the cost implications of all feasible $S_W$ and $S_R$ values to find the combination that results in the minimum expected total cost.
+
+\subsection{Tier 2: The Classic Heuristic (Sequential Echelon Optimization)}
+
+Solving the full stochastic program is computationally expensive. A widely used heuristic is to decouple the problem and optimize it echelon by echelon, starting from the downstream locations (retailers) and moving upstream.
+
+\subsubsection{Algorithm: Sequential Echelon Optimization}
+The core idea is to treat each location's lead time as the sum of its own processing/shipping time plus the lead time of its supplier. The demand seen by an upstream location is the stream of orders from its downstream customers.
+
+\begin{enumerate}
+    \item \textbf{Optimize Retail Echelon:} For each retail store, analyze its customer demand (mean and standard deviation). Using a standard single-location inventory model (e.g., a continuous review (s,Q) or (R,S) model), calculate its optimal reorder point and order quantity. This calculation must account for its supply lead time from its parent DC.
+    \item \textbf{Characterize DC Demand:} The orders placed by the retailers in Step 1 become the "demand" stream for the parent Distribution Center. This demand stream is often lumpier than the end-customer demand. Calculate the mean and variance of this aggregated order stream.
+    \item \textbf{Optimize DC Echelon:} For each DC, use its calculated demand stream from Step 2 and its supply lead time from the central warehouse to calculate its own optimal inventory policy.
+    \item \textbf{Propagate Upstream:} Repeat this process, moving one echelon up at a time, until the inventory policy for the central warehouse (or factory) is determined.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig2.png}
+\caption{Figure 2 for line94}
+\end{figure}
+    \caption{The sequential logic of the echelon-by-echelon optimization heuristic.}
+    \label{fig:heuristic_logic}
+
+\subsubsection{Python Implementation}
+Here's a conceptual Python implementation. For simplicity, it calculates safety stock based on a simple formula: $SS = Z \times \sigma_{LT}$, where $Z$ is the z-score for a target service level and $\sigma_{LT}$ is the standard deviation of demand during the lead time.
+
+\lstinputlisting[language=Python, caption=Sequential Echelon Optimization Heuristic]{.././codes-python/line94.py1.py}
+
+\textbf{Example Output:}
+Calculating for `Retail_A`: $SS = 1.65 \times 5 \times \sqrt{2} \approx 11.67$. $RP = 20 \times 2 + 11.67 = 51.67$.
+Calculating for `Retail_B`: $SS = 1.65 \times 8 \times \sqrt{2} \approx 18.67$. $RP = 30 \times 2 + 18.67 = 78.67$.
+Demand at `DC1` becomes: Mean = $20+30=50$. Std Dev = $\sqrt{5^2 + 8^2} \approx 9.43$.
+Calculating for `DC1`: $SS = 1.65 \times 9.43 \times \sqrt{5} \approx 34.78$. $RP = 50 \times 5 + 34.78 = 284.78$.
+...and so on for the Central Warehouse (CW).
+
+
+\subsection{Tier 3: The Advanced Algorithm (Moth-Flame Optimization)}
+
+Metaheuristics can search the vast solution space of MEIO policies more effectively than simple heuristics. Moth-Flame Optimization (MFO) is a nature-inspired algorithm that mimics the spiral flight path of moths around a light source (flame).
+
+\textbf{Concept}
+\begin{itemize}
+    \item \textbf{Moths}: Potential solutions. Each moth represents a full inventory policy for the network, e.g., a vector of reorder points $[S_1, S_2, ..., S_N]$ for all $N$ locations.
+    \item \textbf{Flames}: The best solutions found so far. The algorithm maintains a set of flames, and moths are attracted to them.
+    \item \textbf{Fitness}: The fitness of a moth (a solution) is the total network cost (holding + backorder costs), typically evaluated using a simulation model that runs the policy against various demand scenarios.
+    \item \textbf{Search Process}: Moths update their position (their inventory policy vector) by flying in a logarithmic spiral towards a specific flame. Early in the search, moths explore widely around distant flames. As the search progresses, the distance decreases, causing the moths to converge and exploit the regions around the best-known solutions. An adaptive mechanism reduces the number of flames over iterations, focusing the search on the most promising areas.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig3.png}
+\caption{Conceptual illustration of the Moth-Flame Optimization search mechanism.}
+\label{fig:mfo}
+\end{figure}
+
+
+\subsubsection{Pseudocode for MFO in MEIO}
+\begin{enumerate}
+    \item \textbf{Initialize}: Create a population of $M$ moths. Each moth $m_i$ is a vector of inventory parameters for all locations.
+    \item \textbf{Fitness Evaluation}: For each moth $m_i$, run a simulation with its policy against a set of demand scenarios to calculate its total cost $C(m_i)$.
+    \item \textbf{Flame Selection}: Sort the moths by fitness. The current moth population becomes the initial set of flames.
+    \item \textbf{Main Loop (until termination condition is met)}:
+    \begin{enumerate}
+        \item Update the number of flames to be considered (this number typically decreases over iterations).
+        \item For each moth $m_i$:
+        \begin{enumerate}
+            \item Select a corresponding flame $F_j$.
+            \item Calculate the distance $D$ between the moth and the flame.
+            \item Update the moth's position (policy vector) using the logarithmic spiral formula: 
+            $m_i(t+1) = D \times e^{bt} \times \cos(2\pi t) + F_j$, where $t$ is a random number.
+            \item Ensure the new policy parameters are within valid bounds.
+        \end{enumerate}
+        \item \textbf{Evaluate Fitness}: Calculate the cost for all new moth positions.
+        \item \textbf{Update Flames}: Combine the previous flame population and the current moth population. Sort them by fitness and select the top N to be the flames for the next generation.
+    \end{enumerate}
+    \item \textbf{Return}: The best flame found, which is the best inventory policy.
+\end{enumerate}
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method (Demand Pattern Learning with VAEs)}
+
+A major challenge in multi-echelon optimization is modeling the complex, high-dimensional, and correlated demand across many locations. A Variational Autoencoder (VAE), a type of generative deep learning model, can learn a compressed, low-dimensional representation of these demand patterns.
+
+\textbf{How it Works}
+A VAE is trained on historical demand data from all locations. It consists of two neural networks:
+\begin{enumerate}
+    \item \textbf{Encoder}: This network takes a high-dimensional demand vector (e.g., daily sales for 1000 stores) and maps it to a much smaller latent space (e.g., 10 dimensions). This latent vector $z$ captures the essential, underlying "features" of the demand pattern (e.g., a "weekend surge" pattern, a "holiday sales" pattern).
+    \item \textbf{Decoder}: This network takes a point from the latent space $z$ and reconstructs the original high-dimensional demand vector.
+\end{enumerate}
+
+The VAE is trained to minimize two things: the reconstruction error (how well the decoded output matches the input) and a regularization term that ensures the latent space is smooth and continuous.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig4.png}
+\caption{Figure 4 for line94}
+\end{figure}
+    \caption{Architecture of a Variational Autoencoder (VAE) for learning demand patterns.}
+    \label{fig:vae}
+
+\textbf{Application to MEIO}
+\begin{enumerate}
+    \item \textbf{Synthetic Scenario Generation}: By sampling from the learned latent space and passing the points through the decoder, we can generate an infinite number of realistic, synthetic demand scenarios. These are far more representative than simple statistical distributions and can be used to drive more robust simulation-optimization (like the MFO in Tier 3).
+    \item \textbf{State Representation for Reinforcement Learning}: In an RL-based approach to inventory control, the state of the system is immense (inventory at all locations). The VAE's encoder can be used to compress this high-dimensional information, plus the current demand, into a compact latent vector. This vector serves as a manageable and informative state representation for an RL agent that learns an inventory policy.
+\end{enumerate}
+
+\subsection{Tier 5: The Integrated Digital Twin (System-of-Systems Simulation)}
+
+A Digital Twin for MEIO is a high-fidelity, virtual replica of the entire supply chain network. It's not just a model; it's a living simulation, continuously updated with real-time data from the physical world.
+
+\textbf{Architecture Components}
+\begin{itemize}
+    \item \textbf{Physical Layer}: The actual assets---warehouses, trucks, containers, inventory. IoT sensors on these assets feed data upwards.
+    \item \textbf{Data Ingestion Layer}: Collects and processes data from ERP systems (orders, inventory levels), TMS (shipment status), WMS (warehouse operations), and IoT devices (location, temperature).
+    \item \textbf{Modeling \& Simulation Layer}: Contains the digital models of each entity (e.g., a DC model includes capacity, labor, processing times) and the relationships between them. This is where optimization algorithms (like from Tiers 1-4) are embedded.
+    \item \textbf{Analytics \& Visualization Layer}: Provides dashboards, reports, and "what-if" scenario analysis tools for supply chain planners. It allows users to query the twin, test policies, and visualize a policy's impact across the entire network before deployment.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig5.png}
+\caption{Architecture of a Digital Twin for Multi-Echelon Inventory Optimization.}
+\label{fig:digital_twin}
+\end{figure}
+
+\textbf{Concrete Example: Supplier Disruption Scenario}
+A planner wants to know the impact of a major supplier in Vietnam shutting down for 4 weeks.
+\begin{enumerate}
+    \item The planner inputs the scenario into the Digital Twin's UI: ``Supplier VNM-01 offline from T1 to T4.''
+    \item The simulation engine freezes this supply lane in the model.
+    \item It runs a forward simulation using the current inventory policies. The twin projects exactly when and where stock-outs will begin to cascade through the network---first at the central warehouse, then at specific DCs, and finally at retail stores in certain regions.
+    \item The planner can then test mitigation strategies in the twin, such as:
+    \begin{itemize}
+        \item Rerouting orders to an alternate supplier in Mexico (and modeling the new lead times and costs).
+        \item Expediting air freight for critical components.
+        \item Proactively rebalancing inventory from well-stocked DCs to vulnerable ones.
+    \end{itemize}
+\end{enumerate}
+The twin provides a quantified comparison of these strategies, showing the projected impact on service levels and total cost, enabling a data-driven decision.
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership (The Centaur Planner)}
+
+Even the most sophisticated AI cannot account for all real-world nuance. The "Centaur" model pairs an AI optimization engine with an expert human planner, creating a partnership that outperforms either one alone.
+
+\textbf{Workflow}
+\begin{enumerate}
+    \item \textbf{AI Analysis}: The AI engine (using methods from Tiers 1-4) ingests historical data, forecasts, and costs. It computes a theoretically optimal inventory policy for the entire network.
+    \item \textbf{AI Recommendation with XAI}: The AI does not simply output a list of numbers. It presents its recommendations on an Explainable AI (XAI) dashboard, highlighting key drivers. For example: ``Recommend increasing safety stock for SKU-123 at DC-Phoenix by 30\% because its demand variability has increased 50\% and its supplier lead time is becoming less reliable.''
+    \item \textbf{Human Review \& Augmentation}: The human planner reviews the AI's plan. They use their qualitative knowledge to adjust it. For example, the planner might know: ``The AI is right about the variability, but a new, more reliable supplier for SKU-123 is coming online in two months. I will override the increase for now and set a reminder to re-evaluate then.'' or ``The AI suggests cutting stock for Product-Z, but I know we have a major, unannounced marketing campaign next quarter. I will manually increase its stock level.''
+    \item \textbf{Final Decision \& Execution}: The planner approves the augmented policy, which is then executed by the company's ERP and WMS systems.
+    \item \textbf{Feedback Loop}: The results of the deployed policy (actual sales, costs, stock-outs) are fed back into the AI system, allowing it to learn from the human's overrides and improve its future recommendations.
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig6.png}
+\caption{Figure 6 for line94}
+\end{figure}
+    \caption{The Centaur-style Human-AI collaboration loop for inventory planning.}
+    \label{fig:centaur}
+
+\subsection{Tier 8: The Value-Aligned \& Ethical Framework (Equitable Service Levels)}
+
+Pure cost optimization in MEIO can have unintended negative social consequences. For example, an algorithm might learn that it's more profitable to serve wealthy urban areas (high volume, low delivery cost) and allow for more frequent stock-outs of essential goods (e.g., baby formula, medicine, staple foods) in poorer or rural areas (low volume, high delivery cost). A value-aligned system embeds ethical constraints directly into the optimization logic.
+
+\textbf{Ethical Governance Layer}
+This is not a post-processing check; it is an integrated architectural component. The optimization engine's objective function is modified to include penalties for violating fairness principles.
+
+\textbf{Modified Objective Function:}
+\begin{equation}
+\min \left( \text{Total Cost} + \lambda \times \sum_{g \in G} \text{FairnessPenalty}(g) \right)
+\end{equation}
+Where:
+\begin{itemize}
+    \item \texttt{Total Cost} is the standard sum of holding, backorder, and transport costs.
+    \item $G$ is a set of demographic or geographic groups.
+    \item \texttt{FairnessPenalty(g)} is a function that becomes very large if the service level for group $g$ falls below a predefined minimum threshold (e.g., 95\% for essential items).
+    \item $\lambda$ is a large weight that forces the optimizer to prioritize fairness over marginal profit gains.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig7.png}
+\caption{An ethical governance layer wrapping the core optimization engine to enforce fairness constraints.}
+\label{fig:ethical_ai}
+\end{figure}
+
+\subsection{Tier 9: The Quantum Leap (Quantum Annealing for Network Policy)}
+
+MEIO is fundamentally a combinatorial optimization problem. As the number of SKUs and locations grows, the number of possible inventory policies explodes, making it intractable for classical computers. Quantum computing, specifically quantum annealing, offers a new path forward.
+
+\textbf{QUBO Formulation}
+The first step is to recast the MEIO problem into a Quadratic Unconstrained Binary Optimization (QUBO) format, which is the native input for quantum annealers.
+\begin{equation}
+\min_{\mathbf{x}} \sum_i Q_{ii}x_i + \sum_{i<j} Q_{ij}x_i x_j
+\end{equation}
+where $x_i$ are binary variables (0 or 1), and the $Q$ matrix encodes the problem's objective and constraints.
+
+\textbf{Mapping MEIO to QUBO}
+\begin{itemize}
+    \item \textbf{Binary Variables}: We must discretize our policy choices. For each location $i$, we could define binary variables $x_{ik}$ that equals 1 if we choose inventory level $k$ for that location, and 0 otherwise. For example, $x_{i,1}$ for "Low" stock, $x_{i,2}$ for "Medium", $x_{i,3}$ for "High".
+    \item \textbf{Objective Terms (Diagonal Qs)}: The diagonal terms $Q_{ii}$ represent the cost of making a single choice. For example, the cost term associated with $x_{i,3}$ (high stock at location $i$) would be high, reflecting the large holding cost.
+    \item \textbf{Interaction Terms (Off-diagonal Qs)}: The off-diagonal terms $Q_{ij}$ represent the costs or benefits of interactions between choices. This is where the multi-echelon magic happens. For example, the term linking $x_{\text{DC, High}}$ and $x_{\text{Retailer, Low}}$ would have a large penalty, reflecting the high backorder risk at the retailer if its parent DC is also stocked low (in this case, both are high stock, but the principle applies to interactions). The term linking a high stock at a DC and a low stock at its child retailer might have a significant cost penalty.
+    \item \textbf{Constraints}: Constraints like "choose only one stock level per location" must be added as penalty terms to the QUBO.
+\end{itemize}
+
+The resulting QUBO is then mapped to the physical qubit architecture of a quantum annealer (like D-Wave's). The annealer uses quantum tunneling to explore the entire energy landscape of the QUBO and settle into a low-energy state, which corresponds to a low-cost inventory policy.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line94.fig8.png}
+\caption{Mapping the multi-echelon inventory problem onto a quantum annealer's qubit connectivity graph via a QUBO formulation.}
+\label{fig:qubo_map}
+\end{figure}
+
+\newpage
+
+\section{Practice Questions}
+
+\begin{enumerate}
+    \item \textbf{(Tier 1)} For the two-stage stochastic program, write down the specific inventory balance constraint for a regional DC that is supplied by one central warehouse and that supplies three retail stores. Define all your variables and indices clearly.
+
+    \item \textbf{(Tier 2)} Using the Python code for the Sequential Echelon Optimization heuristic, what would be the primary drawback of assuming the demand at an upstream echelon is simply the sum of the means and variances of its children? In reality, what feature of retailer ordering behavior would make this assumption inaccurate?
+
+    \item \textbf{(Tier 3)} In the Moth-Flame Optimization algorithm for MEIO, how would you define the "solution" or "moth position" vector? For a network with one central warehouse, 2 DCs, and 5 retail stores, what would this vector look like? Describe what needs to happen during the "fitness evaluation" step.
+    
+    \item \textbf{(Tier 4)} You are using a VAE to learn demand patterns. After training, you sample a point $z_A$ from the latent space that the decoder reconstructs into a high-demand, high-volatility pattern. You sample another point $z_B$ that decodes to a low-demand, stable pattern. What could you do by sampling a point $z_C$ that is exactly halfway between $z_A$ and $z_B$ on the line connecting them? What does this capability enable for simulation?
+
+    \item \textbf{(Tier 5)} A Digital Twin for MEIO is stress-tested with a scenario where a major shipping lane's transit time doubles due to port congestion. The twin predicts a 20\% drop in service level in the affected regions. Describe three specific, different types of policy changes a planner could test within the twin to mitigate this impact, and what trade-offs each one would involve.
+
+    \item \textbf{(Tier 7)} An AI inventory planner recommends slashing safety stock for a product line by 50\%, citing stable historical sales and reliable supplier lead times. As the human part of the Centaur team, you know that a key raw material for this product is sourced from a geopolitically unstable region. How do you act on the AI's recommendation, and what feedback do you provide to the system?
+
+    \item \textbf{(Tier 8)} A company's value-aligned inventory system has a constraint that the service level for essential medicines must not fall below 99\% in any region. The optimizer finds that to satisfy this, the total network holding cost will increase by 15\%. The CEO asks for a justification. How would you explain the purpose and value of the ethical governance layer?
+
+    \item \textbf{(Tier 9)} To formulate the MEIO problem as a QUBO for a quantum annealer, you must discretize the inventory policies. For a single DC, you decide to allow 4 possible safety stock levels: 50, 100, 150, or 200 units. How many binary variables do you need to represent this choice, and how would you write the constraint that ensures exactly one of ahe four levels is chosen, expressed as a penalty term in the QUBO?
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,306 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+% Professional CMYK color palette
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{lightcyan}{cmyk}{0.3,0,0,0.05}
+\definecolor{lightorange}{cmyk}{0,0.3,0.5,0.1}
+
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Logistics \& Supply Chain Problem-Solving Playbook}
+\author{Chapter 29}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{The Integrated Quay Crane \& Yard Truck Scheduling Problem}
+
+The coordination between quay cranes and yard trucks represents one of the most critical synchronization challenges in modern container terminal operations. This integrated scheduling problem involves the simultaneous optimization of crane assignments and truck routing to minimize vessel turnaround times while maximizing equipment utilization. The complexity arises from the interdependent nature of these operations: quay cranes cannot operate efficiently without available trucks, and trucks experience idle time when cranes are not ready with containers.
+
+\subsection{The Scenario: Port Harmony Terminal's Efficiency Challenge}
+
+Port Harmony Terminal operates 6 quay cranes along a 1,200-meter berth and maintains a fleet of 18 yard trucks serving 4 storage yard blocks. Each incoming container vessel requires the coordinated unloading of 800-1,500 containers, with each crane capable of handling 25-30 moves per hour under optimal conditions. However, the terminal has been experiencing significant efficiency losses due to poor coordination between cranes and trucks.
+
+The terminal's current separate scheduling approach leads to several problems: cranes waiting for trucks (reducing crane productivity from 28 to 18 moves per hour), trucks waiting for cranes (reducing truck utilization from 75\% to 45\%), and containers being temporarily stored in suboptimal locations, requiring additional repositioning moves. The terminal management requires an integrated solution that can coordinate these resources in real-time while adapting to uncertainties such as variable truck travel times, crane breakdown possibilities, and changing vessel stowage plans.
+
+\subsection{Tier 1: The Pen \& Paper Method (Mathematical Formulation)}
+
+The integrated quay crane and yard truck scheduling problem can be formulated as a mixed-integer programming model that simultaneously optimizes crane task assignments and truck routing decisions. This mathematical approach provides the foundation for understanding the problem's structural complexity and identifying optimal solutions for smaller instances.
+
+\textbf{Sets and Indices:}
+\begin{align}
+I &= \{1, 2, \ldots, n\} \text{ (set of containers to be handled)} \\
+J &= \{1, 2, \ldots, m\} \text{ (set of quay cranes)} \\
+K &= \{1, 2, \ldots, p\} \text{ (set of yard trucks)} \\
+L &= \{1, 2, \ldots, q\} \text{ (set of yard locations)}
+\end{align}
+
+\textbf{Parameters:}
+\begin{align}
+t_{ij}^{QC} &= \text{time for crane } j \text{ to handle container } i \\
+t_{kl}^{travel} &= \text{travel time for truck } k \text{ to location } l \\
+d_{ij} &= \text{distance penalty if crane } j \text{ handles container } i \\
+s_i &= \text{yard storage location for container } i \\
+M &= \text{large positive constant}
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+x_{ij} &= \begin{cases} 
+1 & \text{if container } i \text{ is assigned to crane } j \\
+0 & \text{otherwise}
+\end{cases} \\
+y_{ik} &= \begin{cases} 
+1 & \text{if container } i \text{ is transported by truck } k \\
+0 & \text{otherwise}
+\end{cases} \\
+z_{ijk} &= \begin{cases} 
+1 & \text{if container } i \text{ is handled by crane } j \text{ and truck } k \\
+0 & \text{otherwise}
+\end{cases} \\
+C_{\max} &= \text{maximum completion time (makespan)}
+\end{align}
+
+\textbf{Objective Function:}
+\begin{equation}
+\min C_{\max} + \alpha \sum_{i \in I} \sum_{j \in J} \sum_{k \in K} d_{ij} z_{ijk}
+\end{equation}
+
+\textbf{Constraints:}
+\begin{align}
+\sum_{j \in J} x_{ij} &= 1 \quad \forall i \in I \text{ (each container assigned to one crane)} \\
+\sum_{k \in K} y_{ik} &= 1 \quad \forall i \in I \text{ (each container assigned to one truck)} \\
+z_{ijk} &\leq x_{ij} \quad \forall i \in I, j \in J, k \in K \\
+z_{ijk} &\leq y_{ik} \quad \forall i \in I, j \in J, k \in K \\
+\sum_{i \in I} z_{ijk} &\leq 1 \quad \forall j \in J, k \in K \text{ (synchronization constraint)} \\
+C_{\max} &\geq \sum_{i \in I} t_{ij}^{QC} x_{ij} + \sum_{i \in I} t_{k,s_i}^{travel} y_{ik} \quad \forall j \in J, k \in K
+\end{align}
+
+The model's key insight lies in the synchronization constraints that ensure cranes and trucks work in harmony. The binary variable $z_{ijk}$ captures the three-way relationship between containers, cranes, and trucks, preventing resource conflicts and idle time.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line29.fig1.png}
+\caption{Figure 1 for line29 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\textbf{Concrete Example:} Consider 3 containers, 2 cranes, and 2 trucks. Container handling times: $t_{11}^{QC} = 2$, $t_{12}^{QC} = 3$, $t_{21}^{QC} = 2.5$, $t_{22}^{QC} = 2$, $t_{31}^{QC} = 3$, $t_{32}^{QC} = 2.5$ minutes. Travel times to yard: $t_1^{travel} = 4$, $t_2^{travel} = 3.5$ minutes.
+
+Optimal solution: $x_{11} = x_{22} = x_{32} = 1$ (crane assignments), $y_{11} = y_{21} = y_{32} = 1$ (truck assignments), giving $C_{\max} = 9.5$ minutes with perfect synchronization between cranes and trucks.
+
+\subsection{Tier 2: The Classic Heuristic (Python Implementation)}
+
+The Earliest Deadline First (EDF) priority-based algorithm provides an efficient heuristic solution for the integrated scheduling problem. This approach prioritizes containers based on urgency while maintaining coordination between cranes and trucks through a synchronized dispatching mechanism.
+
+The algorithm operates by maintaining priority queues for both cranes and trucks, with containers sorted by their deadline criticality. The key innovation lies in the coordination mechanism that ensures crane-truck pairs are synchronized, preventing the inefficiencies that arise from independent scheduling.
+
+\textbf{Algorithm Complexity:} The EDF-based coordination algorithm has time complexity $O(n \log n + nm + np)$, where $n$ is the number of containers, $m$ is the number of cranes, and $p$ is the number of trucks.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line29.fig2.png}
+\caption{Figure 2 for line29 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\lstinputlisting[language=Python]{.././codes-python/line29.py1.py}
+
+\textbf{Concrete Example:} With 5 containers having deadlines [20, 15, 25, 18, 22] minutes and handling times [3, 2.5, 4, 3.5, 2] minutes, the EDF algorithm produces the following schedule:
+
+Container 2 (priority: 10.25) → QC1-T1: 0-6.5 min
+Container 4 (priority: 11.85) → QC2-T2: 0-7.0 min  
+Container 1 (priority: 12.90) → QC1-T1: 6.5-13.5 min
+Container 5 (priority: 14.40) → QC2-T2: 7.0-12.5 min
+Container 3 (priority: 16.20) → QC1-T1: 13.5-22.5 min
+
+Total makespan: 22.5 minutes with 95\% resource utilization.
+
+\subsection{Tier 3: The Advanced Algorithm (Metaheuristic Implementation)}
+
+Ant Colony Optimization (ACO) provides a powerful metaheuristic approach for the integrated scheduling problem by modeling the solution space as a graph where artificial ants construct schedules by following pheromone trails that represent the quality of crane-truck-container assignments.
+
+The ACO algorithm excels in this domain because it naturally handles the combinatorial explosion of possible crane-truck-container combinations while learning from successful scheduling patterns. Each ant constructs a complete schedule by probabilistically selecting assignments based on pheromone concentrations and heuristic information about processing times and distances.
+
+\textbf{Algorithm Components:}
+- \textbf{Construction Graph:} Nodes represent assignment decisions, edges represent feasible transitions
+- \textbf{Pheromone Model:} $\tau_{ijk}$ represents the learned quality of assigning container $i$ to crane $j$ and truck $k$
+- \textbf{Heuristic Information:} $\eta_{ijk} = 1/(t_{ij}^{QC} + t_{k}^{travel})$ prioritizes efficient assignments
+- \textbf{Transition Probability:} $p_{ijk} = \frac{\tau_{ijk}^{\alpha} \cdot \eta_{ijk}^{\beta}}{\sum \tau^{\alpha} \cdot \eta^{\beta}}$
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line29.fig3.png}
+\caption{Figure 3 for line29 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\lstinputlisting[language=Python]{.././codes-python/line29.py2.py}
+
+\textbf{Concrete Example:} For a 3-container, 2-crane, 2-truck instance, the ACO algorithm with 20 ants and 100 iterations produces:
+
+Container 0 → Crane 1, Truck 0: 0.0-6.5 min (pheromone: 0.85)
+Container 1 → Crane 0, Truck 1: 0.0-5.5 min (pheromone: 0.92)  
+Container 2 → Crane 1, Truck 0: 6.5-14.0 min (pheromone: 0.73)
+
+Final makespan: 14.0 minutes. The algorithm converged after 60 iterations, with pheromone trails clearly favoring the optimal crane-truck combinations.
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method}
+
+Unsupervised learning techniques, particularly clustering algorithms, provide valuable insights for the integrated scheduling problem by identifying patterns in container characteristics, crane-truck pair efficiencies, and temporal demand variations. This approach uses K-means clustering to create container groups with similar processing requirements, enabling more efficient batch scheduling and resource allocation.
+
+The clustering-based approach segments containers into homogeneous groups based on features such as handling time, yard destination, priority level, and vessel position. This segmentation allows for specialized scheduling strategies for each cluster, reducing the complexity of the overall optimization problem while improving solution quality.
+
+\textbf{Feature Engineering:} The algorithm uses a 6-dimensional feature space: normalized handling time, yard block distance, deadline urgency, container weight class, crane accessibility, and vessel bay position.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line29.fig4.png}
+\caption{Figure 4 for line29 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+\lstinputlisting[language=Python]{.././codes-python/line29.py3.py}
+
+\textbf{Concrete Example:} With 12 containers clustered into 3 groups:
+
+\textbf{Cluster 0 (Fast \& Urgent):} 4 containers with avg handling time 2.1 min, avg urgency 0.85
+- Strategy: priority\_fast\_track
+- Assignments: Best crane-truck pairs (0,0) and (1,1)
+- Completion: 8.5 minutes average
+
+\textbf{Cluster 1 (Medium):} 5 containers with avg handling time 3.2 min, avg urgency 0.45  
+- Strategy: balanced\_allocation
+- Round-robin assignments across all pairs
+- Completion: 12.3 minutes average
+
+\textbf{Cluster 2 (Slow \& Far):} 3 containers with avg handling time 4.8 min, avg distance 8.2 units
+- Strategy: batch\_processing  
+- Grouped by yard block, same truck used
+- Completion: 15.7 minutes average
+
+Total schedule makespan: 18.2 minutes with 89\% resource utilization and clear specialization by container type.
+
+\subsection{Tier 5: The Integrated Digital Twin (System-of-Systems Simulation)}
+
+The digital twin paradigm transforms the integrated scheduling problem from isolated optimization to comprehensive system simulation, where virtual replicas of cranes, trucks, containers, and yard infrastructure interact in real-time. This approach enables continuous ``what-if'' analysis, predictive maintenance scheduling, and dynamic resource reallocation based on live operational data.
+
+The digital twin integration creates a feedback loop between the physical terminal and its virtual counterpart, allowing operators to test scheduling modifications, simulate equipment failures, and optimize resource allocation before implementing changes in the real system. This capability is particularly valuable for container terminals operating under uncertain conditions with time-sensitive operations.
+
+\textbf{Key Components:} Physical asset sensors, real-time data streaming, 3D simulation environment, predictive analytics engine, automated decision support, and bi-directional synchronization protocols.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line29.fig5.png}
+\caption{Figure 5 for line29 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+The digital twin implementation integrates multiple data streams: crane position sensors (GPS + encoders), truck RFID tracking, container RFID tags, weather monitoring, and traffic flow sensors. Machine learning models process this data to predict equipment availability, estimate processing times, and identify potential bottlenecks before they occur.
+
+\textbf{Simulation Architecture:} The system employs discrete-event simulation with continuous synchronization, where each physical asset has a virtual counterpart updated every 5 seconds. The simulation engine processes approximately 10,000 events per minute, including crane movements, truck dispatches, container picks/drops, and resource state changes.
+
+\textbf{Concrete Example:} During peak operations at Port Harmony, the digital twin detected that Crane 3 showed vibration patterns indicating bearing wear (maintenance predicted in 6 days). The system automatically rescheduled Crane 3's assignments to reduce load by 20\% while increasing Crane 2 and Crane 4 utilization by 8\% each. This reallocation maintained overall productivity at 96\% of normal levels while preventing a potential 4-hour equipment failure that would have reduced terminal capacity by 15\%.
+
+The ``what-if'' analysis capability enabled testing 50 different scheduling scenarios in 2 minutes, identifying that reassigning 12 specific containers to alternative crane-truck combinations would reduce the vessel's port stay by 45 minutes. The system's predictive models also forecasted that implementing this schedule during the predicted weather window (light rain, 15 mph winds) would maintain safety margins while achieving the time savings.
+
+Integration benefits include 23\% reduction in crane idle time, 18\% improvement in truck utilization, 12\% decrease in container dwell time, and 89\% accuracy in predicting schedule adherence within 15-minute windows.
+
+\subsection{Tier 6: The Autonomous \& Self-Optimizing Ecosystem (Distributed Intelligence)}
+
+The transition to autonomous operations transforms the integrated scheduling problem from centralized control to distributed intelligence, where individual cranes and trucks operate as intelligent agents that negotiate, collaborate, and self-optimize their schedules through multi-agent coordination protocols.
+
+This ecosystem employs auction-based mechanisms where containers are ``advertised'' and crane-truck pairs submit bids based on their current state, capabilities, and efficiency metrics. The system eliminates single points of failure while enabling emergent optimization patterns that adapt to changing conditions without human intervention.
+
+\textbf{Agent Architecture:} Each crane and truck operates as an autonomous agent with individual objectives, communication protocols, and decision-making algorithms. Agents maintain local models of their environment and capabilities while participating in global coordination through distributed consensus mechanisms.
+
+\begin{center}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line29.fig6.png}
+\caption{Figure 6 for line29 (standalone pspicture)}
+\end{figure}
+\end{center}
+
+The autonomous ecosystem implements a sophisticated auction mechanism where containers are dynamically allocated through competitive bidding. Each crane-truck pair calculates bids based on their current workload, efficiency for the specific container type, travel distances, and opportunity costs of alternative assignments.
+
+\textbf{Auction Protocol:} The system uses a modified Vickrey-Clarke-Groves (VCG) auction where agents submit sealed bids, and winners pay the second-highest bid plus externality costs. This mechanism ensures truthful bidding and socially optimal outcomes while maintaining individual agent incentives.
+
+\textbf{Distributed Learning:} Agents employ multi-agent reinforcement learning with experience sharing, where successful coordination patterns are propagated through the network. Each agent maintains a Q-table for action-value estimates and shares successful experiences with neighboring agents through a gossip protocol.
+
+\textbf{Concrete Example:} When a vessel with 240 containers arrives, the system automatically initiates 240 separate auctions. Crane Agent 1 (currently at 60\% utilization) bids \$85 for Container C047 (heavy, near its position), while Crane Agent 2 (at 75\% utilization) bids \$78 for the same container. Truck Agent 3 forms a coalition with Crane Agent 1, submitting a joint bid of \$92 that includes coordinated timing.
+
+The VCG mechanism allocates Container C047 to the Crane 1-Truck 3 coalition at a price of \$78 (second-highest bid). This allocation emerges without central planning, and the agents automatically coordinate their schedules to minimize idle time.
+
+Fault tolerance demonstration: When Crane Agent 2 experiences a communication failure, the remaining agents automatically redistribute its pending containers through emergency auctions, maintaining 87\% of normal throughput. The system's Byzantine Fault Tolerant consensus ensures coordination continues with 5 of 6 agents operational.
+
+Learning outcomes show that after 100 vessel operations, agents developed specialized strategies: Crane Agent 1 became efficient at heavy containers (15\% faster than average), while Truck Agent 2 optimized routes to reduce travel time by 22\%. These emergent specializations improved overall system performance by 19\% compared to random assignment.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 Question:} Port Marina operates 4 quay cranes and 6 yard trucks. A vessel arrives with 8 containers requiring unloading. Container handling times by each crane are: C1[3,4,2,5], C2[2,3,4,3], C3[4,2,3,4], C4[3,5,2,3], C5[2,4,3,5], C6[3,2,4,2], C7[4,3,2,4], C8[2,3,5,3] minutes. Truck travel times to yard blocks are 4, 3.5, 5, 4.5, 3, and 6 minutes respectively. Formulate this as a mixed-integer programming problem and solve for the minimum makespan assignment.
+
+\textbf{Tier 2 Question:} Implement an Earliest Deadline First heuristic for the same 8-container problem. Container deadlines are [25, 20, 30, 22, 18, 28, 24, 21] minutes from vessel arrival. Calculate the priority scores and generate the complete schedule showing which containers are assigned to which crane-truck pairs and at what times.
+
+\textbf{Tier 3 Question:} Design an Ant Colony Optimization algorithm for a larger instance with 15 containers, 3 cranes, and 4 trucks. Set up the pheromone matrix structure, define the heuristic information calculation, and specify the ant construction procedure. Run 5 iterations manually and show how pheromone levels evolve.
+
+\textbf{Tier 4 Question:} Given 20 containers with features [handling\_time, yard\_distance, urgency, weight], apply K-means clustering to group them into 4 clusters. Sample data: Container 1[2.5, 4.2, 0.8, 1], Container 2[4.1, 7.3, 0.3, 3], etc. Determine the cluster-specific scheduling strategies and predict the resource allocation efficiency improvement.
+
+\textbf{Tier 5 Question:} Design a digital twin architecture for a terminal with 6 cranes and 12 trucks. Specify the sensor requirements, data synchronization protocols, and simulation update frequency. Calculate the computational resources needed to process 15,000 events per minute and maintain synchronization latency below 200ms.
+
+\textbf{Tier 6 Question:} Implement a multi-agent auction system for 10 containers, 3 crane agents, and 4 truck agents. Define the bidding strategies, auction clearing mechanism, and coalition formation rules. Simulate 3 auction rounds and show how the system handles the failure of one crane agent during the second round.
+
+\end{document}

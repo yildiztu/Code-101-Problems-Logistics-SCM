@@ -1,0 +1,378 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Carbon Footprint Modeling Problem}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{The Carbon Footprint Modeling Problem}
+
+The modern supply chain faces unprecedented pressure to quantify, track, and minimize its environmental impact. Carbon footprint modeling has evolved from a compliance exercise to a strategic imperative that directly affects operational efficiency, regulatory compliance, and competitive positioning in increasingly environmentally conscious markets.
+
+\subsection{The Scenario: Optimizing a Multi-Modal Supply Network}
+
+GlobalLogistics Corp operates a complex supply network spanning multiple continents, transportation modes, and thousands of suppliers. The company must calculate and optimize the total greenhouse gas (GHG) emissions across their entire supply chain, including Scope 1 (direct emissions), Scope 2 (indirect energy-related emissions), and Scope 3 (value chain emissions). The challenge involves modeling carbon emissions from warehouse operations, transportation routes, supplier activities, and end-of-life product disposal while maintaining cost efficiency and service levels.
+
+The network consists of 15 manufacturing facilities, 45 distribution centers, 200 suppliers, and serves 10,000 delivery locations across North America and Europe. Each facility has different energy sources, transportation options include trucks, rail, ships, and aircraft with varying carbon intensities, and suppliers have different sustainability profiles. The company aims to achieve net-zero emissions by 2030 while maintaining profitability and customer satisfaction.
+
+\subsection{Tier 1: The Pen \& Paper Method (Mathematical Formulation)}
+
+We model the carbon footprint optimization as a multi-objective vehicle routing problem with environmental constraints. The mathematical formulation captures the complex relationships between operational decisions and carbon emissions across the entire supply network.
+
+\textbf{Sets and Indices:}
+\begin{align}
+N &= \{1, 2, \ldots, n\} \quad \text{set of all nodes (facilities, suppliers, customers)} \\
+V &= \{1, 2, \ldots, v\} \quad \text{set of vehicles (different modes and types)} \\
+K &= \{1, 2, \ldots, k\} \quad \text{set of products/commodities} \\
+T &= \{1, 2, \ldots, t\} \quad \text{set of time periods} \\
+S &= \{1, 2, 3\} \quad \text{set of emission scopes}
+\end{align}
+
+\textbf{Parameters:}
+\begin{align}
+d_{ij} &= \text{distance between nodes } i \text{ and } j \\
+e_{v,k} &= \text{carbon emission factor for vehicle } v \text{ carrying product } k \text{ (kg CO}_2\text{e/km)} \\
+q_{v} &= \text{capacity of vehicle } v \\
+c_{ij,v} &= \text{transportation cost from } i \text{ to } j \text{ using vehicle } v \\
+f_{i,s,t} &= \text{facility emissions at node } i \text{ for scope } s \text{ in period } t \\
+C_{max} &= \text{maximum allowable total carbon emissions} \\
+\alpha &= \text{weight parameter for carbon objective} \\
+\beta &= \text{weight parameter for cost objective}
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+x_{ij,v,k,t} &= \begin{cases} 1 & \text{if vehicle } v \text{ travels from } i \text{ to } j \text{ carrying product } k \text{ in period } t \\ 0 & \text{otherwise} \end{cases} \\
+y_{i,k,t} &= \text{quantity of product } k \text{ handled at facility } i \text{ in period } t \\
+z_{i,t} &= \begin{cases} 1 & \text{if facility } i \text{ is active in period } t \\ 0 & \text{otherwise} \end{cases}
+\end{align}
+
+\textbf{Objective Function:}
+\begin{align}
+\text{Minimize: } &\alpha \sum_{t \in T} \left[ \sum_{i,j \in N} \sum_{v \in V} \sum_{k \in K} x_{ij,v,k,t} \cdot d_{ij} \cdot e_{v,k} + \sum_{i \in N} \sum_{s \in S} f_{i,s,t} \cdot z_{i,t} \right] \\
+&+ \beta \sum_{t \in T} \sum_{i,j \in N} \sum_{v \in V} \sum_{k \in K} x_{ij,v,k,t} \cdot c_{ij,v}
+\end{align}
+
+\textbf{Constraints:}
+\begin{align}
+\sum_{v \in V} \sum_{j \in N} x_{ij,v,k,t} &= z_{i,t} \quad \forall i \in N, k \in K, t \in T \tag{Flow conservation} \\
+\sum_{k \in K} y_{i,k,t} &\leq q_v \sum_{j \in N} x_{ij,v,k,t} \quad \forall i \in N, v \in V, t \in T \tag{Capacity constraints} \\
+\sum_{t \in T} \sum_{i,j \in N} \sum_{v \in V} \sum_{k \in K} x_{ij,v,k,t} \cdot d_{ij} \cdot e_{v,k} &\leq C_{max} \tag{Carbon budget} \\
+\sum_{j \in N} x_{ij,v,k,t} &\leq z_{i,t} \quad \forall i \in N, v \in V, k \in K, t \in T \tag{Facility activation}
+\end{align}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line44.fig1.png}
+\caption{Carbon Footprint Supply Network Model}
+\end{figure}
+
+\textbf{Concrete Example:}
+
+Consider a simplified network with 3 suppliers, 2 manufacturing plants, and 4 customers. We have trucks (0.8 kg CO$_2$e/km) and rail (0.3 kg CO$_2$e/km) available.
+
+Given distances:
+- Supplier 1 to Plant A: 100 km
+- Supplier 2 to Plant B: 150 km  
+- Plant A to Customer 1: 80 km
+- Plant B to Customer 2: 120 km
+
+Facility emissions:
+- Plant A: 50 kg CO$_2$e/day
+- Plant B: 75 kg CO$_2$e/day
+
+Optimal solution using truck for short distances ($<$ 100 km) and rail for longer distances:
+- Total transportation emissions: $(100 \times 0.8) + (150 \times 0.3) + (80 \times 0.8) + (120 \times 0.3) = 245$ kg CO$_2$e
+- Total facility emissions: $50 + 75 = 125$ kg CO$_2$e  
+- \textbf{Total daily carbon footprint: 370 kg CO$_2$e}
+
+\subsection{Tier 2: The Classic Heuristic (Sweep Algorithm Implementation)}
+
+The sweep algorithm provides an efficient heuristic for carbon-aware route optimization by systematically exploring the solution space in angular increments. This geometric approach naturally clusters nearby delivery points while considering emission factors for different transportation modes.
+
+\textbf{Algorithm Concept:}
+
+The sweep algorithm rotates a ray from a central depot, systematically grouping customers into routes based on angular position and carbon efficiency. Unlike traditional implementations focused solely on distance minimization, our carbon-aware version prioritizes emission reduction through intelligent mode selection and route consolidation.
+
+\textbf{Time Complexity Analysis:}
+- Sorting customers by polar angle: $O(n \log n)$
+- Route construction: $O(n)$  
+- Carbon calculation for each route: $O(n)$
+- Total complexity: $\mathbf{O(n \log n)}$
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line44.fig2.png}
+\caption{Sweep Algorithm for Carbon-Aware Routing}
+\end{figure}
+
+\textbf{Pseudocode:}
+
+\lstinputlisting[language=Python, caption=Carbon-Aware Sweep Algorithm]{.././codes-python/line44.py1.py}
+
+\textbf{Concrete Example:}
+
+Input data for 6 customers around a central depot:
+- Customer coordinates: C1(8.5,6), C2(9,4.5), C3(8.5,2), C4(4.5,2.5), C5(3,4), C6(4,6.5)
+- Vehicle types: \{``Truck'': 0.8 kg CO$_2$e/km, ``Van'': 0.6 kg CO$_2$e/km\}
+- Vehicle capacity: 100 units each
+
+Algorithm execution:
+1. \textbf{Angular sorting:} C6(56°), C1(45°), C2(0°), C3(-45°), C4(-33°), C5(180°)
+2. \textbf{Route 1:} Depot → C6 → C1 → Depot (Distance: 18.2 km, Van selected, Emissions: 10.9 kg CO$_2$e)  
+3. \textbf{Route 2:} Depot → C2 → C3 → Depot (Distance: 15.8 km, Van selected, Emissions: 9.5 kg CO$_2$e)
+4. \textbf{Route 3:} Depot → C4 → C5 → Depot (Distance: 12.1 km, Van selected, Emissions: 7.3 kg CO$_2$e)
+
+\textbf{Total carbon footprint: 27.7 kg CO$_2$e across all routes}
+
+\subsection{Tier 3: The Advanced Algorithm (Grasshopper Optimization Implementation)}
+
+Grasshopper Optimization Algorithm (GOA) mimics the swarming behavior of grasshoppers to solve complex carbon footprint optimization problems. The algorithm balances exploration and exploitation through mathematical modeling of grasshopper social interactions, making it particularly effective for multi-modal transportation networks with complex emission interdependencies.
+
+\textbf{Mathematical Foundation:}
+
+The position update equation models grasshopper movement with social forces:
+\begin{align}
+X_i^{t+1} &= c \left( \sum_{j=1, j \neq i}^{N} c \frac{|ub_d - lb_d|}{2} s(|x_j^t - x_i^t|) \frac{x_j^t - x_i^t}{d_{ij}} \right) + \hat{T_d} \\
+s(r) &= f e^{-r/l} - e^{-r} \quad \text{(Social interaction function)} \\
+c^{t+1} &= c_{max} - t \frac{c_{max} - c_{min}}{T} \quad \text{(Decreasing coefficient)}
+\end{align}
+
+Where $s(r)$ represents the social interaction strength, $c$ controls exploration vs. exploitation balance, and $\hat{T_d}$ is the target position (best solution).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line44.fig3.png}
+\caption{Grasshopper Optimization for Carbon Footprint Minimization}
+\end{figure}
+
+\textbf{Pseudocode:}
+
+\lstinputlisting[language=Python, caption=Grasshopper Optimization Algorithm for Carbon Footprint]{.././codes-python/line44.py2.py}
+
+\textbf{Concrete Example:}
+
+Network configuration:
+- 5 facilities with emissions: \{F1: 120, F2: 85, F3: 200, F4: 150, F5: 95\} kg CO$_2$e/day
+- 3 vehicle types: \{Truck: 0.8, Rail: 0.3, Ship: 0.15\} kg CO$_2$e/km  
+- 8 delivery routes with varying distances
+
+GOA execution results after 500 iterations:
+- \textbf{Iteration 0:} Random solution = 2,847 kg CO$_2$e/day
+- \textbf{Iteration 100:} Improved solution = 1,923 kg CO$_2$e/day  
+- \textbf{Iteration 300:} Better solution = 1,456 kg CO$_2$e/day
+- \textbf{Iteration 500:} Optimal solution = 1,203 kg CO$_2$e/day
+
+Final optimized configuration:
+- Active facilities: F2, F5 (lowest emission facilities)
+- Transportation: 60\% rail, 30\% ship, 10\% truck (prioritizing low-carbon modes)
+- \textbf{Total carbon reduction: 57.7\% compared to initial solution}
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method (Neural Architecture Search)}
+
+Neural Architecture Search (NAS) automatically designs deep learning models optimized for carbon footprint prediction and optimization in complex supply networks. Unlike manual neural network design, NAS explores vast architectural spaces to discover novel network topologies that can capture intricate relationships between operational decisions and environmental impacts.
+
+\textbf{NAS Framework for Carbon Footprint Modeling:}
+
+The search space includes:
+- \textbf{Network depth:} 3-15 layers for different complexity levels
+- \textbf{Layer types:} Dense, LSTM, GRU, Attention mechanisms
+- \textbf{Activation functions:} ReLU, Swish, GELU for non-linear modeling  
+- \textbf{Skip connections:} For gradient flow and feature reuse
+- \textbf{Regularization:} Dropout, BatchNorm for generalization
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line44.fig4.png}
+\caption{Neural Architecture Search for Carbon Footprint Prediction}
+\end{figure}
+
+\textbf{Implementation:}
+
+\lstinputlisting[language=Python, caption=NAS for Carbon Footprint Modeling]{.././codes-python/line44.py3.py}
+
+\textbf{Concrete Example:}
+
+NAS experiment on supply chain dataset with 50,000 historical records:
+
+\textbf{Search Results after 100 architecture trials:}
+- \textbf{Best Architecture:} 4 layers [Dense(128) → LSTM(256) → Dense(64) → Output(1)]
+- \textbf{Activation Functions:} Swish for dense layers, Tanh for LSTM  
+- \textbf{Performance Metrics:}
+  - Mean Absolute Error: 45.3 kg CO$_2$e
+  - R² Score: 0.94
+  - Inference Time: 12 milliseconds
+
+\textbf{Real-world Prediction Example:}
+Input features: \{Total distance: 2,450 km, Truck: 40\%, Rail: 60\%, Active facilities: 3, Capacity utilization: 78\%\}
+
+NAS Model Prediction: \textbf{1,847 kg CO$_2$e} (±45.3 kg uncertainty)
+Actual Measured: 1,892 kg CO$_2$e  
+\textbf{Prediction Accuracy: 97.6\%}
+
+\subsection{Tier 5: The Integrated Digital Twin (System-of-Systems Simulation)}
+
+The Digital Twin paradigm transforms carbon footprint management from reactive measurement to proactive optimization through real-time system-wide simulation. This approach creates a virtual replica of the entire supply network, enabling continuous what-if analysis and dynamic carbon optimization across interconnected subsystems.
+
+\textbf{Digital Twin Architecture:}
+
+The system integrates multiple simulation engines operating at different temporal and spatial scales:
+- \textbf{Microscopic Level:} Individual vehicle routing and facility operations (1-minute resolution)
+- \textbf{Mesoscopic Level:} Regional network flows and mode selection (1-hour resolution) 
+- \textbf{Macroscopic Level:} Strategic network design and supplier selection (daily resolution)
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line44.fig5.png}
+\caption{Digital Twin Architecture for Carbon Footprint Management}
+\end{figure}
+
+\textbf{System Integration Framework:}
+
+The digital twin operates through continuous synchronization between physical operations and virtual models:
+
+\lstinputlisting[language=Python, caption=Digital Twin Carbon Management System]{.././codes-python/line44.py4.py}
+
+\textbf{Concrete Example:}
+
+Digital Twin deployment for a European logistics network covering 12 countries:
+
+\textbf{Real-time Scenario Analysis (15-minute optimization cycle):}
+
+\textbf{Scenario A - Current Operations:}
+- Daily carbon footprint: 45,230 kg CO$_2$e
+- Transportation: 78\% truck, 22\% rail
+- Facility utilization: 67\% average
+
+\textbf{Scenario B - Route Optimization:}  
+- Projected daily carbon: 38,950 kg CO$_2$e (-13.9\%)
+- Transportation: 62\% truck, 38\% rail
+- Additional cost: +2.3\%
+
+\textbf{Scenario C - Renewable Energy Scheduling:}
+- Projected daily carbon: 41,680 kg CO$_2$e (-7.9\%)
+- Facility operations shifted to solar peak hours (10 AM - 3 PM)
+- Cost neutral implementation
+
+\textbf{Digital Twin Recommendation:} Deploy Scenario B immediately, achieving \textbf{6,280 kg CO$_2$e daily reduction} with acceptable cost increase. The system predicts \textbf{2.29 million kg CO$_2$e annual savings} through continuous optimization.
+
+\subsection{Tier 8: The Value-Aligned \& Ethical Framework}
+
+Value-aligned carbon footprint management transcends pure optimization to incorporate ethical principles, stakeholder values, and long-term sustainability goals. This framework ensures that carbon reduction strategies align with broader societal values including environmental justice, economic equity, and intergenerational responsibility.
+
+\textbf{Ethical AI Architecture:}
+
+The system implements a multi-layered ethical framework:
+- \textbf{Constitutional Layer:} Fundamental ethical principles and constraints
+- \textbf{Stakeholder Layer:} Balancing interests of communities, workers, and shareholders  
+- \textbf{Temporal Layer:} Long-term sustainability vs. short-term efficiency
+- \textbf{Justice Layer:} Environmental impact distribution and fairness
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line44.fig6.png}
+\caption{Value-Aligned Ethical Framework for Carbon Management}
+\end{figure}
+
+\textbf{Implementation Framework:}
+
+\lstinputlisting[language=Python, caption=Value-Aligned Carbon Optimization System]{.././codes-python/line44.py5.py}
+
+\textbf{Concrete Example:}
+
+Value-aligned optimization for a regional logistics network serving 3 communities:
+
+\textbf{Stakeholder Value Weights:}
+- Community health: 0.35
+- Worker security: 0.30  
+- Shareholder returns: 0.15
+- Environmental justice: 0.20
+
+\textbf{Scenario Evaluation Results:}
+
+\textbf{Scenario A - Pure Carbon Optimization:}
+- Carbon reduction: 28\% (-450 kg CO$_2$e/day)
+- Community impact: +0.65 (air quality improvement)
+- Worker impact: -0.40 (120 job losses)
+- \textbf{Ethical compliance: VIOLATION} (hard constraint on job losses)
+- Value-aligned score: 0.0 (rejected)
+
+\textbf{Scenario B - Balanced Transition:}
+- Carbon reduction: 22\% (-354 kg CO$_2$e/day)  
+- Community impact: +0.55 (moderate air quality improvement)
+- Worker impact: +0.25 (net 30 job gains through retraining programs)
+- Ethical compliance: FULL COMPLIANCE
+- \textbf{Value-aligned score: 0.78 (selected)}
+
+\textbf{Scenario C - Minimal Change:}
+- Carbon reduction: 8\% (-129 kg CO$_2$e/day)
+- Community impact: +0.20 (limited air quality improvement)
+- Worker impact: +0.80 (no job losses, high security)  
+- Ethical compliance: FULL COMPLIANCE
+- Value-aligned score: 0.52 (suboptimal)
+
+\textbf{Ethical Decision:} The system selects Scenario B, achieving \textbf{354 kg CO$_2$e daily reduction} while maintaining full ethical compliance and supporting worker transition. The solution demonstrates that value-aligned optimization can achieve substantial carbon reduction (78\% of maximum possible) while respecting stakeholder values and ethical constraints.
+
+## Practice Questions
+
+\textbf{1. Tier 1 Mathematical Modeling:} A supply network has 4 facilities with daily emissions of \{F1: 150, F2: 200, F3: 90, F4: 180\} kg CO$_2$e and transportation options with emission factors \{Truck: 0.9, Rail: 0.25, Ship: 0.12\} kg CO$_2$e/km. Formulate the mathematical model to minimize total carbon footprint while serving 6 customers with demands \{25, 40, 35, 20, 30, 45\} units. Include facility activation costs and transportation capacity constraints.
+
+\textbf{2. Tier 2 Heuristic Algorithm:} Implement a carbon-aware sweep algorithm for a depot at coordinates (50, 50) serving 8 customers located at: \{(80,90), (30,85), (90,40), (20,30), (75,15), (15,60), (95,75), (40,25)\}. Each customer has demand 15 units. Compare solutions using trucks (0.8 kg CO$_2$e/km) vs. electric vans (0.3 kg CO$_2$e/km) with capacity 60 units each. Calculate the total carbon reduction achievable through vehicle electrification.
+
+\textbf{3. Tier 3 Metaheuristic Optimization:} Apply Grasshopper Optimization Algorithm to minimize carbon footprint for a 3-facility, 10-customer network over 20 iterations. Use population size 15 with parameters: c\_max=1.0, c\_min=0.00001, f=0.5, l=1.5. The fitness function should combine transportation emissions (weight 0.6) and facility emissions (weight 0.4). Report the convergence behavior and final carbon reduction percentage compared to the initial random solution.
+
+\textbf{4. Tier 4 AI/ML Augmentation:} Design a Neural Architecture Search experiment for carbon footprint prediction using a dataset with features: \{route\_distance, vehicle\_type, weather\_conditions, traffic\_density, facility\_load\}. Define the search space including layer types \{Dense, LSTM, Attention\}, sizes \{64, 128, 256\}, and activations \{ReLU, Swish, GELU\}. The target prediction accuracy should achieve MAE $<$ 50 kg CO$_2$e and R² $>$ 0.90. Describe the architecture selection process and expected computational requirements.
+
+\textbf{5. Tier 5 Digital Twin System:} Design a multi-scale digital twin system for real-time carbon optimization with update frequencies: microscopic (1-minute), mesoscopic (15-minute), and macroscopic (1-hour). The system must handle 100 vehicles, 15 facilities, and 500 daily deliveries. Define the data synchronization protocol, simulation engine interfaces, and what-if scenario generation logic. Calculate the expected carbon reduction achievable through continuous 15-minute optimization cycles compared to static daily planning.
+
+\textbf{6. Tier 8 Value-Aligned Framework:} Develop an ethical constraint system for carbon optimization that balances three stakeholder groups: communities (weight 0.4), workers (weight 0.35), and shareholders (weight 0.25). Define hard constraints for: no net job losses, community emission limits (max 110\% of baseline), and minimum 15\% carbon reduction. Create soft constraints for: worker retraining investment (min \$5k per affected worker) and community benefit sharing (min 5\% of carbon credit revenue). Calculate the value-aligned score for a scenario achieving 25\% carbon reduction, creating 20 new jobs, reducing community emissions by 18\%, but increasing costs by 12\%.
+
+\end{document}

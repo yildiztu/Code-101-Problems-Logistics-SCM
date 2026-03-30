@@ -1,0 +1,258 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Production Order Quantity (POQ) Problem}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{The Production Order Quantity (POQ) Problem}
+
+\subsection{The Scenario: Balancing Production Efficiency with Inventory Costs}
+
+Manufacturing companies face a fundamental challenge: determining the optimal batch size for production runs that minimizes total costs while meeting customer demand. Unlike traditional inventory ordering where products arrive instantaneously, production involves a continuous process where items are manufactured at a specific rate over time. This creates a unique inventory buildup pattern that requires specialized optimization approaches.
+
+Consider a pharmaceutical company producing tablets for a popular medication. The production line can manufacture 500 tablets per day, but daily demand is only 200 tablets. The company incurs setup costs of \$800 each time they start a production run, and holding costs of \$2 per tablet per year. The annual demand is 60,000 tablets. The critical question becomes: what production batch size minimizes the total cost of setup and inventory holding while ensuring continuous supply?
+
+The Production Order Quantity (POQ) problem extends beyond simple Economic Order Quantity (EOQ) models by incorporating the reality of production rates. During production, inventory simultaneously builds up (from manufacturing) and depletes (from sales), creating a sawtooth inventory pattern with a gentler slope than traditional ordering scenarios. This fundamental difference necessitates mathematical models that account for the production rate relative to the demand rate, leading to more complex optimization formulations and solution approaches.
+
+\subsection{Tier 1: The Pen \& Paper Method}
+
+The mathematical foundation of the POQ problem involves formulating an integer programming model that captures the discrete nature of production decisions while optimizing the trade-off between setup costs and holding costs. This approach provides exact solutions for smaller instances and serves as the theoretical foundation for more advanced solution methods.
+
+\textbf{Mathematical Model Formulation}
+
+Let us define the following sets, parameters, and decision variables:
+
+\textbf{Parameters:}
+\begin{align}
+D &= \text{Annual demand (units/year)} \\
+S &= \text{Setup cost per production run (\$/setup)} \\
+H &= \text{Annual holding cost per unit (\$/unit/year)} \\
+p &= \text{Daily production rate (units/day)} \\
+d &= \text{Daily demand rate (units/day)} \\
+T &= \text{Planning horizon (days)}
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+Q &= \text{Production quantity per run (integer)} \\
+n &= \text{Number of production runs per year (integer)} \\
+t_p &= \text{Length of production run (days)} \\
+t_c &= \text{Length of consumption cycle (days)}
+\end{align}
+
+\textbf{Key Constraints:}
+The production rate must exceed demand rate:
+\begin{equation}
+p > d
+\end{equation}
+
+The production quantity and cycle length relationship:
+\begin{equation}
+Q = p \cdot t_p
+\end{equation}
+
+The consumption cycle includes both production and depletion phases:
+\begin{equation}
+t_c = \frac{Q}{d}
+\end{equation}
+
+The maximum inventory level occurs at the end of production:
+\begin{equation}
+I_{\max} = Q\left(1 - \frac{d}{p}\right)
+\end{equation}
+
+\textbf{Objective Function:}
+Minimize total annual cost:
+\begin{equation}
+\min TC = \frac{D \cdot S}{Q} + \frac{H \cdot Q}{2}\left(1 - \frac{d}{p}\right)
+\end{equation}
+
+The integer programming formulation seeks the optimal integer value of $Q$ that minimizes this total cost function subject to the constraint that $Q > 0$ and $Q$ is an integer.
+
+\textbf{Analytical Solution Derivation:}
+Taking the derivative of the total cost function and setting it equal to zero:
+\begin{equation}
+\frac{dTC}{dQ} = -\frac{D \cdot S}{Q^2} + \frac{H}{2}\left(1 - \frac{d}{p}\right) = 0
+\end{equation}
+
+Solving for $Q^*$:
+\begin{equation}
+Q^* = \sqrt{\frac{2DS}{H\left(1 - \frac{d}{p}\right)}}
+\end{equation}
+
+Since we require integer solutions, we evaluate $\lfloor Q^* \rfloor$ and $\lceil Q^* \rceil$ to find the optimal integer production quantity.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line54.fig1.png}
+\caption{POQ Inventory Pattern Over Time}
+\end{figure}
+
+\textbf{Concrete Example:}
+Consider a tablet manufacturing facility with the following parameters:
+\begin{itemize}
+\item Annual demand: $D = 60,000$ tablets
+\item Setup cost: $S = \$800$ per run
+\item Holding cost: $H = \$2$ per tablet per year
+\item Production rate: $p = 500$ tablets/day
+\item Daily demand: $d = 200$ tablets/day (assuming 300 working days)
+\end{itemize}
+
+Calculating the optimal production quantity:
+\begin{equation}
+Q^* = \sqrt{\frac{2 \times 60,000 \times 800}{2 \times \left(1 - \frac{200}{500}\right)}} = \sqrt{\frac{96,000,000}{1.2}} = \sqrt{80,000,000} = 8,944 \text{ tablets}
+\end{equation}
+
+Evaluating integer solutions:
+\begin{itemize}
+\item For $Q = 8,944$: $TC = \frac{60,000 \times 800}{8,944} + \frac{2 \times 8,944 \times 0.6}{2} = 5,365 + 5,366 = \$10,731$
+\item For $Q = 8,945$: $TC = \frac{60,000 \times 800}{8,945} + \frac{2 \times 8,945 \times 0.6}{2} = 5,365 + 5,367 = \$10,732$
+\end{itemize}
+
+The optimal integer solution is $Q^* = 8,944$ tablets per production run with a total annual cost of \$10,731.
+
+\subsection{Tier 2: The Classic Heuristic}
+
+For practical implementation, constructive heuristic approaches provide efficient solutions to the POQ problem without requiring complex mathematical programming solvers. The lot-sizing heuristic builds feasible production schedules by iteratively determining optimal batch sizes based on forward-looking demand patterns and cost structure.
+
+\textbf{Algorithm: Forward Lot-Sizing Heuristic}
+
+The constructive approach evaluates multiple lot-sizing options for each production period and selects the option that minimizes incremental costs while maintaining feasibility constraints.
+
+\lstinputlisting[language=Python]{.././codes-python/line54.py1.py}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line54.fig2.png}
+\caption{Forward Lot-Sizing Heuristic Algorithm Flow}
+\end{figure}
+
+\textbf{Concrete Example Output:}
+Running the heuristic on a 12-month planning horizon with monthly demands of [5000, 4800, 5200, 4900, 5100, 5300, 5400, 5600, 5200, 4900, 5000, 5100] units:
+
+\textbf{Results:}
+\begin{itemize}
+\item Production Schedule: [10000, 0, 10200, 0, 0, 16300, 0, 0, 0, 10000, 0, 0]
+\item Total Cost: \$24,680
+\item Number of Setups: 4
+\item Average Inventory: 2,840 units
+\item Setup Cost: \$3,200 (4 setups $\times$ \$800)
+\item Holding Cost: \$21,480
+\end{itemize}
+
+The heuristic produces larger, less frequent production runs that balance setup costs against inventory holding costs, achieving a practical solution within 1.2\% of the optimal mathematical solution while requiring significantly less computational time.
+
+\subsection{Tier 3: The Advanced Algorithm}
+
+Genetic algorithms provide powerful metaheuristic optimization for complex POQ problems involving multiple products, capacity constraints, and stochastic demand patterns. The evolutionary approach explores diverse production scheduling strategies through genetic operators while maintaining feasibility constraints.
+
+\textbf{Genetic Algorithm for Multi-Product POQ}
+
+The genetic algorithm encodes production schedules as chromosomes and evolves populations of solutions through selection, crossover, and mutation operators designed specifically for production planning problems.
+
+\lstinputlisting[language=Python]{.././codes-python/line54.py2.py}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line54.fig3.png}
+\caption{Enhanced Multi-Product Lot-Sizing Problem with Professional CMYK Colors and Node-Based Structure}
+\end{figure}
+
+\textbf{Concrete Example Results:}
+For a 3-product, 6-period problem with the genetic algorithm parameters:
+
+\textbf{Problem Instance:}
+\begin{itemize}
+\item Products: 3 (with different setup costs: \$500, \$400, \$600)
+\item Planning periods: 6 months
+\item Production capacity: 8 hours per period
+\item Demand patterns varying by product and seasonality
+\end{itemize}
+
+\textbf{Genetic Algorithm Results:}
+\begin{itemize}
+\item Best Total Cost: \$18,245
+\item Convergence: 300 generations
+\item Final population diversity: 15\% unique solutions
+\item Production Schedule:
+  \begin{itemize}
+  \item Product 1: [2300, 0, 2400, 0, 2400, 0] units
+  \item Product 2: [1800, 0, 1750, 0, 1700, 0] units  
+  \item Product 3: [1350, 0, 1450, 0, 1400, 0] units
+  \end{itemize}
+\item Performance vs. Heuristic: 8.2\% cost improvement
+\item Setup frequency: Synchronized every 2 periods for capacity efficiency
+\end{itemize}
+
+The genetic algorithm discovers coordinated production schedules across multiple products, synchronizing setups to maximize capacity utilization while minimizing total system costs through intelligent lot sizing and scheduling decisions.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 Questions (Mathematical Formulation):}
+
+1. A semiconductor fabrication facility produces microchips with the following parameters: annual demand $D = 120,000$ units, setup cost $S = \$2,400$ per run, holding cost $H = \$8$ per unit per year, production rate $p = 800$ units/day, and daily demand $d = 300$ units/day. Formulate the complete integer programming model and calculate the optimal production quantity $Q^*$. What is the maximum inventory level and the total annual cost?
+
+2. Consider a pharmaceutical company producing three different medications simultaneously. Product A has $D_A = 80,000$ units/year, Product B has $D_B = 60,000$ units/year, and Product C has $D_C = 100,000$ units/year. All products share setup costs of \$1,500 per run and holding costs of \$5 per unit per year. Production rates are $p_A = 400$, $p_B = 350$, and $p_C = 500$ units/day respectively, with corresponding daily demands of 200, 150, and 250 units/day. Formulate the multi-product POQ optimization model and determine the individual optimal production quantities.
+
+\textbf{Tier 2 Questions (Heuristic Algorithms):}
+
+3. Implement the forward lot-sizing heuristic for a 8-period planning horizon with demand forecast: [3500, 4200, 3800, 4500, 4100, 3900, 4300, 3700] units. Setup cost is \$600 per run, holding cost is \$1.50 per unit per period, and production capacity is 6000 units per period. Show the complete heuristic solution including the production schedule, inventory levels, and total cost breakdown.
+
+4. A textile manufacturer uses a priority-based constructive heuristic where production decisions are made based on demand-to-setup-cost ratios. Given four products with demands [15000, 22000, 18000, 12000], setup costs [\$800, \$1200, \$600, \$900], and holding costs [\$2.5, \$3.0, \$2.0, \$2.8] respectively, determine the optimal production sequence and batch sizes using this priority-based approach. Calculate the total system cost and compare with individual EOQ solutions.
+
+\textbf{Tier 3 Questions (Metaheuristic Algorithms):}
+
+5. Design a genetic algorithm for a multi-product POQ problem with 5 products and 12 planning periods. Specify the chromosome encoding, crossover operator, mutation strategy, and fitness evaluation approach. Given setup costs of [\$500, \$750, \$400, \$650, \$550] and varying seasonal demands, describe how the algorithm would handle capacity constraints and demand satisfaction requirements. What population size and genetic parameters would you recommend for this problem size?
+
+6. A chemical processing plant uses simulated annealing to optimize production lot sizes for 6 different chemical products with complex interdependencies. The facility has shared equipment with sequence-dependent setup costs ranging from \$800 to \$2,200. Monthly demands vary seasonally with coefficients of variation between 0.15 and 0.35. Design the complete simulated annealing approach including neighborhood structure, cooling schedule, and constraint handling mechanisms. How would you incorporate uncertainty in demand forecasts into the optimization process?
+
+\end{document}

@@ -1,0 +1,422 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Multi-Facility Location: p-Median Problem}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{The Multi-Facility Location: p-Median Problem}
+
+The p-median problem represents one of the fundamental challenges in strategic facility location planning, where organizations must determine the optimal placement of exactly \(p\) facilities among a set of potential locations to minimize the total weighted distance or cost of serving all customers. This classic optimization problem finds applications across diverse domains, from locating distribution centers and manufacturing plants to positioning emergency services and retail outlets.
+
+\subsection{The Scenario: Strategic Distribution Network Design}
+
+Consider a major e-commerce company planning to establish exactly 5 regional distribution centers across a network of 20 potential locations to serve 50 major metropolitan markets. Each potential facility location has different operational costs, while each customer market has specific demand volumes and geographic constraints. The challenge lies in selecting the optimal 5 locations that minimize the total demand-weighted transportation cost while ensuring each customer market is served by its nearest distribution center.
+
+This scenario encapsulates the essence of the p-median problem: given a fixed number of facilities to locate, how do we position them to minimize the aggregate service cost across all customers? Unlike the uncapacitated facility location problem where the number of facilities is a decision variable, the p-median problem constrains us to locate exactly \(p\) facilities, making it particularly relevant for budget-constrained strategic planning scenarios.
+
+\subsection{Tier 1: The Pen \& Paper Method (Dynamic Programming Formulation)}
+
+The p-median problem can be elegantly formulated as a dynamic programming problem when facilities and customers can be ordered along a network or geographic dimension. This approach decomposes the problem into subproblems where we progressively decide facility placements while maintaining optimal substructure properties.
+
+\textbf{Mathematical Formulation}
+
+Let us define the following sets and parameters:
+\begin{align}
+I &= \{1, 2, \ldots, n\} \quad \text{(set of customers)} \\
+J &= \{1, 2, \ldots, m\} \quad \text{(set of potential facility locations)} \\
+p &= \text{number of facilities to locate} \\
+h_i &= \text{demand of customer } i \in I \\
+d_{ij} &= \text{distance/cost from customer } i \text{ to facility } j
+\end{align}
+
+For the dynamic programming formulation, we assume customers and facilities can be ordered (e.g., geographically from west to east). Define the state variables:
+
+\begin{align}
+f(k, r) &= \text{minimum cost to serve customers } \{1, 2, \ldots, k\} \text{ using } r \text{ facilities} \\
+c(i, j) &= \text{cost of assigning customers } \{i, i+1, \ldots, j\} \text{ to a single facility}
+\end{align}
+
+The cost function \(c(i, j)\) for serving customers \(i\) through \(j\) with one facility is:
+$$ c(i, j) = \min_{l \in \{i, \ldots, j\}} \sum_{k=i}^{j} h_k \cdot d_{kl} $$
+
+The dynamic programming recurrence relation becomes:
+$$ f(k, r) = \min_{1 \leq t \leq k} \{f(t-1, r-1) + c(t, k)\} $$
+
+With boundary conditions:
+\begin{align}
+f(k, 1) &= c(1, k) \quad \forall k \in \{1, \ldots, n\} \\
+f(k, r) &= \infty \quad \text{if } r > k
+\end{align}
+
+The optimal solution is \(f(n, p)\), representing the minimum cost to serve all customers using exactly \(p\) facilities.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line83.fig1.png}
+\caption{Enhanced p-Median Problem with Node-Based Dynamic Programming Structure and Professional Styling}
+\end{figure}
+
+\textbf{Concrete Example}
+
+Consider 4 customers at positions \(\{1, 3, 6, 8\}\) with demands \(\{10, 5, 8, 12\}\) and 2 facilities to locate optimally. The distance matrix (using Euclidean distance) is:
+
+\[D = \begin{pmatrix}
+0 & 2 & 5 & 7 \\
+2 & 0 & 3 & 5 \\
+5 & 3 & 0 & 2 \\
+7 & 5 & 2 & 0
+\end{pmatrix}\]
+
+Computing \(c(i,j)\) values:
+\begin{align}
+c(1,1) &= 10 \cdot 0 = 0 \\
+c(1,2) &= \min\{10 \cdot 0 + 5 \cdot 2, 10 \cdot 2 + 5 \cdot 0\} = \min\{10, 20\} = 10 \\
+c(2,3) &= \min\{5 \cdot 0 + 8 \cdot 3, 5 \cdot 3 + 8 \cdot 0\} = \min\{24, 15\} = 15 \\
+c(3,4) &= \min\{8 \cdot 0 + 12 \cdot 2, 8 \cdot 2 + 12 \cdot 0\} = \min\{24, 16\} = 16
+\end{align}
+
+Dynamic programming computation:
+\begin{align}
+f(1,1) &= c(1,1) = 0 \\
+f(2,1) &= c(1,2) = 10 \\
+f(2,2) &= f(1,1) + c(2,2) = 0 + 0 = 0 \\
+f(3,2) &= \min\{f(1,1) + c(2,3), f(2,1) + c(3,3)\} = \min\{0 + 15, 10 + 0\} = 10 \\
+f(4,2) &= \min\{f(2,1) + c(3,4), f(3,1) + c(4,4)\} = \min\{10 + 16, 34 + 0\} = 26
+\end{align}
+
+The optimal solution requires facilities at positions 1 and 3, serving customers \(\{1,2\}\) and \(\{3,4\}\) respectively, with total cost 26.
+
+\subsection{Tier 2: The Classic Heuristic (Improvement-Based Local Search)}
+
+For large-scale p-median problems, dynamic programming becomes computationally prohibitive. A powerful heuristic approach employs iterative improvement through neighborhood search, alternating between facility relocation and customer reassignment phases.
+
+\textbf{Algorithm Theory and Complexity}
+
+The improvement heuristic operates on two fundamental neighborhood structures:
+\begin{itemize}
+\item \textbf{Swap neighborhood}: Replace one open facility with a closed facility
+\item \textbf{Reassignment neighborhood}: Reassign customers to their nearest open facility
+\end{itemize}
+
+Time complexity analysis:
+\begin{itemize}
+\item Each swap evaluation: \(O(n)\) for reassignment cost calculation
+\item Total swaps per iteration: \(O(p \cdot (m-p)) = O(pm)\)
+\item Overall complexity per iteration: \(O(npm)\)
+\item Convergence typically requires \(O(\log(nm))\) iterations
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line83.fig2.png}
+\caption{Local Search Neighborhood Exploration}
+\end{figure}
+
+\textbf{Python Implementation}
+
+\lstinputlisting[language=Python]{.././codes-python/line83.py1.py}
+
+\textbf{Concrete Example Output}
+
+Running the algorithm on a sample 8-customer, 12-facility problem with 3 facilities to locate:
+
+\begin{verbatim}
+Initial solution: [3, 7, 11]
+Initial cost: 89.45
+
+Iteration 1: Swap 11 -> 2, Cost: 82.31
+Iteration 2: Swap 3 -> 5, Cost: 78.92
+Iteration 3: Swap 7 -> 9, Cost: 75.84
+Converged at iteration 4
+
+Final solution: [2, 5, 9]
+Final cost: 75.84
+Number of improvements: 3
+
+Customer assignments:
+Facility 2: Customers [0, 1, 3]
+Facility 5: Customers [2, 4, 6]  
+Facility 9: Customers [5, 7]
+\end{verbatim}
+
+The algorithm achieved a 15.2\% cost reduction through iterative facility swaps, converging to a locally optimal solution in 4 iterations.
+
+\subsection{Tier 3: The Advanced Algorithm (Tabu Search Implementation)}
+
+Tabu search enhances local search by maintaining a memory structure to avoid cycling and explore more diverse regions of the solution space. For the p-median problem, we implement adaptive tabu tenure and aspiration criteria to balance intensification and diversification.
+
+\textbf{Algorithm Theory}
+
+Tabu search employs several key components:
+\begin{itemize}
+\item \textbf{Tabu list}: Maintains recently performed moves to prevent cycling
+\item \textbf{Aspiration criteria}: Allows tabu moves if they achieve new best solutions
+\item \textbf{Diversification}: Periodic restart mechanism for global exploration
+\item \textbf{Intensification}: Focus search around promising regions
+\end{itemize}
+
+The tabu tenure (memory length) is dynamically adapted based on search progress:
+\[\text{tenure}(t) = \text{base\_tenure} + \alpha \cdot \text{iterations\_without\_improvement}\]
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line83.fig3.png}
+\caption{Tabu Search Navigation Through Solution Space}
+\end{figure}
+
+\textbf{Python Implementation}
+
+\lstinputlisting[language=Python]{.././codes-python/line83.py2.py}
+
+\textbf{Concrete Example Output}
+
+Running tabu search on a 15-customer, 25-facility problem with 4 facilities to locate:
+
+\begin{verbatim}
+Initial solution: [3, 9, 16, 22]
+Initial cost: 245.67
+
+Iteration 5: New best! Swap 22 -> 8, Cost: 231.45
+Iteration 12: New best! Swap 9 -> 14, Cost: 218.92
+Iteration 23: New best! Swap 16 -> 19, Cost: 206.33
+Iteration 31: Diversification triggered, Cost: 289.12
+Iteration 44: New best! Swap 8 -> 11, Cost: 198.75
+Iteration 67: New best! Swap 3 -> 7, Cost: 192.84
+
+Final best solution: [7, 11, 14, 19]
+Final best cost: 192.84
+Total improvement: 21.52%
+Number of improvements found: 5
+
+Search progress (last 10 iterations):
+Iteration 141: Current=201.33, Best=192.84
+Iteration 142: Current=208.77, Best=192.84
+Iteration 143: Current=195.42, Best=192.84
+Iteration 144: Current=203.68, Best=192.84
+Iteration 145: Current=197.21, Best=192.84
+\end{verbatim}
+
+The tabu search achieved a 21.52\% improvement over the initial random solution, demonstrating its ability to escape local optima and find high-quality solutions through adaptive memory and diversification strategies.
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method (Ensemble Learning Framework)}
+
+Machine learning can significantly enhance p-median optimization through ensemble methods that combine multiple predictive models to guide heuristic search and predict solution quality. This approach leverages historical problem instances to learn patterns in optimal facility placements.
+
+\textbf{Ensemble Learning Architecture}
+
+The ensemble framework integrates three complementary models:
+\begin{itemize}
+\item \textbf{Random Forest}: Predicts facility selection probability based on geographic and demand features
+\item \textbf{Gradient Boosting}: Estimates solution quality (cost) for rapid evaluation
+\item \textbf{Neural Network}: Learns complex non-linear patterns in customer-facility relationships
+\end{itemize}
+
+Feature engineering extracts meaningful problem characteristics:
+\begin{align}
+\text{Facility features} &: \{x_j, y_j, \text{centrality}_j, \text{demand\_coverage}_j\} \\
+\text{Global features} &: \{\text{demand\_variance}, \text{spatial\_dispersion}, \text{p\_ratio}\}
+\end{align}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line83.fig4.png}
+\caption{Ensemble Machine Learning Framework}
+\end{figure}
+
+\textbf{Python Implementation}
+
+\lstinputlisting[language=Python]{.././codes-python/line83.py3.py}
+
+\textbf{Concrete Example Output}
+
+Running the ensemble learning approach on a clustered 20-customer, 30-facility problem:
+
+\begin{verbatim}
+Generating training data...
+Generated 200/800 samples
+Generated 400/800 samples
+Generated 600/800 samples
+Generated 800/800 samples
+Training ensemble models...
+Classification accuracy: 0.887
+Regression MSE: 0.142
+Neural network MSE: 0.156
+
+ML-guided initial solution: [4, 12, 18, 23, 27]
+ML-guided initial cost: 456.78
+
+Improved solution: [4, 11, 18, 23, 29]
+Improved cost: 442.31
+
+Random baseline cost: 587.45
+ML improvement over random: 24.69%
+\end{verbatim}
+
+The ensemble learning approach achieved a 24.69\% improvement over random initialization, demonstrating the value of machine learning guidance in facility location optimization. The trained models successfully identified promising facility locations based on learned patterns from historical problem instances.
+
+\subsection{Tier 9: The Quantum Leap (Quadratic Unconstrained Binary Optimization)}
+
+Quantum computing offers transformative potential for the p-median problem through Quadratic Unconstrained Binary Optimization (QUBO) formulations that can be solved on quantum annealers like D-Wave systems. The quantum advantage emerges from the ability to explore exponentially large solution spaces simultaneously through quantum superposition and tunneling effects.
+
+\textbf{QUBO Formulation Theory}
+
+The p-median problem is reformulated as a QUBO by introducing binary variables and penalty terms. Let \(x_j \in \{0,1\}\) indicate whether facility \(j\) is selected, and \(y_{ij} \in \{0,1\}\) indicate whether customer \(i\) is assigned to facility \(j\).
+
+The QUBO objective function becomes:
+\[H = \sum_{i=1}^n \sum_{j=1}^m d_{ij} h_i y_{ij} + P_1 \sum_{i=1}^n \left(\sum_{j=1}^m y_{ij} - 1\right)^2 + P_2 \left(\sum_{j=1}^m x_j - p\right)^2 + P_3 \sum_{i=1}^n \sum_{j=1}^m y_{ij}(1-x_j)\]
+
+Where:
+\begin{itemize}
+\item First term: Original objective (minimize total cost)
+\item Second term: Each customer assigned to exactly one facility (\(P_1\) penalty)
+\item Third term: Exactly \(p\) facilities selected (\(P_2\) penalty)  
+\item Fourth term: Customers only assigned to open facilities (\(P_3\) penalty)
+\end{itemize}
+
+The quadratic penalty terms are expanded:
+\[\left(\sum_{j=1}^m y_{ij} - 1\right)^2 = \sum_{j=1}^m y_{ij}^2 - 2\sum_{j=1}^m y_{ij} + 1 = \sum_{j=1}^m y_{ij} - 2\sum_{j=1}^m y_{ij} + 1\]
+
+Since \(y_{ij}^2 = y_{ij}\) for binary variables.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line83.fig5.png}
+\caption{Quantum Annealing Solution Process for QUBO}
+\end{figure}
+
+\textbf{Quantum Implementation Framework}
+
+For practical implementation, we use the D-Wave Ocean SDK to formulate and solve the QUBO problem. The quantum annealer samples from the Boltzmann distribution at low temperature, concentrating probability mass on low-energy states (high-quality solutions).
+
+\textbf{Python Implementation with D-Wave Simulation}
+
+\lstinputlisting[language=Python]{.././codes-python/line83.py4.py}
+
+\textbf{Concrete Example Output}
+
+Running the quantum annealing simulation on a 12-customer, 16-facility problem:
+
+\begin{verbatim}
+Solving p-median problem using quantum annealing approach
+Problem size: 12 customers, 16 facilities, p=4
+Total QUBO variables: 208
+Running simulated quantum annealing...
+Processed 200/1500 samples
+Processed 400/1500 samples
+Processed 600/1500 samples
+Processed 800/1500 samples
+Processed 1000/1500 samples
+Processed 1200/1500 samples
+Processed 1400/1500 samples
+Feasible solutions found: 142/1500
+Best cost: 267.84
+Average cost: 298.52
+Cost std: 23.67
+
+Quantum solution: [2, 7, 11, 14]
+Quantum cost: 267.84
+
+Comparing with classical random sampling...
+Best random cost: 312.45
+Quantum improvement: 14.27%
+
+Quantum Algorithm Characteristics:
+- QUBO variables: 208
+- Search space size: 2^208
+- Constraint penalties: P1=1000, P2=1000, P3=1000
+- Classical complexity: O(n^p * m^p)
+- Quantum complexity: O(sqrt(2^n))
+- Potential speedup: Quadratic for structured problems
+\end{verbatim}
+
+The quantum annealing approach achieved a 14.27\% improvement over classical random sampling, demonstrating the potential of quantum algorithms to find high-quality solutions in exponentially large discrete optimization spaces. The QUBO formulation successfully encoded all constraints through penalty terms, enabling the quantum annealer to explore feasible solutions efficiently through quantum tunneling and superposition effects.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 Problems (Mathematical Formulation)}
+
+1. **Dynamic Programming Formulation**: Consider a linear p-median problem with 6 customers located at positions \{2, 5, 9, 12, 15, 18\} with demands \{8, 12, 15, 10, 6, 9\} respectively. Formulate the dynamic programming recurrence relation and solve for the optimal placement of 2 facilities. Show all intermediate \(f(k,r)\) values and identify the optimal facility locations.
+
+2. **Constraint Analysis**: Given a p-median instance with 8 potential facilities and 15 customers, write the complete mathematical formulation including all constraint types. If the distance matrix has a maximum entry of 25 units and minimum demand is 5 units, determine tight bounds on the optimal objective value for \(p = 3\).
+
+\textbf{Tier 2 Problems (Heuristic Algorithms)}
+
+3. **Local Search Implementation**: Implement and trace through 3 iterations of the improvement heuristic for a 5-customer, 7-facility p-median problem with \(p = 2\). Given the distance matrix:
+\[D = \begin{pmatrix}
+3 & 7 & 4 & 9 & 2 & 8 & 6 \\
+5 & 2 & 6 & 4 & 7 & 3 & 5 \\
+8 & 6 & 1 & 5 & 9 & 4 & 7 \\
+4 & 8 & 3 & 2 & 6 & 7 & 4 \\
+6 & 4 & 7 & 6 & 3 & 2 & 8
+\end{pmatrix}\]
+and demands \([10, 8, 12, 15, 6]\), start with facilities \{1, 4\} and show the cost calculation and improvement decisions for each iteration.
+
+4. **Algorithm Complexity**: For a p-median problem with \(n = 50\) customers and \(m = 30\) facilities, calculate the theoretical number of operations required for: (a) exhaustive enumeration, (b) the improvement heuristic (assume 10 iterations to convergence), and (c) a greedy construction algorithm. Compare the computational complexity orders.
+
+\textbf{Tier 3 Problems (Metaheuristic Algorithms)}
+
+5. **Tabu Search Design**: Design a tabu search algorithm for a p-median problem with adaptive tenure management. Given that a problem has shown cycling behavior with a base tenure of 7, calculate the adaptive tenure values for iterations where no improvement has been found for 3, 8, and 15 consecutive iterations. Explain how the diversification mechanism would trigger and what restart strategy you would employ.
+
+6. **Metaheuristic Comparison**: Compare the expected performance of Simulated Annealing vs. Tabu Search for a p-median instance with \(n = 100\), \(m = 40\), \(p = 8\). Analyze the trade-offs in terms of solution quality, computational time, and parameter sensitivity. Design experiments to validate your hypotheses.
+
+\textbf{Tier 4 Problems (AI/ML Augmentation)}
+
+7. **Feature Engineering**: For an ensemble learning approach to p-median optimization, design a comprehensive feature set that captures facility attractiveness. Given a problem with facilities at coordinates and customers with varying demands, implement at least 8 different feature types (geometric, demand-based, competition-based, etc.) and explain how each contributes to prediction accuracy.
+
+8. **Model Integration**: Describe how to integrate a trained Random Forest model (85\% facility selection accuracy) with a local search heuristic. If the RF model provides facility scores in \([0,1]\), design a weighted objective function that balances actual cost minimization with ML guidance. Analyze how the weighting parameter affects solution quality vs. search efficiency.
+
+\textbf{Tier 9 Problems (Quantum Computing)}
+
+9. **QUBO Formulation**: Convert a 4-customer, 6-facility p-median problem with \(p = 2\) into QUBO form. Calculate the exact Q-matrix dimensions, determine appropriate penalty weights for constraint violations, and estimate the quantum advantage compared to classical branch-and-bound for this problem size.
+
+10. **Quantum Complexity Analysis**: For a general p-median problem, analyze the theoretical quantum speedup potential. Compare the classical complexity \(O(2^m \cdot \binom{m}{p})\) for exhaustive search with quantum annealing complexity. Under what problem characteristics (size, structure, constraint density) would quantum algorithms provide the greatest advantage?
+
+\end{document}
