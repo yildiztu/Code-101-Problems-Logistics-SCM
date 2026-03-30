@@ -28,17 +28,72 @@ This repository is designed for individuals interested in learning and practicin
 * **Problem Categories 📂:** The 101 problems are organized into two main categories:
   * `Part I - The Port & Container Terminal (Problems 1-46)/` - Container terminal and port operations problems
   * `Part II - The End-to-End Supply Chain (Problems 47-101)/` - Full supply chain and logistics problems
-* **Within-Part Grouping 📂:** Within each Part, problems are grouped under TOC-based subfolders (A–E) for cleaner navigation.
+
+* **Within-Part Grouping 📂:** Within each Part, problems are grouped under TOC-based subfolders (A–E) for cleaner navigation:
+
+  **Part I - The Port & Container Terminal:**
+  * **A. Foundations of Terminal Operations (The Building Blocks)** - Basic terminal operations including crane sequencing, container stacking, reefer monitoring, berth scheduling, and gate operations (Problems 1-6)
+  * **B. Core Quay-Side Operations (The Ship-to-Shore Interface)** - Ship-to-shore operations including berth allocation, quay crane assignment/scheduling, dual cycling, and vessel stowage (Problems 7-15)
+  * **C. Core Yard & Land-Side Operations (The Heart of the Terminal)** - Yard operations including storage location assignment, container reshuffling, yard crane scheduling, and truck/AGV dispatching (Problems 16-26)
+  * **D. Integrated Tactical & Pre-Planning Problems (Connecting the Silos)** - Cross-functional integration including berth-crane coordination, yard pre-marshalling, rail-terminal scheduling, and labor management (Problems 27-34)
+  * **E. Strategic Design & Long-Term Investment (Shaping the Future)** - Strategic planning including terminal layout, equipment selection, capacity expansion, and competitive pricing (Problems 35-46)
+
+  **Part II - The End-to-End Supply Chain:**
+  * **A. Foundational Analytics & Inventory Control (The Language of Supply Chain)** - Demand forecasting, inventory policies (EOQ, newsvendor), and ABC/XYZ classification (Problems 47-58)
+  * **B. Warehouse & Fulfillment Center Operations (Inside the Four Walls)** - Warehouse design, slotting optimization, order picking, and value-added services (Problems 59-68)
+  * **C. Transportation, Routing & Freight Management (The Physical Internet)** - Vehicle routing problems, fleet management, freight mode selection, and loading optimization (Problems 69-81)
+  * **D. Strategic Network Design & Sourcing (The Blueprint of the Business)** - Facility location, supplier selection, sourcing strategies, and contract design (Problems 82-91)
+  * **E. Integrated, Resilient, & Modern Supply Chains (The Frontier)** - Location-routing, inventory-routing, resilient networks, last-mile delivery, and sustainable logistics (Problems 92-101)
+
 * **Problem Folders 📂:** Each problem has its own folder containing multiple tiered notebooks with increasing complexity and depth.
 * `infrastructure/jupyterhub/` 🐳: A Docker-based JupyterHub setup you can run locally on Windows/macOS/Linux.
 
 ## Running the Notebooks ▶️
 
 * **Option A (simplest) 💻:** Run notebooks locally with JupyterLab
-	+ Install Python, create a virtual environment, install `jupyterlab`.
-	+ Open the generated `.ipynb` notebooks.
+  * **Prerequisites:** Python 3.8+ installed on your system
+  * **Setup Steps:**
+    + Create a virtual environment:
+    ```bash
+    python -m venv .venv
+    ```
+    + Activate virtual environment:
+    ```bash
+    # Windows
+    .venv\Scripts\activate
+    
+    # macOS/Linux
+    source .venv/bin/activate
+    ```
+    + Install required packages:
+    ```bash
+    pip install jupyterlab numpy pandas matplotlib seaborn
+    ```
+    + Launch JupyterLab:
+    ```bash
+    jupyter lab
+    ```
+  * **Usage:** Navigate to the problem folders and open `.ipynb` notebooks directly in your browser
+
 * **Option B (classroom / multi-user) 👥:** Run JupyterHub via Docker
-	+ See: `infrastructure/jupyterhub/README.md`
+  * **Prerequisites:** Docker and Docker Compose installed
+  * **Setup Steps:**
+    + Navigate to infrastructure folder:
+    ```bash
+    cd infrastructure/jupyterhub/
+    ```
+    + Run JupyterHub:
+    ```bash
+    docker-compose up -d
+    ```
+    + Access JupyterHub at: `http://localhost:8000`
+  * **Features:** Multi-user support, centralized authentication, shared workspace
+  * **Documentation:** See `infrastructure/jupyterhub/README.md` for detailed configuration
+
+* **Option C (cloud-based) ☁️:** Run on cloud platforms (optional)
+  * **Supported Platforms:** Google Colab, Azure Notebooks, AWS SageMaker
+  * **Usage:** Upload individual notebooks to your preferred cloud platform
+  * **Note:** Some advanced features may require additional configuration
 
 ## Design Principles ⚙️
 
