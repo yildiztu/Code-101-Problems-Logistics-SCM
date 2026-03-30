@@ -1,3 +1,6 @@
 # Prompt and TODO files
 #Prompt.txt
 #TODO.md
+
+# LaTeX files (exclude from repository)
+latex_files/
