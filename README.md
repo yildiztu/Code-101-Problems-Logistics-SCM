@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626.svg?logo=jupyter)](https://jupyter.org/)
+[![YouTube](https://img.shields.io/badge/YouTube-IntelliBoost-red.svg?logo=youtube)](https://www.youtube.com/@IntelliBoost/courses)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 > *A comprehensive, interactive, and tiered approach to solving 101 complex logistics and supply chain problems using Python and Jupyter Notebooks.*
@@ -14,6 +15,7 @@
 
 - [Overview 📘](#overview-)
 - [Relationship to the Books 📚](#relationship-to-the-books-)
+- [Video Courses & Tutorials 🎥](#video-courses--tutorials-)
 - [Tiered Notebook Philosophy 🧠](#tiered-notebook-philosophy-)
 - [Target Audience 🎯](#target-audience-)
 - [Repository Structure 📁](#repository-structure-)
@@ -42,6 +44,14 @@ The 101 problems in this repository are derived from the following books publish
 	+ https://www.amazon.com/dp/B0FV89XJZ5
 * **Logistics and Supply Chain Management in the Modern Era: Trends, Technologies, and Best Practices**: A comprehensive guide to modern logistics and supply chain management, covering fundamentals (inventory, transportation, warehousing), strategy (JIT, VMI, 3PL), analytics (big data, AI), sustainability, risk and resilience, and the impact of emerging technologies such as IoT, blockchain, and autonomous systems.
 	+ https://www.amazon.com/dp/B0DKHYRT89
+
+## Video Courses & Tutorials 🎥
+
+To complement the books and Jupyter notebooks, you can follow along with full video courses and tutorials on our YouTube channel. These videos walk through the problem-solving processes and code implementations step-by-step:
+
+* 📺 **[IntelliBoost YouTube Channel](https://www.youtube.com/@IntelliBoost/courses)** — *Subscribe for all courses and updates!*
+* 🚢 **[Part I: The Port & Container Terminal Course](https://www.youtube.com/playlist?list=PL6O8rFz-5oZq3HSNoYg_nruGbDq1lUNfu)** — *Video series covering Problems 1-46.*
+* 🔗 **[Part II: The End-to-End Supply Chain Course](https://www.youtube.com/playlist?list=PL6O8rFz-5oZrSfjIOvYVg8fLeajqjNn-z)** — *Video series covering Problems 47-101.*
 
 ## Tiered Notebook Philosophy 🧠
 
