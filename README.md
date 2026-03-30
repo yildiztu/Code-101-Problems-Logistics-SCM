@@ -223,7 +223,11 @@ All three books and the 101 problems are authored by **Turkay Yildiz, Ph.D.**. T
 
 Turkay Yildiz received his Ph.D. from the Institute of Marine Sciences and Technology at Dokuz Eylul University in Izmir, Turkey. He holds degrees in Electronics and Management, and a Master’s Degree in Logistics Management from Izmir University of Economics. His research and professional interests span transportation, port operations, logistics, and supply chain management, and he has authored numerous peer‑reviewed publications and conference presentations in these fields. He also has extensive experience in applying information technologies to logistics and supply chain problems.
 
-Research profile: https://www.researchgate.net/profile/Turkay-Yildiz 🔗
+**Academic Profiles & Publications:**
+* 🔬 **ResearchGate:** [Turkay_Yildiz](https://www.researchgate.net/profile/Turkay_Yildiz)
+* 🎓 **Google Scholar:** [Publications](https://scholar.google.com/citations?user=dxYzo_AAAAAJ)
+* 🆔 **ORCID:** [0000-0003-0851-050X](https://orcid.org/0000-0003-0851-050X)
+* 🌐 **SciProfiles:** [turkay-yildiz](https://sciprofiles.com/profile/turkay-yildiz)
 
 ## Using and Citing This Work 📖
 
