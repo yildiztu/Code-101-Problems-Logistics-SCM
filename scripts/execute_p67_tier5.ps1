@@ -1,2 +1,0 @@
-cd "C:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\B. Warehouse & Fulfillment Center Operations (Inside the Four Walls)\067. The Kitting & Value-Added Service Scheduling Problem"
-& "C:\Users\turkayyildiz\Desktop\Code - 101 Problems\.venv\Scripts\python.exe" -m jupyter nbconvert --to notebook --execute "P67-Tier-5.ipynb" --output "executed\P67-Tier-5.ipynb" --ExecutePreprocessor.timeout=1800

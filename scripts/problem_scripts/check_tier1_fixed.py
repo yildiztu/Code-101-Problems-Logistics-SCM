@@ -1,9 +1,0 @@
-import json
-
-try:
-    with open('P88-Tier-1-FIXED.ipynb', 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    print('✓ P88-Tier-1-FIXED - Valid JSON structure')
-    print(f'  Cells: {len(data.get("cells", []))}')
-except Exception as e:
-    print(f'✗ P88-Tier-1-FIXED - Error: {e}')
