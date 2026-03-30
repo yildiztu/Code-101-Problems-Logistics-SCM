@@ -1,8 +1,36 @@
 # Code — 101 Problems (Jupyter Notebooks) 🚢📦
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626.svg?logo=jupyter)](https://jupyter.org/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+> *A comprehensive, interactive, and tiered approach to solving 101 complex logistics and supply chain problems using Python and Jupyter Notebooks.*
+
+---
+
+<details>
+<summary><b>📖 Table of Contents</b></summary>
+
+- [Overview 📘](#overview-)
+- [Relationship to the Books 📚](#relationship-to-the-books-)
+- [Tiered Notebook Philosophy 🧠](#tiered-notebook-philosophy-)
+- [Target Audience 🎯](#target-audience-)
+- [Repository Structure 📁](#repository-structure-)
+- [Running the Notebooks ▶️](#running-the-notebooks-️)
+- [GitHub Setup & Usage 🚀](#github-setup--usage-)
+- [Design Principles ⚙️](#design-principles-️)
+- [About the Author ✍️](#about-the-author-️)
+- [Using and Citing This Work 📖](#using-and-citing-this-work-)
+- [Contributions 🤝](#contributions-)
+
+</details>
+
+---
+
 ## Overview 📘
 
-This workspace contains Jupyter notebooks for solving 101 programming problems, organized by problem and difficulty tiers. The notebooks are designed to be educational and reproducible, providing executable, well-documented solutions and visualizations for each problem.
+This workspace contains Jupyter notebooks for solving **101 programming problems**, organized by problem and difficulty tiers. The notebooks are designed to be educational and reproducible, providing executable, well-documented solutions and visualizations for each problem.
 
 ## Relationship to the Books 📚
 
@@ -17,11 +45,23 @@ The 101 problems in this repository are derived from the following books publish
 
 ## Tiered Notebook Philosophy 🧠
 
-The notebooks in this repository are organized using a tiered structure, inspired by the 12-Tier Framework introduced in the playbook. Each problem folder corresponds to one or more exercises from the books and expands them with step-by-step, beginner-friendly Jupyter implementations. The tier numbers may vary per problem.
+The notebooks in this repository are organized using a **tiered structure**, inspired by the **12-Tier Framework** introduced in the playbook. Each problem folder corresponds to one or more exercises from the books and expands them with step-by-step, beginner-friendly Jupyter implementations.
+
+The tiered approach generally follows a progression from exact mathematical foundations to advanced AI and real-time simulations:
+1. **Tier 1**: Mathematical Formulation (MIP, Pen & Paper)
+2. **Tier 2**: Classic Heuristic Algorithms
+3. **Tier 3**: Advanced Metaheuristics (GA, PSO, ACO)
+4. **Tier 4**: AI/ML and Reinforcement Learning
+5. **Tier 5+**: Digital Twins, Human-AI Collaboration, and Quantum Computing
+
+> *Note: The specific tiers and total number of tiers may vary per problem.*
 
 ## Target Audience 🎯
 
-This repository is designed for individuals interested in learning and practicing logistics and supply chain management concepts through hands-on problem-solving.
+This repository is designed for:
+- 🎓 **Students & Educators** interested in learning logistics and supply chain concepts through hands-on problem-solving.
+- 🧑‍💻 **Data Scientists & Operations Researchers** looking for practical implementations of complex optimization algorithms.
+- 🏢 **Supply Chain Professionals** exploring advanced concepts like Digital Twins, Reinforcement Learning, and Quantum Computing in logistics.
 
 ## Repository Structure 📁
 
