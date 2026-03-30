@@ -45,7 +45,7 @@ def check_notebook_quality(filepath):
         return {'error': str(e)}
 
 # Check quality of all P93 notebooks
-p93_dir = r'c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\093. The Inventory-Routing Problem (IRP)'
+p93_dir = r'c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\E. Integrated, Resilient, & Modern Supply Chains (The Frontier)\093. The Inventory-Routing Problem (IRP)'
 notebooks = [f'P93-Tier-{i}.ipynb' for i in range(1, 11)]
 
 print('P93 Quality Assessment:')

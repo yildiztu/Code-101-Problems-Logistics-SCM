@@ -33,5 +33,5 @@ def validate_json(file_path):
         return False
 
 if __name__ == "__main__":
-    file_path = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part I - The Port & Container Terminal (Problems 1-46)\07. The Berth Allocation Problem\P7-Tier-9.ipynb"
+    file_path = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part I - The Port & Container Terminal (Problems 1-46)\B. Core Quay-Side Operations (The Ship-to-Shore Interface)\07. The Berth Allocation Problem\P7-Tier-9.ipynb"
     validate_json(file_path)

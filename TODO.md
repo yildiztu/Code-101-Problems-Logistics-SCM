@@ -9,6 +9,19 @@
 - Create **101 problem folders** organized into two main categories:
   - `Part I - The Port & Container Terminal (Problems 1-46)/` - Contains problems 1-46
   - `Part II - The End-to-End Supply Chain (Problems 47-101)/` - Contains problems 47-101
+- Inside each Part, group problems under TOC-based subfolders (do not use the word "Chapter"):
+  - Part I:
+    - `A. Foundations of Terminal Operations (The Building Blocks)/` (Problems 1–6)
+    - `B. Core Quay-Side Operations (The Ship-to-Shore Interface)/` (Problems 7–15)
+    - `C. Core Yard & Land-Side Operations (The Heart of the Terminal)/` (Problems 16–26)
+    - `D. Integrated Tactical & Pre-Planning Problems (Connecting the Silos)/` (Problems 27–34)
+    - `E. Strategic Design & Long-Term Investment (Shaping the Future)/` (Problems 35–46)
+  - Part II:
+    - `A. Foundational Analytics & Inventory Control (The Language of Supply Chain)/` (Problems 47–58)
+    - `B. Warehouse & Fulfillment Center Operations (Inside the Four Walls)/` (Problems 59–68)
+    - `C. Transportation, Routing & Freight Management (The Physical Internet)/` (Problems 69–81)
+    - `D. Strategic Network Design & Sourcing (The Blueprint of the Business)/` (Problems 82–91)
+    - `E. Integrated, Resilient, & Modern Supply Chains (The Frontier)/` (Problems 92–101)
 - Each problem folder name must follow:
   - `NN. <Problem Title>` (two-digit format for 1-46)
   - `NNN. <Problem Title>` (three-digit format for 47-101)
@@ -131,7 +144,7 @@ $py = Join-Path $root ".venv\Scripts\python.exe"
 Problem 1:
 
 ```powershell
-$dir = Join-Path $root "Part I - The Port & Container Terminal (Problems 1-46)\01. The Single Crane Lift Sequence Problem"
+$dir = Join-Path $root "Part I - The Port & Container Terminal (Problems 1-46)\A. Foundations of Terminal Operations (The Building Blocks)\01. The Single Crane Lift Sequence Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
@@ -145,7 +158,7 @@ foreach ($f in $files) {
 Problem 2:
 
 ```powershell
-$dir = Join-Path $root "Part I - The Port & Container Terminal (Problems 1-46)\02. The Container Stacking Rules Problem"
+$dir = Join-Path $root "Part I - The Port & Container Terminal (Problems 1-46)\A. Foundations of Terminal Operations (The Building Blocks)\02. The Container Stacking Rules Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
@@ -159,7 +172,7 @@ foreach ($f in $files) {
 Problem 47 (example for three-digit format):
 
 ```powershell
-$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\047. The Demand Forecasting Problem"
+$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\A. Foundational Analytics & Inventory Control (The Language of Supply Chain)\047. The Demand Forecasting Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
@@ -169,7 +182,7 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
 Problem 100 (example for three-digit format):
 
 ```powershell
-$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\100. The Advanced Supply Chain Analytics Problem"
+$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\E. Integrated, Resilient, & Modern Supply Chains (The Frontier)\100. The Advanced Supply Chain Analytics Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
@@ -179,7 +192,7 @@ New-Item -ItemType Directory -Force -Path $out | Out-Null
 Problem 101 (example for three-digit format):
 
 ```powershell
-$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\101. The Ultimate Supply Chain Challenge Problem"
+$dir = Join-Path $root "Part II - The End-to-End Supply Chain (Problems 47-101)\E. Integrated, Resilient, & Modern Supply Chains (The Frontier)\101. The Ultimate Supply Chain Challenge Problem"
 $out = Join-Path $dir "executed"
 New-Item -ItemType Directory -Force -Path $out | Out-Null
 
@@ -256,8 +269,8 @@ This must not be manual work. Since the `.tex` files are the single source of tr
 - **[O1]** Choose an output root directory (script parameter):
   - Example: `D:\...\responses-complete-png\_problems_out` (or a separate repo folder)
 - **[O2]** For each problem, create a folder in the appropriate category:
-  - Problems 1-46: `Part I - The Port & Container Terminal (Problems 1-46)/NN. <Problem Title>`
-  - Problems 47-101: `Part II - The End-to-End Supply Chain (Problems 47-101)/NNN. <Problem Title>`
+  - Problems 1-46: `Part I - The Port & Container Terminal (Problems 1-46)/<A-E heading>/NN. <Problem Title>`
+  - Problems 47-101: `Part II - The End-to-End Supply Chain (Problems 47-101)/<A-E heading>/NNN. <Problem Title>`
 - **[O3]** For each Tier, create an `.ipynb`:
   - Minimum notebook structure:
     - Markdown cell(s): title + context + Tier overview
@@ -363,9 +376,9 @@ Note: the presence of “Integrated Digital Twin” does **not** force AWS usage
   - Number of generated notebooks (sum of Tiers)
   - Any files that failed parsing (with reasons)
 - **[Q2]** Spot-check example:
-  - `line1.tex` → folder `Part I - The Port & Container Terminal (Problems 1-46)/01. The Single Crane Lift Sequence Problem` exists
+  - `line1.tex` → folder `Part I - The Port & Container Terminal (Problems 1-46)/A. Foundations of Terminal Operations (The Building Blocks)/01. The Single Crane Lift Sequence Problem` exists
   - Contains `P1-Tier-1.ipynb` … `P1-Tier-4.ipynb`
-  - `line47.tex` → folder `Part II - The End-to-End Supply Chain (Problems 47-101)/047. The Demand Forecasting Problem` exists
+  - `line47.tex` → folder `Part II - The End-to-End Supply Chain (Problems 47-101)/A. Foundational Analytics & Inventory Control (The Language of Supply Chain)/047. The Demand Forecasting Problem` exists
   - Contains appropriate Tier notebooks
 
 ## Implementation (code tasks) — suggested files

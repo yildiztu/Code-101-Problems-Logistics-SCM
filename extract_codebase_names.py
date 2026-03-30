@@ -17,20 +17,22 @@ def extract_problem_number_and_name(folder_name):
 # Part I
 part_i_dir = os.path.join(base_dir, "Part I - The Port & Container Terminal (Problems 1-46)")
 if os.path.exists(part_i_dir):
-    for folder in sorted(os.listdir(part_i_dir)):
-        if folder.startswith(tuple(f"{i:02d}." for i in range(1, 47))):
-            prob_num, prob_name = extract_problem_number_and_name(folder)
-            if prob_num:
-                codebase_problems[prob_num] = prob_name
+    for root, dirs, files in os.walk(part_i_dir):
+        for folder in sorted(dirs):
+            if folder.startswith(tuple(f"{i:02d}." for i in range(1, 47))):
+                prob_num, prob_name = extract_problem_number_and_name(folder)
+                if prob_num:
+                    codebase_problems[prob_num] = prob_name
 
 # Part II
 part_ii_dir = os.path.join(base_dir, "Part II - The End-to-End Supply Chain (Problems 47-101)")
 if os.path.exists(part_ii_dir):
-    for folder in sorted(os.listdir(part_ii_dir)):
-        if folder.startswith(tuple(f"{i:02d}." for i in range(47, 102))):
-            prob_num, prob_name = extract_problem_number_and_name(folder)
-            if prob_num:
-                codebase_problems[prob_num] = prob_name
+    for root, dirs, files in os.walk(part_ii_dir):
+        for folder in sorted(dirs):
+            if folder.startswith(tuple(f"{i:03d}." for i in range(47, 102))):
+                prob_num, prob_name = extract_problem_number_and_name(folder)
+                if prob_num:
+                    codebase_problems[prob_num] = prob_name
 
 # Write to file
 with open('codebase_folder_names.txt', 'w', encoding='utf-8') as f:

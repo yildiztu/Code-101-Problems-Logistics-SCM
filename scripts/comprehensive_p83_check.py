@@ -13,7 +13,7 @@ def comprehensive_p83_check():
         ("P83-Tier-9.ipynb", "Quantum QUBO")
     ]
     
-    base_dir = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\083. The Multi-Facility Location p-Median Problem"
+    base_dir = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\D. Strategic Network Design & Sourcing (The Blueprint of the Business)\083. The Multi-Facility Location p-Median Problem"
     
     print("COMPREHENSIVE P83 VALIDATION REPORT")
     print("="*80)

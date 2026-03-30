@@ -1,7 +1,7 @@
 # Test core functionality of P30-Tier-9
 import sys
 import os
-sys.path.append(r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part I - The Port & Container Terminal (Problems 1-46)\30. The Yard Pre-Marshalling for Exports Problem")
+sys.path.append(r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part I - The Port & Container Terminal (Problems 1-46)\D. Integrated Tactical & Pre-Planning Problems (Connecting the Silos)\30. The Yard Pre-Marshalling for Exports Problem")
 
 # Test imports and basic class definitions
 try:

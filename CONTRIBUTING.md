@@ -85,6 +85,8 @@ Code-101-Problems-Logistics-SCM/
 └── infrastructure/
 ```
 
+Within each Part folder, problems are grouped under A–E TOC-based subfolders for cleaner navigation.
+
 ## Getting Help
 
 - Check existing issues and documentation

@@ -72,10 +72,10 @@ codebase_folders = {}
 part1_dir = os.path.join(codebase_dir, "Part I - The Port & Container Terminal (Problems 1-46)")
 part2_dir = os.path.join(codebase_dir, "Part II - The End-to-End Supply Chain (Problems 47-101)")
 
-# Extract folder names from Part I
+# Extract folder names from Part I (traverse TOC-based heading subfolders)
 if os.path.exists(part1_dir):
-    for folder in sorted(os.listdir(part1_dir)):
-        if os.path.isdir(os.path.join(part1_dir, folder)) and not folder.startswith('.'):
+    for root, dirs, files in os.walk(part1_dir):
+        for folder in sorted(dirs):
             # Extract problem number and name
             match = re.match(r'(\d+)\.\s*(.+)', folder)
             if match:
@@ -83,12 +83,12 @@ if os.path.exists(part1_dir):
                 prob_name = match.group(2).strip()
                 codebase_folders[prob_num] = prob_name
 
-# Extract folder names from Part II
+# Extract folder names from Part II (traverse TOC-based heading subfolders)
 if os.path.exists(part2_dir):
-    for folder in sorted(os.listdir(part2_dir)):
-        if os.path.isdir(os.path.join(part2_dir, folder)) and not folder.startswith('.'):
+    for root, dirs, files in os.walk(part2_dir):
+        for folder in sorted(dirs):
             # Extract problem number and name
-            match = re.search(r'(\d+)\.\s*(.+)', folder)
+            match = re.match(r'(\d+)\.\s*(.+)', folder)
             if match:
                 prob_num = int(match.group(1))
                 prob_name = match.group(2).strip()

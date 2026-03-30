@@ -2,7 +2,7 @@ import os
 import shutil
 
 # Directory path
-dir_path = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\086. The Capacitated Facility Location Problem (CFLP)"
+dir_path = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\D. Strategic Network Design & Sourcing (The Blueprint of the Business)\086. The Capacitated Facility Location Problem (CFLP)"
 
 # File mappings
 file_mappings = [

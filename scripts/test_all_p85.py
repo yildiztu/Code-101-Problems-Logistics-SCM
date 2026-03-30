@@ -29,15 +29,16 @@ def test_notebook(notebook_path, output_dir):
 
 def main():
     """Test all P85 notebooks"""
-    base_path = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\085. The Uncapacitated Facility Location Problem"
-    output_dir = os.path.join(base_path, "executed")
+    root_dir = os.getcwd()
+    p85_dir = os.path.join(root_dir, "Part II - The End-to-End Supply Chain (Problems 47-101)", "D. Strategic Network Design & Sourcing (The Blueprint of the Business)", "085. The Uncapacitated Facility Location Problem")
+    output_dir = os.path.join(p85_dir, "executed")
     
     # Create output directory
     os.makedirs(output_dir, exist_ok=True)
     
     notebooks = [
         "P85-Tier-1.ipynb",
-        "P85-Tier-2.ipynynb", 
+        "P85-Tier-2.ipynb",
         "P85-Tier-3.ipynb",
         "P85-Tier-4.ipynb",
         "P85-Tier-9.ipynb"
@@ -49,7 +50,7 @@ def main():
     failed = []
     
     for notebook in notebooks:
-        notebook_path = os.path.join(base_path, notebook)
+        notebook_path = os.path.join(p85_dir, notebook)
         if os.path.exists(notebook_path):
             if test_notebook(notebook_path, output_dir):
                 successful.append(notebook)

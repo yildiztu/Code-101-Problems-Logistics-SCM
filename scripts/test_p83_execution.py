@@ -57,7 +57,7 @@ notebooks = [
     "P83-Tier-9.ipynb"
 ]
 
-base_dir = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\083. The Multi-Facility Location p-Median Problem"
+base_dir = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\D. Strategic Network Design & Sourcing (The Blueprint of the Business)\083. The Multi-Facility Location p-Median Problem"
 
 print("P83 EXECUTION READINESS CHECK")
 print("="*50)

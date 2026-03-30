@@ -28,6 +28,7 @@ This repository is designed for individuals interested in learning and practicin
 * **Problem Categories 📂:** The 101 problems are organized into two main categories:
   * `Part I - The Port & Container Terminal (Problems 1-46)/` - Container terminal and port operations problems
   * `Part II - The End-to-End Supply Chain (Problems 47-101)/` - Full supply chain and logistics problems
+* **Within-Part Grouping 📂:** Within each Part, problems are grouped under TOC-based subfolders (A–E) for cleaner navigation.
 * **Problem Folders 📂:** Each problem has its own folder containing multiple tiered notebooks with increasing complexity and depth.
 * `infrastructure/jupyterhub/` 🐳: A Docker-based JupyterHub setup you can run locally on Windows/macOS/Linux.
 

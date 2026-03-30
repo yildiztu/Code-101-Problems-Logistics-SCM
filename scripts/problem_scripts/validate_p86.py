@@ -30,7 +30,7 @@ def validate_notebook(filepath):
         return False, f"Other Error: {str(e)}"
 
 # Validate all P86 notebooks
-notebook_dir = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\086. The Capacitated Facility Location Problem (CFLP)"
+notebook_dir = r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part II - The End-to-End Supply Chain (Problems 47-101)\D. Strategic Network Design & Sourcing (The Blueprint of the Business)\086. The Capacitated Facility Location Problem (CFLP)"
 
 print("P86 Notebook Validation Results:")
 print("=" * 60)

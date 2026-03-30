@@ -1,7 +1,7 @@
 # Test core functionality of P7-Tier-9
 import sys
 import os
-sys.path.append(r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part I - The Port & Container Terminal (Problems 1-46)\07. The Berth Allocation Problem")
+sys.path.append(r"c:\Users\turkayyildiz\Desktop\Code - 101 Problems\Part I - The Port & Container Terminal (Problems 1-46)\B. Core Quay-Side Operations (The Ship-to-Shore Interface)\07. The Berth Allocation Problem")
 
 # Test imports and basic class definitions
 try:
