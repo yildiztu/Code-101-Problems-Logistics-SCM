@@ -1,0 +1,99 @@
+🚨 MISSING NOTEBOOK FILES CREATION PROMPT
+
+30 EKSİK NOTEBOOK DOSYASINI OLUŞTURMA TALİMATI
+
+📋 Eksik Dosyalar Listesi:
+- Problem 7: P7-Tier-9.ipynb
+- Problem 10: P10-Tier-5.ipynb, P10-Tier-9.ipynb
+- Problem 11: P11-Tier-7.ipynb
+- Problem 15: P15-Tier-2.ipynb, P15-Tier-5.ipynb, P15-Tier-7.ipynb
+- Problem 16: P16-Tier-2.ipynb, P16-Tier-5.ipynb, P16-Tier-6.ipynb
+- Problem 17: P17-Tier-9.ipynb
+- Problem 18: P18-Tier-2.ipynb, P18-Tier-5.ipynb, P18-Tier-6.ipynb, P18-Tier-7.ipynb
+- Problem 19: P19-Tier-2.ipynb, P19-Tier-5.ipynb, P19-Tier-6.ipynb, P19-Tier-8.ipynb
+- Problem 27: P27-Tier-7.ipynb, P27-Tier-9.ipynb
+- Problem 30: P30-Tier-9.ipynb
+- Problem 42: P42-Tier-8.ipynb
+- Problem 46: P46-Tier-10.ipynb
+- Problem 52: P52-Tier-4.ipynb
+- Problem 74: P74-Tier-5.ipynb, P74-Tier-6.ipynb, P74-Tier-7.ipynb, P74-Tier-8.ipynb, P74-Tier-9.ipynb
+- Problem 101: P101-Tier-7.ipynb
+
+🎯 GENEL TALİMATLAR:
+
+Her bir problem için aşağıdaki adımları izle:
+
+1) KAYNAK ANALİZİ
+- Source folder'dan ilgili line{X}.tex dosyasını oku
+- Problem tanımını, hedefleri, kısıtları ve gereksinimleri analiz et
+- İlgili Tier numarasının ne anlama geldiğini .tex dosyasından öğren
+
+2) İPYNB DOSYASI OLUŞTURMA
+- "TODO.md" dosyasının TAM rehberliğinde ilgili P{X}-Tier-{Y}.ipynb dosyasını oluştur
+- Mevcut diğer tier dosyalarıyla tutarlı yapı ve format kullan
+- Her tier'in kendine özgü değerini ve kullanım senaryosunu açıkla
+
+3) KALİTE STANDARTLARI (P1/P2 SEVİYESİNDE)
+✅ Açık kaynak paketleri sadece: numpy, pandas, matplotlib, seaborn, pulp, dataclass, typing, random, time, copy, datetime, collections, itertools, warnings, heapq, networkx
+✅ Kapsamlı açıklamalar: Adım adım İngilizce açıklamalar, matematiksel formüller, gerçek dünya uygulamaları
+✅ Başlangıç dostu kod: Yorumlanmış kod, açık değişken isimleri, modüler fonksiyon tasarımı
+✅ Tier gerekçelendirme: Her tier'in bir öncekine göre avantajları/dezavantajları
+✅ Görünür konseptler: Somut örnekler, profesyonel görselleştirmeler
+✅ Tutarlı problem örnekleri: Tüm tierlarda uyumlu problem tanımı
+✅ Profesyonel görselleştirmeler: 4 panel analiz dashboard'ları, öğrenme eğrileri
+
+4) YAPI SALIKONTROLÜ
+✅ JSON formatı geçerli mi?
+✅ Markdown ve kod hücreleri doğru yapılandırılmış mı?
+✅ Görsel olarak düzgün görünüyor mu?
+✅ Hiçbir syntax hatası var mı?
+✅ Tüm import ifadeleri doğru mu?
+
+5) ÇALIŞTIRMA VE TEST ETME
+✅ Tüm notebook'ları hatasız çalıştır
+✅ Çıktılar kaliteli ve doğru mu?
+✅ Pedagojik olarak harika mi?
+✅ Görselleştirmeler profesyonel mi?
+✅ Cross-tier karşılaştırmalar var mı?
+
+6) ÖZEL TIER GEREKSİNİMLERİ
+Tier 1: Matematiksel formülasyon (MIP, MDP, vb.)
+Tier 2: Klasik heuristikler (Greedy, Savings, vb.)
+Tier 3: İleri algoritmalar (GA, PSO, ACO, vb.)
+Tier 4: AI/ML/RL (DQN, Transformer, vb.)
+Tier 5: Entegre Digital Twin
+Tier 6: Otonom Ekosistem (Multi-Agent)
+Tier 7: İnsan-YAI Sembiyotik Ortaklık
+Tier 8: Değer-Hizmetli Etik Çerçeve
+Tier 9: Kuantum Sıçraması (QAOA, vb.)
+Tier 10: Proaktif Piyasa Şekillendirme
+
+🔥 KRİTİK ÖNCELİKLER:
+1. Problem 74 - 5 eksik tier (en acil)
+2. Problem 18 - 4 eksik tier  
+3. Problem 19 - 4 eksik tier
+4. Diğer problemler - 1-3 eksik tier
+
+📁 DOSYA YAPISI:
+Part I - The Port & Container Terminal (Problems 1-46)/
+├── {Problem X}. The {Problem Name}/
+│   ├── P{X}-Tier-{Y}.ipynb
+
+Part II - The End-to-End Supply Chain (Problems 47-101)/
+├── {Problem X}. The {Problem Name}/
+│   ├── P{X}-Tier-{Y}.ipynb
+
+🎯 SON KONTROL LİSTESİ:
+[ ] 30 dosyanın tamamı oluşturuldu mu?
+[ ] Tüm dosyalar P1/P2 kalitesinde mi?
+[ ] JSON yapıları geçerli mi?
+[ ] Tüm dosyalar hatasız çalışıyor mu?
+[ ] Pedagojik standartlar karşılandı mı?
+[ ] Cross-tier tutarlılığı sağlandı mı?
+
+HAYDİ BAŞLA! 30 eksik dosyayı P1/P2 kalitesinde oluştur ve tüm sistemi tamamla! 🚀
+
+## Source of truth (must not change)
+- Source folder: D:\Users\Turkay\Desktop\Books\The Logistics & Supply Chain Problem-Solving Playbook (101 Problems Edition)\___LaTeX\___responses-complete\responses-complete-png 
+- This folder contains line1.tex … line101.tex.
+- For each problem, the Python code and Tier information live inside the corresponding .tex file (problem narrative + solution code blocks + Tier count, etc.).
