@@ -1,0 +1,224 @@
+Table of Contents
+Part I: The Port & Container Terminal Playbook	1
+Introduction: How to Use This Playbook — Mastering the Port & Terminal Domain	1
+Chapter 1: Foundations of Terminal Operations (The Building Blocks)	16
+1. The Single Crane Lift Sequence Problem	16
+Practice Questions	30
+2. The Container Stacking Rules Problem	32
+Practice Questions	46
+3. The Manual Reefer Monitoring Problem	48
+Practice Questions	62
+4. The FCFS Berth Scheduling Problem	64
+Practice Questions	74
+5. The Single Truck Gate Entry Analysis	76
+Practice Questions	91
+6. The Yard Location Naming Convention Problem	93
+Practice Questions	104
+Chapter 2: Core Quay-Side Operations (The Ship-to-Shore Interface)	106
+7. The Static Berth Allocation Problem	106
+Practice Questions	122
+8. The Quay Crane Assignment Problem	124
+Practice Questions	139
+9. The Quay Crane Scheduling Problem	140
+Practice Questions	162
+10. The Dual-Cycling Quay Crane Problem	163
+Practice Questions	183
+11. The Dynamic Berth Allocation Problem	186
+Practice Questions	199
+12. The Berth Allocation with Tidal Windows Problem	201
+Practice Questions	216
+13. The Quay-Side Ancillary Service Scheduling Problem	218
+Practice Questions	233
+14. The Vessel Stowage Planning Problem (Export)	235
+Practice Questions	244
+15. The Vessel Re-stow Problem (Transshipment)	246
+Practice Questions	262
+Chapter 3: Core Yard & Land-Side Operations (The Heart of the Terminal)	263
+16. The Storage Location Assignment Problem (SLAP)	263
+Practice Questions	277
+17. The Container Reshuffling (Remarshalling) Problem	279
+Practice Questions	298
+18. The Yard Crane (RTG/RMG) Scheduling Problem	300
+Practice Questions	319
+19. The SLAP for Reefer Containers Problem	320
+Practice Questions	334
+20. The SLAP for Out-of-Gauge (OOG) Containers Problem	336
+Practice Questions	348
+21. The Yard Block Housekeeping Problem	350
+Practice Questions	367
+22. The Internal Vehicle (Terminal Truck) Dispatching Problem	369
+Practice Questions	386
+23. The AGV Dispatching & Battery Management Problem	387
+Practice Questions	401
+24. The Static Truck Appointment System Problem	402
+Practice Questions	416
+25. The Dynamic Truck Appointment System Problem	417
+Practice Questions	432
+26. The Gate Automation & Damage Detection Problem	434
+Practice Questions	449
+Chapter 4: Integrated Tactical & Pre-Planning Problems (Connecting the Silos)	451
+27. The Integrated Berth & Crane Allocation Problem (BAP-QCAP)	451
+Practice Questions	468
+28. The Integrated Crane Assignment & Scheduling Problem (QCAP-QCSP)	470
+Practice Questions	487
+29. The Integrated Quay Crane & Yard Truck Scheduling Problem	489
+Practice Questions	505
+30. The Yard Pre-Marshalling for Exports Problem	506
+Practice Questions	524
+31. The Rail-Terminal Scheduling Problem	525
+Practice Questions	539
+32. The Inter-Terminal Transfer Optimization Problem	540
+Practice Questions	557
+33. The Labor Shift Scheduling Problem	560
+Practice Questions	578
+34. The Hazard & IMDG Segregation Problem	579
+Practice Questions	593
+Chapter 5: Strategic Design & Long-Term Investment (Shaping the Future)	595
+35. The Terminal Layout Design Problem	595
+Practice Questions	605
+36. The Berth & Quay Length Design Problem	607
+Practice Questions	620
+37. The Equipment Selection Problem (RTG vs. RMG vs. Straddle)	622
+Practice Questions	639
+38. The Automation Investment Analysis Problem	641
+Practice Questions	662
+39. The Channel Dredging & Deepening Investment Problem	663
+Practice Questions	681
+40. The Port Capacity & Expansion Timing Problem	683
+Practice Questions	700
+41. The Terminal Concession Bidding Problem	702
+Practice Questions	718
+42. The Peak Energy Consumption & Load Shifting Problem	720
+Practice Questions	738
+43. The Security Inspection Optimization Problem	741
+Practice Questions	760
+44. The Carbon Footprint Modeling Problem	763
+Practice Questions	779
+45. The Terminal Digital Twin Scoping Problem	780
+Practice Questions	791
+46. The Competitive Port Pricing Problem	793
+Practice Questions	808
+Conclusion: The Future of Problem-Solving and Your Role In It	809
+
+---------
+
+Table of Contents
+Part II: The End-to-End Supply Chain Playbook	1
+Introduction: How to Use This Playbook — A Journey Through the 12-Tier Problem-Solving Continuum	1
+Chapter 6: Foundational Analytics & Inventory Control (The Language of Supply Chain)	8
+47. The Demand Forecasting: Moving Average & Weighted MA Problem	8
+Practice Questions	19
+48. The Demand Forecasting: Exponential Smoothing Problem	20
+Practice Questions	30
+49. The Causal & Regression-Based Forecasting Problem	32
+Practice Questions	43
+50. The New Product Forecasting Problem	45
+Practice Questions	63
+51. The Classic Economic Order Quantity (EOQ) Problem	65
+Practice Questions	74
+52. The EOQ with Quantity Discounts Problem	75
+Practice Questions	85
+53. The EOQ with Planned Shortages Problem	86
+Practice Questions	95
+54. The Production Order Quantity (POQ) Problem	96
+Practice Questions	104
+55. The Newsvendor Problem	105
+Practice Questions	122
+56. The Safety Stock & Reorder Point (Q,r) Policy Problem	124
+Practice Questions	137
+57. The Periodic Review (Base-Stock) Policy Problem	138
+Practice Questions	152
+58. The ABC/XYZ Inventory Classification Problem	153
+Practice Questions	167
+Chapter 7: Warehouse & Fulfillment Center Operations (Inside the Four Walls)	169
+59. The Warehouse Layout Design Problem	169
+Practice Questions	180
+60. The Warehouse Slotting Optimization Problem	182
+Practice Questions	199
+61. The Order Batching Problem	201
+Practice Questions	214
+62. The Picker Routing Problem	215
+Practice Questions	232
+63. The Zone Picking & Pick-and-Pass Balancing Problem	234
+Practice Questions	248
+64. The Cross-Docking Door Assignment Problem	250
+Practice Questions	265
+65. The 3D Pallet/Case Packing Problem	267
+Practice Questions	279
+66. The Workforce Scheduling for Peak/Off-Peak Problem	280
+Practice Questions	290
+67. The Kitting & Value-Added Service Scheduling Problem	292
+Practice Questions	306
+68. The AS/RS Task Interleaving Problem	308
+Practice Questions	323
+Chapter 8: Transportation, Routing & Freight Management (The Physical Internet)	325
+69. The Shortest Path Problem	325
+Practice Questions	336
+70. The Minimum Spanning Tree Problem	337
+Practice Questions	349
+71. The Classic Vehicle Routing Problem (VRP)	350
+Practice Questions	367
+72. The Capacitated VRP (CVRP)	368
+Practice Questions	383
+73. The Vehicle Routing Problem with Time Windows (VRPTW)	385
+Practice Questions	405
+74. The VRP with Backhauls (VRPB)	406
+Practice Questions	426
+75. The VRP with Pickup and Delivery (VRPPD)	427
+Practice Questions	442
+76. The VRP with Split Deliveries (SDVRP)	443
+Practice Questions	450
+77. The Dynamic & Real-Time VRP	452
+Practice Questions	462
+78. The Fleet Sizing and Composition Problem	464
+Practice Questions	479
+79. The Freight Carrier Selection & Bidding Problem	480
+Practice Questions	497
+80. The International Freight Mode Selection Problem (Air vs. Ocean)	499
+Practice Questions	512
+81. The 3D Container/Truck Loading Problem (Bin Packing)	513
+Practice Questions	538
+Chapter 9: Strategic Network Design & Sourcing (The Blueprint of the Business)	540
+82. The Single Facility Location Problem (Center of Gravity)	540
+Practice Questions	549
+83. The Multi-Facility Location: p-Median Problem	550
+Practice Questions	567
+84. The Multi-Facility Location: p-Center Problem	569
+Practice Questions	581
+85. The Uncapacitated Facility Location Problem	583
+Practice Questions	598
+86. The Capacitated Facility Location Problem (CFLP)	599
+Practice Questions	607
+87. The Hub-and-Spoke Network Design Problem	608
+Practice Questions	625
+88. The Supplier Selection & Order Allocation Problem	626
+Practice Questions	648
+89. The Single vs. Dual Sourcing Problem	649
+Practice Questions	663
+90. The Global Sourcing Offshoring vs. Reshoring Problem	665
+Practice Questions	679
+91. The Contract Design to Mitigate the Bullwhip Effect	680
+Practice Questions	691
+Chapter 10: Integrated, Resilient, & Modern Supply Chains (The Frontier)	692
+92. The Location-Routing Problem (LRP)	692
+Practice Questions	699
+93. The Inventory-Routing Problem (IRP)	700
+Practice Questions	707
+94. The Multi-Echelon Inventory Optimization Problem	709
+Practice Questions	719
+95. The Supply Chain Network Design under Uncertainty	721
+Practice Questions	741
+96. The Resilient Network Design (Robust Optimization)	743
+Practice Questions	759
+97. The Last-Mile Delivery & Micro-Fulfillment Problem	761
+Practice Questions	779
+98. The Green Vehicle Routing Problem	780
+Practice Questions	787
+99. The Electric Vehicle Routing Problem (EVRP)	789
+Practice Questions	799
+100. The Closed-Loop (Reverse Logistics) Network Design Problem	800
+Practice Questions	807
+101. The Supply Chain Finance & Working Capital Optimization Problem	808
+Practice Questions	819
+Conclusion: The Future of Problem-Solving and Your Role In It	820
+
