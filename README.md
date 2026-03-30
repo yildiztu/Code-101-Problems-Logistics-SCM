@@ -95,6 +95,73 @@ This repository is designed for individuals interested in learning and practicin
   * **Usage:** Upload individual notebooks to your preferred cloud platform
   * **Note:** Some advanced features may require additional configuration
 
+## GitHub Setup & Usage 🚀
+
+### Prerequisites:
+* **Git Installation:**
+  ```bash
+  # Windows: Download from https://git-scm.com/download/win
+  # macOS: brew install git
+  # Linux (Ubuntu/Debian): sudo apt-get install git
+  # Linux (Fedora): sudo dnf install git
+  ```
+
+* **GitHub Account:** Create account at https://github.com
+
+### Clone Repository:
+```bash
+# Clone the repository
+git clone https://github.com/yildiztu/Code-101-Problems.git
+
+# Navigate to repository
+cd Code-101-Problems
+```
+
+### Platform-Specific Setup:
+
+**Windows:**
+```bash
+# Create virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+.venv\Scripts\activate
+
+# Install dependencies
+pip install jupyterlab numpy pandas matplotlib seaborn
+
+# Launch JupyterLab
+jupyter lab
+```
+
+**macOS/Linux:**
+```bash
+# Create virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+source .venv/bin/activate
+
+# Install dependencies
+pip install jupyterlab numpy pandas matplotlib seaborn
+
+# Launch JupyterLab
+jupyter lab
+```
+
+### Repository Updates:
+```bash
+# Navigate to repository directory
+cd Code-101-Problems
+
+# Pull latest changes
+git pull origin main
+
+# Activate virtual environment (if needed)
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+```
+
 ## Design Principles ⚙️
 
 * The notebooks are designed to be educational and reproducible. 📊
