@@ -5,6 +5,6 @@ latex_files/
 scripts/
 
 # Development documentation files (keep locally but exclude from releases)
-Prompt.txt
-TODO.md  
-TOC.txt
+# Prompt.txt
+# TODO.md  
+# TOC.txt
