@@ -5,5 +5,6 @@ latex_files/
 scripts/
 
 # Prompt and TODO files (exclude from repository)
-Prompt.txt
-TODO.md
+#Prompt.txt
+#TODO.md
+#TOC.txt
