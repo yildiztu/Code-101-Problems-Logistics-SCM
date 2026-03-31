@@ -49,9 +49,37 @@ The 101 problems in this repository are derived from the following books publish
 
 To complement the books and Jupyter notebooks, you can follow along with full video courses and tutorials on our YouTube channel. These videos walk through the problem-solving processes and code implementations step-by-step:
 
-* 📺 **[IntelliBoost YouTube Channel](https://www.youtube.com/@IntelliBoost/courses)** — *Subscribe for all courses and updates!*
-* 🚢 **[Part I: The Port & Container Terminal Course](https://www.youtube.com/playlist?list=PL6O8rFz-5oZq3HSNoYg_nruGbDq1lUNfu)** — *Video series covering Problems 1-46.*
-* 🔗 **[Part II: The End-to-End Supply Chain Course](https://www.youtube.com/playlist?list=PL6O8rFz-5oZrSfjIOvYVg8fLeajqjNn-z)** — *Video series covering Problems 47-101.*
+### 📺 Featured Video Courses
+
+<table align="center">
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://www.youtube.com/playlist?list=PL6O8rFz-5oZq3HSNoYg_nruGbDq1lUNfu">
+        <img src="https://img.youtube.com/vi/25kv-tONUck/maxresdefault.jpg" alt="Part I Course Thumbnail" width="100%" style="border-radius: 8px;">
+      </a>
+      <br>
+      <strong>🚢 Part I: The Port & Container Terminal Course</strong><br>
+      <em>Video series covering Problems 1-46</em><br>
+      <a href="https://www.youtube.com/playlist?list=PL6O8rFz-5oZq3HSNoYg_nruGbDq1lUNfu">Watch Playlist →</a>
+    </td>
+    <td align="center" width="50%">
+      <a href="https://www.youtube.com/playlist?list=PL6O8rFz-5oZrSfjIOvYVg8fLeajqjNn-z">
+        <img src="https://img.youtube.com/vi/himrb9cEuz8/maxresdefault.jpg" alt="Part II Course Thumbnail" width="100%" style="border-radius: 8px;">
+      </a>
+      <br>
+      <strong>🔗 Part II: The End-to-End Supply Chain Course</strong><br>
+      <em>Video series covering Problems 47-101</em><br>
+      <a href="https://www.youtube.com/playlist?list=PL6O8rFz-5oZrSfjIOvYVg8fLeajqjNn-z">Watch Playlist →</a>
+    </td>
+  </tr>
+</table>
+
+### 📚 Additional Resources
+
+* **[IntelliBoost YouTube Channel](https://www.youtube.com/@IntelliBoost/courses)** — *Subscribe for all courses and updates!*
+* **[Individual Problem Tutorials](https://www.youtube.com/@IntelliBoost/videos)** — *Browse specific problem solutions*
+
+> 💡 **Tip:** Each video corresponds to specific notebook tiers. Look for the problem number in the video title to match with the Jupyter notebooks in this repository.
 
 ## Tiered Notebook Philosophy 🧠
 
@@ -224,18 +252,41 @@ All three books and the 101 problems are authored by **Turkay Yildiz, Ph.D.**. T
 Turkay Yildiz received his Ph.D. from the Institute of Marine Sciences and Technology at Dokuz Eylul University in Izmir, Turkey. He holds degrees in Electronics and Management, and a Master’s Degree in Logistics Management from Izmir University of Economics. His research and professional interests span transportation, port operations, logistics, and supply chain management, and he has authored numerous peer‑reviewed publications and conference presentations in these fields. He also has extensive experience in applying information technologies to logistics and supply chain problems.
 
 **Academic Profiles & Publications:**
-* 🔬 **ResearchGate:** [Turkay_Yildiz](https://www.researchgate.net/profile/Turkay_Yildiz)
+* 🔬 **ResearchGate:** [Turkay-Yildiz](https://www.researchgate.net/profile/Turkay-Yildiz)
 * 🎓 **Google Scholar:** [Publications](https://scholar.google.com/citations?user=dxYzo_AAAAAJ)
 * 🆔 **ORCID:** [0000-0003-0851-050X](https://orcid.org/0000-0003-0851-050X)
 * 🌐 **SciProfiles:** [turkay-yildiz](https://sciprofiles.com/profile/turkay-yildiz)
 
 ## Using and Citing This Work 📖
 
-If you use these notebooks in teaching, research, or practice, please cite the underlying books as the primary sources of the problem statements and conceptual framework:
+If you use these notebooks in teaching, research, or practice, please cite the underlying books as the primary sources of the problem statements and conceptual framework.
 
-* Yildiz, T. (2025). *The logistics problem-solving playbook: 101 problems edition, Part I – The port & container terminal playbook (Problems 1–46).* Amazon.com. https://www.amazon.com/dp/B0FV7ZK9D5
-* Yildiz, T. (2025). *The logistics problem-solving playbook: 101 problems edition, Part II – The end-to-end supply chain playbook (Problems 47–101).* Amazon.com. https://www.amazon.com/dp/B0FV89XJZ5
-* Yildiz, T. (2024). *Logistics and supply chain management in the modern era: Trends, technologies, and best practices.* Amazon.com. https://www.amazon.com/dp/B0DKHYRT89
+### APA Style (7th Edition)
+```text
+Yildiz, T. (2025). The logistics problem-solving playbook: 101 problems edition, Part I – The port & container terminal playbook (Problems 1–46). Amazon.com. https://www.amazon.com/dp/B0FV7ZK9D5
+
+Yildiz, T. (2025). The logistics problem-solving playbook: 101 problems edition, Part II – The end-to-end supply chain playbook (Problems 47–101). Amazon.com. https://www.amazon.com/dp/B0FV89XJZ5
+
+Yildiz, T. (2024). Logistics and supply chain management in the modern era: Trends, technologies, and best practices. Amazon.com. https://www.amazon.com/dp/B0DKHYRT89
+```
+
+### MLA Style (9th Edition)
+```text
+Yildiz, Turkay. The Logistics Problem-Solving Playbook: 101 Problems Edition, Part I – The Port & Container Terminal Playbook (Problems 1–46). Amazon.com, 2025, https://www.amazon.com/dp/B0FV7ZK9D5.
+
+Yildiz, Turkay. The Logistics Problem-Solving Playbook: 101 Problems Edition, Part II – The End-to-End Supply Chain Playbook (Problems 47–101). Amazon.com, 2025, https://www.amazon.com/dp/B0FV89XJZ5.
+
+Yildiz, Turkay. Logistics and Supply Chain Management in the Modern Era: Trends, Technologies, and Best Practices. Amazon.com, 2024, https://www.amazon.com/dp/B0DKHYRT89.
+```
+
+### Chicago Style (17th Edition - Author-Date)
+```text
+Yildiz, Turkay. 2025. The Logistics Problem-Solving Playbook: 101 Problems Edition, Part I – The Port & Container Terminal Playbook (Problems 1–46). Amazon.com. https://www.amazon.com/dp/B0FV7ZK9D5.
+
+Yildiz, Turkay. 2025. The Logistics Problem-Solving Playbook: 101 Problems Edition, Part II – The End-to-End Supply Chain Playbook (Problems 47–101). Amazon.com. https://www.amazon.com/dp/B0FV89XJZ5.
+
+Yildiz, Turkay. 2024. Logistics and Supply Chain Management in the Modern Era: Trends, Technologies, and Best Practices. Amazon.com. https://www.amazon.com/dp/B0DKHYRT89.
+```
 
 You may also reference this repository as a Jupyter-based companion that provides executable implementations, visualizations, and extensions of the problems defined in the books.
 
