@@ -4,7 +4,7 @@ latex_files/
 # Scripts folder (exclude from repository)
 scripts/
 
-# Essential documentation files (KEEP in repository)
-# Prompt.txt
-# TODO.md  
-# TOC.txt
+# Development documentation files (keep locally but exclude from releases)
+Prompt.txt
+TODO.md  
+TOC.txt
