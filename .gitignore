@@ -4,7 +4,7 @@ latex_files/
 # Scripts folder (exclude from repository)
 scripts/
 
-# Prompt and TODO files (exclude from repository)
-#Prompt.txt
-#TODO.md
-#TOC.txt
+# Essential documentation files (KEEP in repository)
+# Prompt.txt
+# TODO.md  
+# TOC.txt
