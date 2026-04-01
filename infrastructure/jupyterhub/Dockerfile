@@ -7,4 +7,11 @@ RUN pip install --no-cache-dir \
     dockerspawner \
     numpy \
     pandas \
-    matplotlib
+    matplotlib \
+    seaborn \
+    scipy \
+    scikit-learn \
+    pulp \
+    networkx \
+    torch \
+    ipywidgets
