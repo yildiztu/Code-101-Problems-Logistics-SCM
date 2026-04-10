@@ -1,8 +1,8 @@
-# 91. Problem Title
+# 091. The Contract Design to Mitigate the Bullwhip Effect
 
 ## 📋 Problem Overview
 
-TechFlow Industries, a major electronics manufacturer, discovered that while consumer demand for their flagship smartphone varied by only 5\% month-to-month, their component suppliers were experiencing demand swings of up to 40\%. This classic bullwhip effect was causing severe disruptions: semiconductor suppliers were alternating between massive overproduction and critical shortages, logistics providers were struggling with unpredictable capacity requirements, and retailers were either stockpiled with excess inventory or facing stockouts during peak periods.
+TechFlow Industries, a major electronics manufacturer, discovered that while consumer demand for their flagship smartphone varied by only 5% month-to-month, their component suppliers were experiencing demand swings of up to 40%. This classic bullwhip effect was causing severe disruptions: semiconductor suppliers were alternating between massive overproduction and critical shortages, logistics providers were struggling with unpredictable capacity requirements, and retailers were either stockpiled with excess inventory or facing stockouts during peak periods.
 
 The root causes were multifaceted: each tier in the supply chain was making independent forecasts based on limited information, forward buying behavior was incentivized by volume discounts, and reactive order batching was amplifying demand signals. The company needed to redesign their contracting mechanisms across multiple tiers to create proper incentives for information sharing, demand smoothing, and coordinated decision-making.
 

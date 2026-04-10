@@ -1,4 +1,4 @@
-# 16. Problem Title
+# 16. The Storage Location Assignment Problem (SLAP)
 
 ## 📋 Problem Overview
 

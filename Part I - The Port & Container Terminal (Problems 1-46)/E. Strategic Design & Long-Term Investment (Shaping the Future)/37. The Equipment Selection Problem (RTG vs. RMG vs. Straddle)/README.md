@@ -1,4 +1,4 @@
-# 37. Problem Title
+# 37. The Equipment Selection Problem (RTG vs. RMG vs. Straddle)
 
 ## 📋 Problem Overview
 

@@ -1,4 +1,4 @@
-# 05. Problem Title
+# 05. The Single Truck Gate Entry Analysis
 
 ## 📋 Problem Overview
 

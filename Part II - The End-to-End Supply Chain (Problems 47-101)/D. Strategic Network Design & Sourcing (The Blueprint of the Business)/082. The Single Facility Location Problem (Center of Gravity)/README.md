@@ -1,4 +1,4 @@
-# 82. Problem Title
+# 082. The Single Facility Location Problem (Center of Gravity)
 
 ## 📋 Problem Overview
 

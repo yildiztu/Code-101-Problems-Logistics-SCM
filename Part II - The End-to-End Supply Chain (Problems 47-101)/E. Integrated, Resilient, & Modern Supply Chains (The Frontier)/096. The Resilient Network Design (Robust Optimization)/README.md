@@ -1,4 +1,4 @@
-# 96. Problem Title
+# 096. The Resilient Network Design (Robust Optimization)
 
 ## 📋 Problem Overview
 
