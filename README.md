@@ -182,25 +182,45 @@ All 630 executed notebooks have been tested with the following packages:
 
 See `requirements.txt` for the complete list of packages.
 
-### 🐳 Docker Option (Containerized Environment)
+### 🐳 JupyterHub (Multi-User Docker Environment)
 
-**Prerequisites:** Docker installed on your system
+**Prerequisites:** Docker and Docker Compose installed on your system
+
+For classroom or multi-user environments, use the JupyterHub setup in `infrastructure/jupyterhub/`:
 
 ```bash
-# Build the Docker image
-docker build -t logistics-playbook .
+# Navigate to JupyterHub folder
+cd infrastructure/jupyterhub/
 
-# Run the container
-docker run -p 8888:8888 -v $(pwd):/workspace logistics-playbook
+# Build and run with Docker Compose
+docker compose up --build
 
-# Access JupyterLab at: http://localhost:8888
+# Access JupyterHub at: http://localhost:8000
 ```
 
-**Docker Features:**
-- ✅ All dependencies pre-installed
+**Alternative: Manual Docker Build**
+
+```bash
+cd infrastructure/jupyterhub/
+
+# Build the image
+docker build -t my-jupyterhub .
+
+# Run the container
+docker run -d --name jupyterhub -p 8000:8000 my-jupyterhub
+
+# Access at: http://localhost:8000
+```
+
+**JupyterHub Features:**
+- ✅ All 630 notebooks' dependencies pre-installed
+- ✅ Multi-user support with authentication
 - ✅ Consistent environment across platforms
 - ✅ No local Python setup required
 - ✅ Isolated from system packages
+- ✅ Perfect for classroom/workshop settings
+
+See `infrastructure/jupyterhub/README.md` for detailed configuration options.
 
 ### ☁️ Cloud Platforms (Optional)
 
