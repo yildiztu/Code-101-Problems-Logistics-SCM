@@ -1,0 +1,9 @@
+services:
+  jupyterhub:
+    build: .
+    container_name: jupyterhub
+    ports:
+      - "8000:8000"
+    command:
+      - jupyterhub
+      - "--Authenticator.allow_all=True"
