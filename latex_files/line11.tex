@@ -1,0 +1,308 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Logistics \& Supply Chain Problem-Solving Playbook\\Chapter 11: The Dynamic Berth Allocation Problem}
+\author{Advanced Container Terminal Operations}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{The Dynamic Berth Allocation Problem}
+
+The Dynamic Berth Allocation Problem (DBAP) represents one of the most complex operational challenges in modern container terminal management. Unlike its static counterpart, where all vessel arrivals are known in advance, the dynamic version must handle vessels that arrive over time with uncertain schedules, creating a continuous optimization challenge that directly impacts terminal productivity, vessel waiting costs, and overall port competitiveness.
+
+\subsection{The Scenario: Port Metropolis Container Terminal}
+
+Port Metropolis handles over 2,000 vessel calls annually across its 12 discrete berths, with vessels ranging from 1,000 TEU feeders to 24,000 TEU ultra-large container vessels (ULCVs). The terminal operates under dynamic conditions where vessel arrivals are subject to weather delays, port congestion at previous stops, and schedule adjustments. Each berth has different specifications: Berths 1-3 accommodate vessels up to 8,000 TEU with 3 quay cranes each, Berths 4-8 handle mid-size vessels up to 15,000 TEU with 4-5 cranes, and Berths 9-12 are dedicated to ULCVs with 6-8 high-productivity cranes each.
+
+The challenge intensifies during peak seasons when 15-20 vessels may arrive within a 48-hour window, each with different draft requirements, handling time expectations, and departure deadlines. Terminal operators must make real-time berth assignments while minimizing total service time, balancing berth utilization, and maintaining service quality agreements with shipping lines.
+
+\subsection{Tier 1: The Pen \& Paper Method (Mathematical Formulation)}
+
+The Dynamic Berth Allocation Problem can be formulated as an Integer Programming model that captures the temporal and spatial constraints of berth assignment decisions.
+
+\textbf{Sets and Indices:}
+\begin{align}
+V &= \{1, 2, \ldots, n\} \quad \text{set of vessels} \\
+B &= \{1, 2, \ldots, m\} \quad \text{set of berths} \\
+T &= \{0, 1, 2, \ldots, H\} \quad \text{discrete time periods}
+\end{align}
+
+\textbf{Parameters:}
+\begin{align}
+a_i &= \text{arrival time of vessel } i \\
+p_{ij} &= \text{processing time of vessel } i \text{ at berth } j \\
+d_i &= \text{desired departure time of vessel } i \\
+L_i &= \text{length of vessel } i \\
+C_j &= \text{capacity (length) of berth } j \\
+\alpha &= \text{weight for waiting time penalty} \\
+\beta &= \text{weight for handling time penalty}
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+x_{ijt} &= \begin{cases} 
+1 & \text{if vessel } i \text{ starts service at berth } j \text{ at time } t \\
+0 & \text{otherwise}
+\end{cases} \\
+s_i &= \text{actual start time of vessel } i \\
+c_i &= \text{completion time of vessel } i
+\end{align}
+
+\textbf{Objective Function:}
+\begin{equation}
+\text{Minimize} \quad Z = \sum_{i \in V} \left[\alpha(s_i - a_i) + \beta(c_i - s_i)\right]
+\end{equation}
+
+\textbf{Constraints:}
+\begin{align}
+\sum_{j \in B} \sum_{t \in T} x_{ijt} &= 1 \quad \forall i \in V \tag{Assignment} \\
+\sum_{i \in V} \sum_{t \in T} x_{ijt} &\leq 1 \quad \forall j \in B \tag{Berth capacity} \\
+s_i &= \sum_{j \in B} \sum_{t \in T} t \cdot x_{ijt} \quad \forall i \in V \tag{Start time} \\
+c_i &= s_i + \sum_{j \in B} p_{ij} \sum_{t \in T} x_{ijt} \quad \forall i \in V \tag{Completion time} \\
+s_i &\geq a_i \quad \forall i \in V \tag{Arrival constraint} \\
+L_i \sum_{t \in T} x_{ijt} &\leq C_j \quad \forall i \in V, j \in B \tag{Length constraint}
+\end{align}
+
+For non-overlapping vessel service at each berth:
+\begin{equation}
+s_i + \sum_{j \in B} p_{ij} \sum_{t \in T} x_{ijt} \leq s_k + M(1 - y_{ik}) \quad \forall i, k \in V, i \neq k
+\end{equation}
+where $y_{ik} = 1$ if vessel $i$ is served before vessel $k$ at the same berth, and $M$ is a large constant.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line11.fig1.png}
+\caption{Enhanced Dynamic Berth Allocation Problem with Node-Based Structure and Professional Styling}
+\end{figure}
+
+\textbf{Concrete Example:} Consider a simplified scenario with 3 vessels and 2 berths over a 12-hour planning horizon. Vessel 1 (5,000 TEU) arrives at $t=0$ requiring 4 hours at berth 1 or 5 hours at berth 2. Vessel 2 (8,000 TEU) arrives at $t=2$ requiring 3 hours at berth 1 or 4 hours at berth 2. Vessel 3 (12,000 TEU) arrives at $t=4$ requiring 6 hours at berth 1 or 5 hours at berth 2.
+
+The optimal solution assigns Vessel 1 to berth 1 from $t=0$ to $t=4$, Vessel 2 to berth 2 from $t=2$ to $t=6$, and Vessel 3 to berth 1 from $t=4$ to $t=10$. This yields a total service time of $(0+4) + (0+4) + (0+6) = 14$ hours with zero waiting time.
+
+\subsection{Tier 2: The Classic Heuristic (Python Implementation)}
+
+The Earliest Deadline First (EDF) constructive heuristic provides an efficient approach to the DBAP by prioritizing vessels with the most urgent departure requirements while considering berth availability and processing efficiency.
+
+\textbf{Algorithm Concept:} The EDF heuristic sorts vessels by their desired departure times and assigns each vessel to the berth that minimizes its completion time while respecting arrival constraints and berth availability windows.
+
+\textbf{Time Complexity:} $O(n^2 \cdot m \cdot \log n)$ where $n$ is the number of vessels, $m$ is the number of berths, and the log factor accounts for sorting operations.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line11.fig2.png}
+\caption{EDF Heuristic Algorithm Flow}
+\end{figure}
+
+\lstinputlisting[language=Python]{.././codes-python/line11.py1.py}
+
+\textbf{Concrete Example Output:}
+\begin{verbatim}
+EDF Heuristic Solution:
+Vessel 1: Berth 1, Start 0, Complete 4, Wait 0h, Process 4h
+Vessel 2: Berth 2, Start 2, Complete 6, Wait 0h, Process 4h  
+Vessel 3: Berth 3, Start 4, Complete 9, Wait 3h, Process 5h
+Vessel 4: Berth 1, Start 4, Complete 12, Wait 1h, Process 8h
+Total Service Time: 32 hours
+\end{verbatim}
+
+The EDF heuristic achieves reasonable performance by prioritizing urgent vessels, though it may not always find the global optimum due to its greedy nature.
+
+\subsection{Tier 3: The Advanced Algorithm (Genetic Algorithm Implementation)}
+
+The Genetic Algorithm (GA) approach treats berth allocation solutions as chromosomes, where each gene represents a vessel-berth-time assignment. Through evolutionary operators of selection, crossover, and mutation, the GA explores the solution space to discover high-quality allocations that minimize total service time.
+
+\textbf{Solution Encoding:} Each chromosome is represented as a list of $(vessel\_id, berth\_id, start\_time)$ tuples, ensuring feasibility through repair mechanisms that handle constraint violations.
+
+\textbf{Fitness Function:} $f(x) = \frac{1}{1 + \alpha \cdot \text{total\_waiting\_time} + \beta \cdot \text{total\_processing\_time} + \gamma \cdot \text{penalty}}$
+
+where penalty accounts for constraint violations such as berth capacity exceedance or overlapping assignments.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line11.fig3.png}
+\caption{Genetic Algorithm Evolution Process for DBAP}
+\end{figure}
+
+\lstinputlisting[language=Python]{.././codes-python/line11.py2.py}
+
+\textbf{Concrete Example Results:} The GA typically converges to superior solutions compared to the EDF heuristic, often achieving 15-25\% reduction in total service time through its global search capability. For the sample problem, the GA found a solution with 28 hours total service time compared to EDF's 32 hours, representing a 12.5\% improvement.
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method}
+
+Reinforcement Learning transforms the DBAP into a sequential decision-making problem where an intelligent agent learns optimal berth assignment policies through interaction with the dynamic port environment.
+
+\textbf{State Space Definition:}
+The state $s_t$ at time $t$ includes:
+\begin{align}
+s_t = \{&\text{current\_time}, \text{berth\_availability\_vector}, \\
+&\text{waiting\_vessels\_queue}, \text{vessel\_features}, \\
+&\text{historical\_performance\_metrics}\}
+\end{align}
+
+\textbf{Action Space:} $A = \{(\text{vessel\_id}, \text{berth\_id}, \text{delay\_decision}) : \text{vessel\_id} \in \text{waiting\_queue}, \text{berth\_id} \in \text{available\_berths}\}$
+
+\textbf{Reward Function:}
+\begin{equation}
+R(s_t, a_t, s_{t+1}) = -\alpha \cdot \text{waiting\_cost} - \beta \cdot \text{processing\_cost} + \gamma \cdot \text{utilization\_bonus}
+\end{equation}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line11.fig4.png}
+\caption{Reinforcement Learning Framework for DBAP}
+\end{figure}
+
+\lstinputlisting[language=Python]{.././codes-python/line11.py3.py}
+
+\textbf{Concrete Example Results:} After 500 training episodes, the DQN agent achieves an average total reward of -45.2, significantly outperforming random policy (-127.8) and approaching the performance of the genetic algorithm solution. The learned policy demonstrates sophisticated behaviors such as strategic waiting for better berth matches and prioritizing high-value vessel assignments.
+
+\subsection{Tier 5: The Integrated Digital Twin (System-of-Systems Simulation)}
+
+The Digital Twin paradigm elevates DBAP from isolated optimization to comprehensive terminal ecosystem simulation, enabling real-time synchronization between physical operations and digital representations for predictive analytics and scenario planning.
+
+\textbf{Multi-System Integration Architecture:}
+The digital twin integrates multiple subsystems including berth allocation, crane scheduling, yard operations, gate processes, and vessel traffic management through a unified simulation platform that maintains bidirectional data flow with physical systems.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line11.fig5.png}
+\caption{Digital Twin System-of-Systems Architecture}
+\end{figure}
+
+\textbf{Simulation Framework Implementation:}
+
+The digital twin employs discrete-event simulation with real-time data synchronization to create a living model of terminal operations. Key components include:
+
+\textbf{Event-Driven Simulation Engine:} Processes vessel arrivals, berth assignments, crane operations, and container movements as discrete events with temporal dependencies.
+
+\textbf{Real-Time Data Integration:} Continuously ingests sensor data, equipment status, and operational updates through IoT infrastructure and terminal operating systems.
+
+\textbf{Predictive Analytics Module:} Utilizes machine learning models to forecast vessel arrival delays, processing time variations, and equipment failures.
+
+\textbf{Scenario Planning Capability:} Enables ``what-if'' analysis for capacity planning, emergency response, and operational policy evaluation.
+
+\textbf{Concrete Example:} The Port Metropolis digital twin processes 15,000+ events daily, maintaining synchronization within 30 seconds of physical operations. During Typhoon Helena, the system simulated 50 different vessel rescheduling scenarios in 2 minutes, identifying an optimal strategy that reduced total delay costs by \$2.3 million compared to the initial reactive approach. The integrated model revealed that delaying 3 large vessels by 8 hours while expediting 7 smaller vessels reduced overall terminal congestion by 23\% and improved berth utilization from 67\% to 81\% during the recovery period.
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership (The Centaur Model)}
+
+The Centaur Model transforms berth allocation from purely automated decision-making to collaborative human-AI intelligence, where terminal operators and AI systems complement each other's strengths to achieve superior operational outcomes.
+
+\textbf{Augmented Intelligence Architecture:}
+Human operators provide contextual knowledge, exception handling, and strategic oversight while AI systems deliver computational optimization, pattern recognition, and real-time data processing. The partnership leverages explainable AI to ensure transparency in automated recommendations.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line11.fig6.png}
+\caption{Human-AI Symbiotic Partnership Architecture}
+\end{figure}
+
+\textbf{Collaborative Decision Framework:}
+
+The partnership operates through three decision modes based on situation complexity and uncertainty:
+
+\textbf{AI-Led Decisions:} Routine berth assignments for standard vessels under normal conditions, where AI provides optimal solutions with high confidence scores above 0.85.
+
+\textbf{Human-Led Decisions:} Complex scenarios involving VIP vessels, emergency situations, contractual exceptions, or political considerations where human judgment is paramount.
+
+\textbf{Collaborative Decisions:} Multi-objective optimization problems, resource conflicts, or high-uncertainty scenarios where human expertise guides AI optimization parameters.
+
+\textbf{Explainable AI Integration:}
+
+The system provides transparent decision rationale through:
+- \textbf{Feature Importance Visualization:} Shows which factors (vessel size, arrival time, berth capacity, etc.) most influenced each recommendation
+- \textbf{Counterfactual Explanations:} Demonstrates how different input changes would alter recommendations
+- \textbf{Confidence Intervals:} Provides uncertainty quantification for each decision
+- \textbf{Alternative Options:} Presents top 3 alternative solutions with trade-off analysis
+
+\textbf{Concrete Example:} During the Port Metropolis annual efficiency evaluation, the Human-AI partnership achieved remarkable results. Over a 6-month period handling 1,247 vessel assignments, the system operated in AI-led mode for 68\% of decisions (847 vessels), collaborative mode for 24\% (299 vessels), and human-led mode for 8\% (101 vessels). 
+
+The AI-led decisions averaged 12 seconds per assignment with 94\% acceptance rate by operators. Collaborative decisions took average 3.2 minutes with AI providing 4.7 alternative scenarios per case, resulting in 15\% better solutions than AI-alone recommendations. Human-led decisions, while taking 8.4 minutes average, successfully handled all emergency situations and VIP vessel requirements with zero customer complaints.
+
+Overall performance showed 18\% reduction in total service time compared to pure AI optimization, 31\% reduction compared to human-only operations, and 97\% operator satisfaction with the partnership model. The explainable AI component achieved 89\% trust score from operators, who reported understanding the reasoning behind 91\% of AI recommendations.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 Practice Questions:}
+
+\textbf{Question 1.1:} Formulate an integer programming model for a simplified DBAP with 4 vessels and 3 berths. Vessel data: V1(arrival=0, length=200m, desired\_departure=10), V2(arrival=2, length=150m, desired\_departure=12), V3(arrival=3, length=250m, desired\_departure=15), V4(arrival=1, length=180m, desired\_departure=11). Berth capacities: B1=300m, B2=200m, B3=220m. Processing times are vessel-dependent: V1 needs 4h at any berth, V2 needs 3h, V3 needs 5h, V4 needs 3h. Minimize total waiting plus processing time.
+
+\textbf{Question 1.2:} Extend the basic model to include berth-dependent processing times where each vessel has different handling times at different berths due to crane variations. V1: B1=4h, B2=5h, B3=6h. V2: B1=3h, B2=3h, B3=4h. V3: B1=5h, B2=6h, B3=7h. V4: B1=3h, B2=4h, B3=4h. Solve manually for the optimal assignment sequence.
+
+\textbf{Tier 2 Practice Questions:}
+
+\textbf{Question 2.1:} Implement a First-Come-First-Served (FCFS) heuristic for the vessel data in Question 1.1. Compare the total service time with your optimal IP solution. Calculate the optimality gap percentage.
+
+\textbf{Question 2.2:} Design and implement a ``Shortest Processing Time First'' heuristic that assigns vessels to berths based on minimum processing time requirements. Test on a dataset of 6 vessels with arrivals spread over 8 hours. Analyze time complexity and solution quality.
+
+\textbf{Tier 3 Practice Questions:}
+
+\textbf{Question 3.1:} Design a Simulated Annealing algorithm for the DBAP with cooling schedule $T(k) = T_0 \cdot 0.95^k$ starting from $T_0 = 100$. Define appropriate neighborhood operations for vessel-berth reassignments and run for 1000 iterations on the 4-vessel problem. Report the best solution found and convergence behavior.
+
+\textbf{Question 3.2:} Implement a Particle Swarm Optimization approach where each particle represents a complete vessel-berth assignment. Define position encoding, velocity updates, and constraint handling mechanisms. Use swarm size of 20 particles and compare results with the GA implementation after 100 iterations.
+
+\textbf{Tier 4 Practice Questions:}
+
+\textbf{Question 4.1:} Design a Multi-Agent Reinforcement Learning system where each berth has an independent agent. Define the communication protocol between agents, shared reward structure, and coordination mechanism. Test on a scenario with 3 berths and 10 vessels arriving over 24 hours.
+
+\textbf{Question 4.2:} Implement a Deep Reinforcement Learning agent using Dueling DQN architecture. Compare performance against the basic DQN from the chapter implementation. Train for 1000 episodes and report learning curves, final policy performance, and sample efficiency.
+
+\textbf{Tier 5 Practice Questions:}
+
+\textbf{Question 5.1:} Design a digital twin simulation incorporating berth allocation, crane scheduling, and yard operations. Model interdependencies between these subsystems and simulate a 48-hour period with 12 vessel arrivals. Measure the impact of berth allocation decisions on overall terminal throughput.
+
+\textbf{Question 5.2:} Implement a ``what-if'' analysis module that can evaluate the impact of adding one additional berth to the terminal. Simulate current operations and compare with the expanded capacity scenario over a month-long period. Report ROI calculations based on reduced vessel waiting costs.
+
+\textbf{Tier 7 Practice Questions:}
+
+\textbf{Question 7.1:} Design an explainable AI dashboard for berth allocation decisions. Implement SHAP (SHapley Additive exPlanations) values to explain individual vessel assignments. Create visualizations showing feature importance and decision confidence for a human operator interface.
+
+\textbf{Question 7.2:} Develop a human-AI collaboration protocol for handling vessel priority exceptions. Define escalation triggers, override mechanisms, and learning feedback loops. Simulate scenarios where 20\% of assignments require human intervention and measure decision quality improvements over time.
+
+\end{document}

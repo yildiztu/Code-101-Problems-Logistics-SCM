@@ -1,5 +1,5 @@
 # LaTeX files (exclude from repository)
-latex_files/
+#latex_files/
 
 # Scripts folder (exclude from repository)
 scripts/

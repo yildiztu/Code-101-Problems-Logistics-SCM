@@ -1,0 +1,458 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The ABC/XYZ Inventory Classification Problem}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{The ABC/XYZ Inventory Classification Problem}
+
+The ABC/XYZ inventory classification problem represents one of the most fundamental challenges in supply chain management: how to intelligently categorize thousands of different products to optimize inventory policies, safety stock levels, and resource allocation decisions. This dual-dimensional classification system combines the traditional ABC analysis (based on item value) with XYZ analysis (based on demand variability) to create a sophisticated nine-category matrix that enables nuanced inventory management strategies.
+
+\subsection{The Scenario: Managing 50,000 SKUs with Limited Resources}
+
+Consider MegaMart Distribution, a regional distribution center serving 200 retail locations across the southeastern United States. The facility manages approximately 50,000 Stock Keeping Units (SKUs) ranging from high-volume consumer electronics to seasonal decorative items. The challenge facing the inventory management team is how to classify these diverse products to implement differentiated inventory policies that balance service levels with working capital efficiency.
+
+Currently, the distribution center treats all products with uniform safety stock policies, resulting in either excessive inventory for stable, low-value items or frequent stockouts for high-value, volatile products. The annual carrying cost of inventory approaches \$12 million, while stockout costs (lost sales, expedited shipping, customer dissatisfaction) exceed \$8 million annually. The inventory management team recognizes that a sophisticated classification system could significantly reduce both carrying costs and stockout incidents.
+
+The ABC dimension classifies products by their annual consumption value, where A-items represent the top 20\% of products contributing 80\% of total value, B-items represent the next 30\% contributing 15\% of value, and C-items represent the remaining 50\% contributing 5\% of value. The XYZ dimension classifies products by demand variability, where X-items have stable, predictable demand (coefficient of variation $<$ 10\%), Y-items have moderate variability (coefficient of variation 10-25\%), and Z-items have highly erratic demand (coefficient of variation $>$ 25\%).
+
+The resulting nine-category matrix enables differentiated inventory policies: AX items (high-value, stable demand) require tight control with moderate safety stocks, while CZ items (low-value, erratic demand) can be managed with loose controls and higher safety stock buffers relative to their demand patterns.
+
+\subsection{Tier 1: The Pen \& Paper Method (Mathematical Formulation)}
+
+The ABC/XYZ inventory classification problem can be formulated as a constraint satisfaction problem (CSP) that systematically assigns each SKU to one of nine categories based on predefined thresholds and calculated metrics.
+
+\textbf{Sets and Parameters:}
+
+Let $I = \{1, 2, \ldots, n\}$ be the set of all SKUs to be classified.
+
+For each SKU $i \in I$, define:
+\begin{itemize}
+    \item $v_i$ = annual consumption value (revenue) of SKU $i$
+    \item $d_{i,t}$ = demand for SKU $i$ in period $t$
+    \item $T$ = number of historical periods considered
+    \item $\bar{d_i} = \frac{1}{T} \sum_{t=1}^{T} d_{i,t}$ = average demand for SKU $i$
+    \item $\sigma_i = \sqrt{\frac{1}{T-1} \sum_{t=1}^{T} (d_{i,t} - \bar{d_i})^2}$ = standard deviation of demand for SKU $i$
+    \item $CV_i = \frac{\sigma_i}{\bar{d_i}}$ = coefficient of variation for SKU $i$
+\end{itemize}
+
+\textbf{ABC Classification Thresholds:}
+
+Define cumulative value thresholds:
+\begin{itemize}
+    \item $\alpha$ = percentile threshold for A-class items (typically 80\%)
+    \item $\beta$ = percentile threshold for B-class items (typically 95\%)
+\end{itemize}
+
+\textbf{XYZ Classification Thresholds:}
+
+Define variability thresholds:
+\begin{itemize}
+    \item $\gamma_1$ = coefficient of variation threshold for X-class items (typically 0.10)
+    \item $\gamma_2$ = coefficient of variation threshold for Y-class items (typically 0.25)
+\end{itemize}
+
+\textbf{Decision Variables:}
+
+For each SKU $i \in I$ and each category $(c, v) \in \{A, B, C\} \times \{X, Y, Z\}$, define:
+
+$$x_{i,c,v} = \begin{cases}
+1 & \text{if SKU } i \text{ is assigned to category } (c, v) \\
+0 & \text{otherwise}
+\end{cases}$$
+
+\textbf{Objective Function:}
+
+The objective is to ensure proper classification consistency:
+
+$$\text{Minimize } \sum_{i \in I} \sum_{(c,v)} \left| P_{i,c,v} - x_{i,c,v} \right|$$
+
+where $P_{i,c,v}$ represents the probability that SKU $i$ belongs to category $(c, v)$ based on its metrics.
+
+\textbf{Constraints:}
+
+Each SKU must be assigned to exactly one category:
+$$\sum_{c \in \{A,B,C\}} \sum_{v \in \{X,Y,Z\}} x_{i,c,v} = 1 \quad \forall i \in I$$
+
+ABC classification constraints based on cumulative value:
+$$\sum_{i: v_i \geq V_\alpha} x_{i,A,v} = |\{i: v_i \geq V_\alpha\}| \quad \forall v \in \{X,Y,Z\}$$
+
+$$\sum_{i: V_\beta \leq v_i < V_\alpha} x_{i,B,v} = |\{i: V_\beta \leq v_i < V_\alpha\}| \quad \forall v \in \{X,Y,Z\}$$
+
+where $V_\alpha$ and $V_\beta$ are the value thresholds corresponding to the $\alpha$ and $\beta$ percentiles.
+
+XYZ classification constraints based on coefficient of variation:
+$$x_{i,c,X} = 1 \Rightarrow CV_i \leq \gamma_1 \quad \forall i \in I, c \in \{A,B,C\}$$
+
+$$x_{i,c,Y} = 1 \Rightarrow \gamma_1 < CV_i \leq \gamma_2 \quad \forall i \in I, c \in \{A,B,C\}$$
+
+$$x_{i,c,Z} = 1 \Rightarrow CV_i > \gamma_2 \quad \forall i \in I, c \in \{A,B,C\}$$
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line58.fig1.png}
+\caption{Enhanced ABC Analysis Problem with Professional CMYK Colors and Node-Based Classification Matrix with Inventory Management Strategies}
+\end{figure}
+
+\textbf{Concrete Example:}
+
+Consider three SKUs with the following data over 12 months:
+
+\textbf{SKU 1 (Premium Laptop):}
+\begin{itemize}
+    \item Annual value: \$450,000
+    \item Monthly demands: [85, 82, 88, 84, 86, 85, 87, 83, 85, 86, 84, 85]
+    \item Average demand: $\bar{d_1} = 85$ units/month
+    \item Standard deviation: $\sigma_1 = 1.83$ units/month
+    \item Coefficient of variation: $CV_1 = \frac{1.83}{85} = 0.022 = 2.2\%$
+\end{itemize}
+
+\textbf{SKU 2 (Office Chair):}
+\begin{itemize}
+    \item Annual value: \$45,000
+    \item Monthly demands: [25, 22, 35, 28, 31, 26, 29, 24, 33, 27, 30, 26]
+    \item Average demand: $\bar{d_2} = 28$ units/month
+    \item Standard deviation: $\sigma_2 = 3.86$ units/month
+    \item Coefficient of variation: $CV_2 = \frac{3.86}{28} = 0.138 = 13.8\%$
+\end{itemize}
+
+\textbf{SKU 3 (Seasonal Decoration):}
+\begin{itemize}
+    \item Annual value: \$5,000
+    \item Monthly demands: [2, 1, 0, 5, 8, 15, 45, 62, 35, 12, 3, 1]
+    \item Average demand: $\bar{d_3} = 15.75$ units/month
+    \item Standard deviation: $\sigma_3 = 22.04$ units/month
+    \item Coefficient of variation: $CV_3 = \frac{22.04}{15.75} = 1.40 = 140\%$
+\end{itemize}
+
+Applying the classification thresholds ($\alpha = 80\%$, $\beta = 95\%$, $\gamma_1 = 10\%$, $\gamma_2 = 25\%$):
+
+\begin{itemize}
+    \item SKU 1: High value (\$450,000) $\Rightarrow$ A-class; Low variability (2.2\%) $\Rightarrow$ X-class; Classification: \textbf{AX}
+    \item SKU 2: Medium value (\$45,000) $\Rightarrow$ B-class; Medium variability (13.8\%) $\Rightarrow$ Y-class; Classification: \textbf{BY}
+    \item SKU 3: Low value (\$5,000) $\Rightarrow$ C-class; High variability (140\%) $\Rightarrow$ Z-class; Classification: \textbf{CZ}
+\end{itemize}
+
+\subsection{Tier 2: The Classic Heuristic (Python Implementation)}
+
+A probabilistic classification heuristic addresses the challenge of boundary cases where SKUs fall near classification thresholds. This randomized approach introduces controlled uncertainty to prevent artificial hard boundaries and enables more robust classification decisions.
+
+\textbf{Algorithm Theory:}
+
+The randomized classification algorithm uses probability distributions around threshold boundaries to make classification decisions. Instead of hard cutoffs, the algorithm defines transition zones where the probability of assignment to adjacent categories varies smoothly. This approach mimics real-world uncertainty in demand patterns and value fluctuations.
+
+The algorithm operates in three phases:
+1. \textbf{Threshold Computation}: Calculate value and variability thresholds with confidence intervals
+2. \textbf{Probabilistic Assignment}: Use Gaussian transition functions around boundaries
+3. \textbf{Randomized Selection}: Make final assignments using weighted random selection
+
+\textbf{Time Complexity}: $O(n \log n)$ for sorting plus $O(n)$ for classification, resulting in $O(n \log n)$ overall complexity.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line58.fig2.png}
+\caption{Probabilistic Transition Functions for Smooth Classification Boundaries}
+\end{figure}
+
+\textbf{Pseudocode:}
+
+\lstinputlisting[language=Python, caption=Randomized ABC/XYZ Classification Algorithm]{.././codes-python/line58.py1.py}
+
+\textbf{Concrete Example:}
+
+Running the randomized algorithm on a dataset of 1,000 SKUs with the following results:
+
+\textbf{Input Data Sample:}
+\begin{itemize}
+    \item SKU\_1001: Value = \$125,000, CV = 0.08
+    \item SKU\_1002: Value = \$85,000, CV = 0.15  
+    \item SKU\_1003: Value = \$12,000, CV = 0.35
+\end{itemize}
+
+\textbf{Threshold Calculations:}
+\begin{itemize}
+    \item A-class threshold (80th percentile): \$95,000
+    \item B-class threshold (95th percentile): \$15,000
+    \item X-class CV threshold: 0.10
+    \item Y-class CV threshold: 0.25
+\end{itemize}
+
+\textbf{Probabilistic Assignments:}
+\begin{itemize}
+    \item SKU\_1001: P(A)=0.85, P(B)=0.15, P(C)=0.00; P(X)=0.75, P(Y)=0.25, P(Z)=0.00 $\Rightarrow$ \textbf{AX} (85\% × 75\% = 64\% probability)
+    \item SKU\_1002: P(A)=0.15, P(B)=0.80, P(C)=0.05; P(X)=0.25, P(Y)=0.70, P(Z)=0.05 $\Rightarrow$ \textbf{BY} (80\% × 70\% = 56\% probability)
+    \item SKU\_1003: P(A)=0.00, P(B)=0.10, P(C)=0.90; P(X)=0.00, P(Y)=0.15, P(Z)=0.85 $\Rightarrow$ \textbf{CZ} (90\% × 85\% = 77\% probability)
+\end{itemize}
+
+The algorithm successfully handles boundary cases and provides probability distributions for classification confidence, enabling more nuanced inventory policy decisions.
+
+\subsection{Tier 3: The Advanced Algorithm (Metaheuristic Implementation)}
+
+A hybrid metaheuristic combining Genetic Algorithm evolution with Simulated Annealing refinement addresses the multi-objective nature of ABC/XYZ classification, where optimal thresholds must balance classification accuracy, policy effectiveness, and operational constraints.
+
+\textbf{Algorithm Theory:}
+
+The hybrid approach recognizes that ABC/XYZ classification involves multiple competing objectives: maximizing classification stability, minimizing inventory costs, and achieving target service levels. A Genetic Algorithm evolves threshold combinations while Simulated Annealing fine-tunes individual solutions to escape local optima.
+
+The chromosome representation encodes threshold values: $[V_A, V_B, CV_X, CV_Y, w_1, w_2, w_3]$ where the first four values represent classification thresholds and the weights represent policy emphasis factors.
+
+The fitness function balances multiple criteria:
+$$f(x) = w_1 \cdot \text{ClassificationStability}(x) + w_2 \cdot \text{InventoryCost}(x) + w_3 \cdot \text{ServiceLevel}(x)$$
+
+\textbf{Computational Complexity}: $O(G \cdot P \cdot N \cdot E)$ where $G$ is generations, $P$ is population size, $N$ is number of SKUs, and $E$ is evaluation complexity.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line58.fig3.png}
+\caption{Hybrid Genetic Algorithm with Simulated Annealing Refinement}
+\end{figure}
+
+\textbf{Pseudocode:}
+
+\lstinputlisting[language=Python, caption=Hybrid GA-SA ABC/XYZ Optimization]{.././codes-python/line58.py2.py}
+
+\textbf{Concrete Example:}
+
+Applied to a dataset of 5,000 SKUs over 50 generations with population size 80:
+
+\textbf{Initial Random Population (Sample):}
+\begin{itemize}
+    \item Individual 1: $[V_A=\$95K, V_B=\$12K, CV_X=0.12, CV_Y=0.28, w_1=0.4, w_2=0.3, w_3=0.3]$
+    \item Individual 2: $[V_A=\$110K, V_B=\$18K, CV_X=0.08, CV_Y=0.22, w_1=0.2, w_2=0.5, w_3=0.3]$
+\end{itemize}
+
+\textbf{Evolution Progress:}
+\begin{itemize}
+    \item Generation 1: Best fitness = 0.672, Avg = 0.445
+    \item Generation 25: Best fitness = 0.834, Avg = 0.721
+    \item Generation 50: Best fitness = 0.891, Avg = 0.856
+\end{itemize}
+
+\textbf{Final Optimized Solution:}
+$[V_A=\$102,500, V_B=\$15,800, CV_X=0.095, CV_Y=0.235, w_1=0.35, w_2=0.40, w_3=0.25]$
+
+This solution achieved:
+\begin{itemize}
+    \item 12\% reduction in total inventory costs compared to uniform thresholds
+    \item 8\% improvement in service level consistency across categories
+    \item 94\% classification stability over 6-month validation period
+\end{itemize}
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method}
+
+An online learning approach using adaptive multi-armed bandits addresses the dynamic nature of ABC/XYZ classification where optimal thresholds and policies must continuously adapt to changing market conditions, seasonal patterns, and business priorities.
+
+\textbf{Algorithm Theory:}
+
+The online learning framework treats each possible threshold configuration as an "arm" in a multi-armed bandit problem, where the reward represents the combined performance of inventory cost reduction and service level achievement. The algorithm uses Upper Confidence Bound (UCB) exploration to balance exploitation of known good configurations with exploration of potentially better alternatives.
+
+The system maintains confidence intervals for each threshold combination and adapts policies in real-time based on observed performance. This approach handles non-stationary environments where optimal classifications change over time due to market dynamics, product lifecycle changes, and seasonal variations.
+
+\textbf{State Representation}: Each state includes current inventory levels, recent demand patterns, cost structures, and service level achievements for each category.
+
+\textbf{Action Space}: Discrete threshold adjustments within predefined ranges for each classification boundary.
+
+\textbf{Reward Function}: 
+$$R_t = \alpha \cdot \text{CostReduction}_t + \beta \cdot \text{ServiceImprovement}_t - \gamma \cdot \text{ClassificationInstability}_t$$
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line58.fig4.png}
+\caption{Online Learning System for Adaptive ABC/XYZ Classification}
+\end{figure}
+
+\textbf{Implementation:}
+
+\lstinputlisting[language=Python, caption=Online Learning ABC/XYZ Classification]{.././codes-python/line58.py3.py}
+
+\textbf{Concrete Example:}
+
+Deployed for a 10,000 SKU distribution center over 180 days of operation:
+
+\textbf{System Configuration:}
+\begin{itemize}
+    \item Threshold ranges: Value [\$1K-\$500K], CV [0.05-0.50]
+    \item Generated 625 unique threshold combinations (arms)
+    \item Learning rate = 0.1, Exploration factor = 2.0
+    \item Performance evaluation window = 30 days
+\end{itemize}
+
+\textbf{Learning Progress:}
+\begin{itemize}
+    \item Days 1-30: Exploration phase, avg reward = 0.42
+    \item Days 31-90: Exploitation begins, avg reward = 0.67
+    \item Days 91-180: Stable performance, avg reward = 0.83
+\end{itemize}
+
+\textbf{Optimal Configuration Discovered:}
+$V_A = \$98,500$, $V_B = \$16,200$, $CV_X = 0.092$, $CV_Y = 0.228$
+
+\textbf{Performance Improvements:}
+\begin{itemize}
+    \item 18\% reduction in inventory carrying costs
+    \item 95.2\% average service level (vs. 91.8\% baseline)
+    \item Automatic adaptation to seasonal demand patterns
+    \item Real-time threshold adjustment during demand spikes
+\end{itemize}
+
+The online learning system successfully adapted to three major demand pattern changes during the evaluation period, automatically adjusting thresholds within 5-7 days of detecting performance degradation.
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership (The Centaur Model)}
+
+The Human-AI symbiotic approach to ABC/XYZ classification recognizes that optimal inventory management requires both algorithmic precision and human business intuition. This centaur model creates an augmented intelligence system where AI handles large-scale pattern recognition and optimization while humans provide strategic oversight, exception handling, and business context interpretation.
+
+\textbf{Symbiotic Architecture:}
+
+The system implements a three-layer collaboration framework:
+
+1. \textbf{AI Foundation Layer}: Automated classification using ensemble methods combining multiple algorithms from previous tiers, providing baseline classifications with confidence scores.
+
+2. \textbf{Human Oversight Layer}: Domain experts review high-uncertainty classifications, business-critical items, and edge cases where algorithmic decisions may not align with strategic priorities.
+
+3. \textbf{Collaborative Decision Layer}: Interactive interface where humans and AI jointly refine classification rules, incorporate business constraints, and validate policy changes.
+
+The partnership leverages Explainable AI (XAI) techniques to ensure human partners understand why specific classifications were made, enabling informed override decisions and continuous improvement of the algorithmic components.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line58.fig5.png}
+\caption{Centaur Model for Human-AI Collaborative Classification}
+\end{figure}
+
+\textbf{Implementation Framework:}
+
+\lstinputlisting[language=Python, caption=Human-AI Symbiotic Classification System]{.././codes-python/line58.py4.py}
+
+\textbf{Concrete Example:}
+
+Implemented for GlobalTech Distribution managing 25,000 electronics SKUs:
+
+\textbf{System Deployment:}
+\begin{itemize}
+    \item AI ensemble accuracy: 87\% on automated classifications
+    \item Human review rate: 12\% of all SKUs (3,000 items)
+    \item Expert override rate: 23\% of reviewed items (690 overrides)
+    \item Average review time: 45 seconds per item
+\end{itemize}
+
+\textbf{Sample Human-AI Collaboration Cases:}
+
+\textbf{Case 1 - High-Value Smartphone:}
+\begin{itemize}
+    \item AI Prediction: AY (High value, Medium variability)
+    \item AI Confidence: 72\%
+    \item Human Review: Expert noted upcoming model refresh affecting demand
+    \item Human Decision: OVERRIDE to AZ (anticipating demand volatility)
+    \item Outcome: Prevented \$45,000 in excess inventory costs
+\end{itemize}
+
+\textbf{Case 2 - Seasonal Cable Accessory:}
+\begin{itemize}
+    \item AI Prediction: CZ (Low value, High variability)
+    \item AI Confidence: 91\%
+    \item Human Review: Expert confirmed seasonal pattern alignment
+    \item Human Decision: ACCEPT with adjusted safety stock policy
+    \item Outcome: Maintained 98\% service level during peak season
+\end{itemize}
+
+\textbf{Performance Improvements:}
+\begin{itemize}
+    \item Overall classification accuracy: 94\%
+    \item 16\% reduction in inventory carrying costs
+    \item 22\% improvement in stockout prevention
+    \item Expert productivity: 2.5x faster than manual classification
+    \item AI model improvement: 12\% accuracy gain from human feedback
+\end{itemize}
+
+The human-AI partnership achieved superior results compared to either approach alone, demonstrating the power of augmented intelligence in complex inventory management decisions.
+
+## Practice Questions
+
+\textbf{Tier 1 Questions (Mathematical Formulation):}
+
+1. **Basic ABC/XYZ Classification Problem**: Given 5 SKUs with the following data, perform manual ABC/XYZ classification using 80/95 percentile thresholds for ABC and 10\%/25\% CV thresholds for XYZ:
+   \begin{itemize}
+       \item SKU A: Annual value \$150,000, Monthly demands [120, 118, 125, 122, 119, 121, 123, 120, 124, 121, 118, 119]
+       \item SKU B: Annual value \$75,000, Monthly demands [45, 52, 38, 49, 41, 55, 47, 44, 51, 46, 48, 43]
+       \item SKU C: Annual value \$25,000, Monthly demands [15, 14, 16, 15, 17, 14, 15, 16, 14, 15, 16, 15]
+       \item SKU D: Annual value \$8,000, Monthly demands [5, 12, 8, 15, 6, 18, 9, 11, 7, 16, 10, 13]
+       \item SKU E: Annual value \$180,000, Monthly demands [200, 185, 220, 175, 195, 210, 180, 205, 190, 215, 185, 200]
+   \end{itemize}
+   Calculate the coefficient of variation for each SKU and assign final classifications.
+
+2. **Constraint Satisfaction Formulation**: Formulate the ABC/XYZ classification as a CSP for 1,000 SKUs where exactly 20\% must be A-class, 30\% B-class, 50\% C-class, and the XYZ distribution should be approximately 40\% X-class, 35\% Y-class, 25\% Z-class. Define the decision variables, constraints, and objective function.
+
+\textbf{Tier 2 Questions (Heuristic Algorithms):}
+
+3. **Randomized Classification Implementation**: Implement the probabilistic classification algorithm for a dataset where 15\% of SKUs fall within transition zones (±5\% of thresholds). Compare the classification stability over 10 random runs versus deterministic thresholds. Expected stability should be 85-90\%.
+
+4. **Boundary Case Analysis**: Design a heuristic to handle SKUs that fall exactly on classification boundaries. Given threshold values $V_A = \$100,000$, $V_B = \$20,000$, $CV_X = 0.10$, $CV_Y = 0.25$, develop a tie-breaking strategy for SKUs with values \$100,000 ±\$1,000 and CV values 0.10 ±0.005.
+
+\textbf{Tier 3 Questions (Metaheuristic Algorithms):}
+
+5. **Multi-Objective Optimization**: Design a fitness function for the hybrid GA-SA algorithm that balances three objectives: classification stability (target 90\%), inventory cost reduction (target 15\%), and service level improvement (target 5\%). Define the weight relationships and constraint handling methods.
+
+6. **Algorithm Performance Comparison**: Compare the hybrid GA-SA approach against pure GA and pure SA for optimizing ABC/XYZ thresholds on a 5,000 SKU dataset. Expected convergence times: Hybrid (50 generations), Pure GA (80 generations), Pure SA (200 iterations). Analyze the trade-offs.
+
+\textbf{Tier 4 Questions (AI/ML Methods):}
+
+7. **Online Learning Evaluation**: Implement the UCB bandit algorithm for adaptive threshold selection with 625 arms (threshold combinations). Calculate the regret bounds and expected convergence time for achieving 95\% of optimal performance. Analyze the exploration-exploitation trade-off.
+
+8. **Performance Prediction**: Train a machine learning model to predict the performance impact of different ABC/XYZ threshold changes. Use features including historical demand patterns, seasonality indicators, and value distributions. Expected prediction accuracy should exceed 85\%.
+
+\textbf{Tier 7 Questions (Human-AI Partnership):}
+
+9. **Collaboration Framework Design**: Design the human-AI interaction workflow for a distribution center with 50,000 SKUs where human experts can review at most 5,000 classifications per week. Define the prioritization criteria, explanation requirements, and feedback integration mechanisms.
+
+10. **Expert Override Analysis**: Analyze a scenario where human experts override AI classifications 25\% of the time with 92\% accuracy. Design a system to identify when expert intuition adds value versus when it introduces bias. Calculate the optimal human review threshold to maximize overall classification performance.
+
+\end{document}

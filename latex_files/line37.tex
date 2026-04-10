@@ -1,0 +1,331 @@
+\documentclass{article}
+\usepackage[margin=1in, a4paper]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\usepackage{enumitem}
+\usepackage{float}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.99,0.99,0.99}
+% Professional color palette for academic publishing
+\definecolor{myblue}{cmyk}{0.8,0.4,0,0.1}
+\definecolor{mygreen}{cmyk}{0.7,0,0.5,0.2}
+\definecolor{myorange}{cmyk}{0,0.5,0.8,0.1}
+\definecolor{mygray}{cmyk}{0,0,0,0.4}
+\definecolor{arrowcolor}{cmyk}{0.9,0.5,0,0.3}
+\definecolor{nodecolor}{cmyk}{0.6,0.2,0,0.05}
+\definecolor{framecolor}{cmyk}{0.4,0.1,0,0.1}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{The Equipment Selection Problem (RTG vs. RMG vs. Straddle)}
+\author{The Logistics \& Supply Chain Problem-Solving Playbook}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{The Equipment Selection Problem (RTG vs. RMG vs. Straddle)}
+
+The choice of container handling equipment represents one of the most critical strategic decisions facing port operators and terminal managers. This selection directly impacts operational efficiency, cost structure, environmental footprint, and long-term competitiveness. The three primary contenders - Rubber-Tyred Gantry (RTG) cranes, Rail-Mounted Gantry (RMG) cranes, and Straddle Carriers - each offer distinct advantages and limitations that must be carefully evaluated against specific operational requirements.
+
+\subsection{The Scenario: Port Terminal Equipment Investment Decision}
+
+Mediterranean Container Terminal (MCT) is planning a \$200 million expansion of its container handling capacity. The terminal currently processes 2.5 million TEU annually and expects to reach 4 million TEU within five years. The expansion site covers 50 hectares with plans for 8 container blocks, each measuring 400m × 150m. The terminal serves a mix of deep-sea vessels and feeder services, with truck gate throughput of 3,000 moves per day and rail connectivity handling 15\% of total volume.
+
+The decision team must evaluate three equipment configurations: (1) RTG-based system with 16 cranes, (2) RMG-based system with 12 cranes and rail infrastructure, and (3) Automated Straddle Carrier system with 24 units. Each option presents different capital requirements, operational characteristics, and long-term implications for terminal performance.
+
+Key considerations include initial investment costs (\$8-15 million per RTG, \$12-18 million per RMG, \$3-5 million per straddle carrier), operational efficiency (15-35 container moves per hour), stacking density (4-7 high), energy consumption, automation potential, and maintenance requirements. The terminal operates 24/7 with peak productivity requirements during vessel operations and must accommodate future growth while maintaining competitive handling rates.
+
+\subsection{Tier 1: The Pen \& Paper Method (Multi-Objective Mathematical Optimization)}
+
+The equipment selection problem requires simultaneous optimization of multiple conflicting objectives: minimizing total cost of ownership, maximizing operational throughput, minimizing environmental impact, and maximizing operational flexibility. This multi-objective optimization problem can be formulated using Pareto optimization principles.
+
+\textbf{Sets and Parameters:}
+\begin{align}
+E &= \{RTG, RMG, SC\} \text{ (equipment types)} \\
+T &= \{1, 2, \ldots, 20\} \text{ (planning horizon years)} \\
+K &= \{1, 2, \ldots, 8\} \text{ (container blocks)} \\
+C_e^{cap} &= \text{capital cost of equipment type } e \\
+C_e^{op} &= \text{annual operating cost per unit of equipment } e \\
+P_e &= \text{productivity (moves/hour) of equipment } e \\
+S_e &= \text{stacking capacity of equipment } e \\
+F_e &= \text{flexibility index of equipment } e \\
+D_k^t &= \text{demand at block } k \text{ in year } t
+\end{align}
+
+\textbf{Decision Variables:}
+\begin{align}
+x_{e,k} &= \text{number of equipment units of type } e \text{ at block } k \\
+y_e &= \begin{cases} 1 & \text{if equipment type } e \text{ is selected} \\ 0 & \text{otherwise} \end{cases}
+\end{align}
+
+\textbf{Objective Functions (Pareto Optimization):}
+\begin{align}
+\text{Minimize } f_1 &= \sum_{e \in E} \sum_{k \in K} C_e^{cap} \cdot x_{e,k} + \sum_{t \in T} \sum_{e \in E} \sum_{k \in K} \frac{C_e^{op} \cdot x_{e,k}}{(1+r)^t} \\
+\text{Maximize } f_2 &= \sum_{e \in E} \sum_{k \in K} P_e \cdot x_{e,k} \cdot 8760 \\
+\text{Maximize } f_3 &= \sum_{e \in E} \sum_{k \in K} S_e \cdot x_{e,k} \\
+\text{Maximize } f_4 &= \sum_{e \in E} F_e \cdot y_e
+\end{align}
+
+\textbf{Constraints:}
+\begin{align}
+\sum_{e \in E} y_e &= 1 && \text{(single equipment type selection)} \\
+\sum_{e \in E} \sum_{k \in K} P_e \cdot x_{e,k} \cdot 16 &\geq \sum_{k \in K} D_k^{max} && \text{(capacity requirement)} \\
+x_{e,k} &\leq M \cdot y_e && \forall e \in E, k \in K \text{ (logical constraint)} \\
+\sum_{e \in E} \sum_{k \in K} C_e^{cap} \cdot x_{e,k} &\leq B && \text{(budget constraint)} \\
+x_{e,k} &\geq 0, \text{ integer} && \forall e \in E, k \in K
+\end{align}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line37.fig1.png}
+\caption{Enhanced Yard Equipment Selection Problem with Node-Based Comparison Matrix and Professional Styling}
+\end{figure}
+
+\textbf{Concrete Example:} Consider a simplified 2-block terminal with the following parameters:
+- RTG: \$12M capital, \$0.8M/year operating, 22 moves/hour, flexibility index 0.8
+- RMG: \$15M capital, \$0.6M/year operating, 30 moves/hour, flexibility index 0.3  
+- Straddle: \$4M capital, \$1.2M/year operating, 18 moves/hour, flexibility index 0.9
+
+The Pareto-optimal solutions yield three non-dominated configurations:
+1. Pure RTG solution: 8 units, total NPV cost \$156M, 1,408 moves/day capacity
+2. Pure RMG solution: 6 units, total NPV cost \$162M, 1,440 moves/day capacity
+3. Hybrid Straddle solution: 16 units, total NPV cost \$134M, 1,152 moves/day capacity
+
+\subsection{Tier 2: The Classic Heuristic (Constraint Propagation with Backtracking)}
+
+Equipment selection involves complex interdependencies between technical constraints, operational requirements, and economic factors. A backtracking algorithm with constraint propagation can systematically explore the solution space while pruning infeasible combinations early.
+
+\textbf{Algorithm Design:}
+The constraint propagation approach maintains consistency across multiple constraint domains: capacity constraints, budget constraints, compatibility constraints, and performance requirements. When a partial solution violates any constraint, backtracking occurs to explore alternative configurations.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line37.fig2.png}
+\caption{Backtracking Algorithm with Constraint Propagation}
+\end{figure}
+
+\lstinputlisting[language=Python, caption=Equipment Selection Backtracking Algorithm]{.././codes-python/line37.py1.py}
+
+\textbf{Concrete Example:} For a terminal with 8 blocks requiring 2,400 moves/day capacity and \$180M budget:
+
+The algorithm explores equipment combinations systematically:
+1. RTG branch: Tests 12, 16, 20 units (16 units selected - meets capacity, within budget)
+2. RMG branch: Tests 8, 10, 12 units (10 units selected - meets capacity, within budget)  
+3. Straddle branch: Tests 20, 24, 28 units (24 units selected - meets capacity, within budget)
+
+After constraint propagation and ranking:
+- Solution 1: 16 RTG units, total cost \$176M, flexibility score 8.5/10
+- Solution 2: 10 RMG units, total cost \$174M, productivity score 9.2/10  
+- Solution 3: 24 Straddle units, total cost \$158M, versatility score 8.8/10
+
+\subsection{Tier 3: The Advanced Algorithm (Artificial Bee Colony Optimization)}
+
+The equipment selection problem's multi-dimensional nature and complex constraint interactions make it well-suited for the Artificial Bee Colony (ABC) algorithm. This metaheuristic mimics the foraging behavior of honeybees, where employed bees explore equipment configurations, onlooker bees evaluate solutions based on fitness, and scout bees escape local optima by exploring new solution regions.
+
+\textbf{Algorithm Framework:}
+Each bee represents a complete equipment configuration solution with continuous variables for equipment quantities, operational parameters, and layout decisions. The nectar amount (fitness) corresponds to the overall system performance considering cost, throughput, flexibility, and sustainability metrics.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line37.fig3.png}
+\caption{Artificial Bee Colony Equipment Selection Process}
+\end{figure}
+
+\lstinputlisting[language=Python, caption=Artificial Bee Colony Equipment Selection]{.././codes-python/line37.py2.py}
+
+\textbf{Concrete Example:} Running the ABC algorithm for MCT's equipment selection with colony size 40 and 500 iterations:
+
+Initial population generates diverse configurations. After 284 iterations, convergence is achieved with optimal solution:
+- RTG units: 14 (distributed across blocks 1, 3, 5, 7)
+- RMG units: 6 (blocks 2, 4, 6) 
+- Straddle Carriers: 8 (flexible deployment)
+- Total cost: \$178.4M
+- Daily capacity: 2,856 moves
+- Fitness score: 0.847
+- Sustainability index: 0.72 (60\% electric/hybrid equipment)
+
+The algorithm shows superior performance over traditional optimization methods, finding solutions 15\% better than greedy approaches and 8\% better than simulated annealing in equivalent computational time.
+
+\subsection{Tier 4: The AI/ML/RL Augmentation Method (Federated Learning)}
+
+Modern port terminals generate vast amounts of operational data across distributed systems - crane performance metrics, traffic patterns, maintenance records, and environmental conditions. Federated learning enables multiple terminals to collaboratively train equipment selection models without sharing sensitive operational data, creating a global intelligence network for optimal equipment decision-making.
+
+\textbf{Federated Learning Architecture:}
+Each terminal maintains local equipment performance data and trains local models while contributing to a global model that captures industry-wide patterns. This approach addresses data privacy concerns while leveraging collective intelligence for better equipment selection decisions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line37.fig4.png}
+\caption{Federated Learning Architecture for Equipment Selection}
+\end{figure}
+
+\lstinputlisting[language=Python, caption=Federated Learning Equipment Selection System]{.././codes-python/line37.py3.py}
+
+\textbf{Concrete Example:} Federated learning network with 12 major container terminals:
+
+After 15 federation rounds, the global model achieves 89.3\% accuracy in equipment selection recommendations. For MCT's specific parameters:
+- Annual TEU: 2.5M (growing to 4M)
+- Peak daily moves: 3,000
+- Truck percentage: 75\%
+- Rail percentage: 15\%
+- Available yard: 50 hectares
+- Budget: \$200M
+- ROI requirement: 12\%
+
+Model recommendations with confidence scores:
+1. HYBRID configuration: 74.2\% confidence (STRONG)
+2. RTG\_PURE configuration: 18.1\% confidence (WEAK)
+3. RMG\_PURE configuration: 5.3\% confidence (NOT\_RECOMMENDED)
+4. SC\_PURE configuration: 2.4\% confidence (NOT\_RECOMMENDED)
+
+The federated model recommends a hybrid approach: 10 RTG units for general operations, 4 RMG units for high-density blocks, and 6 automated straddle carriers for landside operations, optimizing both operational efficiency and future scalability.
+
+\subsection{Tier 5: The Integrated Digital Twin (System-of-Systems Simulation)}
+
+The digital twin paradigm transforms equipment selection from static analysis to dynamic, real-time optimization through comprehensive system-of-systems modeling. This approach creates virtual replicas of the entire terminal ecosystem, enabling continuous ``what-if'' analysis and adaptive equipment deployment based on real-world performance feedback.
+
+The integrated digital twin encompasses multiple interconnected subsystems: equipment performance models, traffic flow simulation, weather impact modeling, maintenance scheduling systems, and economic optimization engines. Each subsystem maintains bidirectional data exchange with its physical counterpart, creating a living model that evolves with operational reality.
+
+\textbf{System Architecture:}
+The digital twin integrates IoT sensors from crane systems, RFID tracking from containers, GPS data from vehicles, weather monitoring stations, and financial systems. Machine learning algorithms continuously calibrate model parameters, while optimization engines recommend real-time adjustments to equipment deployment and operational strategies.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line37.fig5.png}
+\caption{Digital Twin System-of-Systems Architecture}
+\end{figure}
+
+\textbf{Implementation Framework:}
+The digital twin operates through continuous simulation cycles, processing real-time data streams to update equipment performance models, predict maintenance requirements, and optimize resource allocation. Advanced analytics identify patterns in equipment utilization, seasonal demand variations, and operational bottlenecks to recommend equipment reallocation or investment decisions.
+
+Key components include discrete event simulation for vessel operations, continuous simulation for traffic flows, Monte Carlo methods for uncertainty modeling, and reinforcement learning for adaptive control strategies. The system maintains multiple scenario models simultaneously, enabling rapid evaluation of proposed changes before physical implementation.
+
+\textbf{Concrete Example:} MCT's digital twin implementation demonstrates substantial operational improvements:
+
+The system processes 2.3 million data points daily from 847 IoT sensors across the terminal. Real-time equipment allocation optimization increases average crane productivity from 22 to 26.8 moves per hour through intelligent work assignment and predictive positioning. Maintenance scheduling optimization reduces unplanned downtime by 34\%, while energy optimization through equipment coordination decreases operational costs by 12\%.
+
+Dynamic equipment selection scenarios reveal optimal configurations under different conditions:
+- Peak season (November-February): Hybrid configuration with temporary RTG deployment
+- Off-peak season (June-August): RMG-focused operations with straddle carrier flexibility
+- Vessel arrival clustering: Automated straddle carrier surge capacity activation
+- Maintenance windows: Dynamic equipment reallocation to maintain service levels
+
+The digital twin identified that the initially planned pure RTG configuration would create bottlenecks during peak operations, leading to a recommendation for hybrid deployment saving \$23M in potential delays and additional equipment costs over the 10-year planning horizon.
+
+\subsection{Tier 7: The Human-AI Symbiotic Partnership (The Centaur Model)}
+
+The centaur model represents the optimal fusion of human expertise and artificial intelligence in equipment selection decisions. Rather than replacing human decision-makers, this approach creates augmented intelligence systems where AI handles complex data processing and pattern recognition while humans provide strategic insight, contextual knowledge, and ethical oversight.
+
+Terminal managers possess irreplaceable domain expertise: understanding of local operational nuances, relationships with shipping lines, knowledge of regulatory constraints, and intuitive grasp of market dynamics. AI systems excel at processing vast datasets, identifying subtle patterns, and exploring thousands of equipment configuration scenarios simultaneously. The centaur model combines these complementary strengths.
+
+\textbf{Symbiotic Decision Architecture:}
+The human-AI partnership operates through explainable AI interfaces that provide transparent reasoning for equipment recommendations. Decision support systems present multiple scenarios with clear trade-off visualizations, allowing human experts to understand AI reasoning and provide strategic guidance. The system learns from human feedback, continuously improving its recommendations while maintaining human oversight for critical decisions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line37.fig6.png}
+\caption{Human-AI Centaur Model for Equipment Selection}
+\end{figure}
+
+\textbf{Explainable AI Implementation:}
+The system provides multiple explanation formats tailored to different stakeholders. For technical teams, detailed mathematical models and constraint analysis are available. For executives, high-level strategic summaries with financial impact projections are provided. For operational staff, practical implementation guidance and expected performance changes are emphasized.
+
+Trust-building mechanisms include confidence intervals for all recommendations, sensitivity analysis showing how changes in assumptions affect outcomes, and historical validation showing past prediction accuracy. The system explicitly identifies uncertainty areas where human judgment is particularly valuable, creating natural collaboration points.
+
+\textbf{Concrete Example:} MCT's centaur model implementation demonstrates the power of human-AI collaboration:
+
+The AI system analyzes 15 years of port operational data, global equipment performance benchmarks, and economic forecasting models to generate equipment recommendations. However, the terminal manager provides crucial context: upcoming changes in shipping alliance strategies, planned infrastructure developments in competing ports, and evolving environmental regulations.
+
+The AI initially recommends a pure RMG system based on historical efficiency data. The human expert notes that MCT's customer base includes significant short-sea shipping with smaller vessels requiring operational flexibility. This insight leads to a collaborative exploration of hybrid configurations.
+
+Through iterative human-AI dialogue, the optimal solution emerges: a hybrid system with 60\% RMG capacity for efficiency, 25\% RTG capacity for flexibility, and 15\% automated straddle carriers for landside operations. This configuration achieves 94\% of the pure RMG efficiency while maintaining operational adaptability for diverse customer requirements.
+
+The centaur model's transparent reasoning builds stakeholder confidence, with board approval achieved in a single meeting compared to typical multi-month deliberation periods. Post-implementation validation shows the hybrid solution outperforms both the initial AI recommendation and traditional human-only decision-making by 18\% in operational performance metrics.
+
+\subsection{Tier 8: The Value-Aligned \& Ethical Framework}
+
+Equipment selection decisions carry profound ethical implications that extend far beyond operational efficiency. The choice between RTG, RMG, and straddle carrier systems affects employment levels, environmental sustainability, community health, and long-term economic development. Value-aligned decision-making integrates ethical considerations as primary constraints rather than secondary considerations.
+
+Modern port equipment selection must address multiple stakeholder values: worker safety and employment security, environmental justice for surrounding communities, sustainable development goals, fair competition in global trade, and intergenerational equity in resource consumption. These values often conflict with short-term profit maximization, requiring sophisticated ethical reasoning frameworks.
+
+\textbf{Ethical Constraint Architecture:}
+The value-aligned system operates through constitutional AI principles, where ethical constraints are formally encoded as hard constraints in the optimization process. Stakeholder value models are explicitly represented, with multi-criteria decision analysis incorporating not just cost and efficiency, but also social impact, environmental effects, and distributional justice considerations.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{../figures-png/line37.fig7.png}
+\caption{Value-Aligned Ethical Framework for Equipment Selection}
+\end{figure}
+
+\textbf{Stakeholder Value Integration:}
+The framework explicitly models different stakeholder utility functions. Workers value employment security, skill development opportunities, and workplace safety. Local communities prioritize air quality, noise reduction, and economic development. Environmental groups focus on carbon emissions, energy efficiency, and circular economy principles. Shipping customers emphasize cost, reliability, and service quality.
+
+Multi-stakeholder optimization uses techniques from social choice theory to aggregate these diverse preferences while respecting fundamental rights and justice principles. The system identifies Pareto-efficient solutions that improve outcomes for some stakeholders without significantly harming others, seeking win-win configurations wherever possible.
+
+\textbf{Concrete Example:} MCT's value-aligned analysis reveals significant ethical considerations in equipment selection:
+
+\textbf{Worker Impact Analysis:}
+- RTG systems require 150 operators (high employment)
+- RMG systems require 80 operators (40\% employment reduction)
+- Hybrid approach requires 110 operators (25\% reduction with retraining programs)
+
+\textbf{Environmental Justice Assessment:}
+- RTG diesel emissions disproportionately affect low-income neighborhoods downwind
+- RMG electric systems reduce local air pollution by 85\%
+- Hybrid configuration with electric RTGs achieves 70\% emission reduction
+
+\textbf{Community Development Impact:}
+- Pure automation reduces local economic multiplier effects
+- Hybrid approach maintains 70\% of local employment benefits
+- Investment in worker retraining creates high-skill job pathways
+
+The value-aligned optimization identifies the hybrid configuration as ethically superior, despite 3\% higher costs. Constitutional constraints prevent pure RMG selection due to excessive employment impacts. The recommended solution includes: mandatory retraining programs (\$2.3M investment), community health monitoring systems, and profit-sharing mechanisms with affected workers.
+
+Stakeholder engagement reveals strong support for the ethical approach: 89\% worker approval, 94\% community organization endorsement, and 76\% investor acceptance. The ethically-informed decision enhances MCT's social license to operate and creates sustainable competitive advantages through stakeholder alignment.
+
+\section{Practice Questions}
+
+\textbf{Tier 1 Question:} Formulate a multi-objective optimization model for a 75-hectare container terminal choosing between RTG, RMG, and straddle carrier systems. The terminal processes 3.2 million TEU annually with a \$350M budget. RTG units cost \$14M each with 24 moves/hour capacity, RMG units cost \$18M each with 32 moves/hour capacity, and straddle carriers cost \$5M each with 16 moves/hour capacity. Include objectives for minimizing total cost of ownership, maximizing throughput capacity, and maximizing operational flexibility. Solve for the optimal equipment mix assuming 15\% discount rate over 15 years.
+
+\textbf{Tier 2 Question:} Implement a backtracking algorithm with constraint propagation to select equipment for 6 container blocks with varying operational requirements. Block constraints include: minimum capacity requirements (1,800-2,400 moves/day per block), maximum budget allocation (\$45M per block), compatibility constraints (adjacent blocks must use compatible equipment), and operational synergy requirements (minimum 40\% equipment type consistency across terminal). Show the complete search tree and pruning decisions for the first 3 blocks.
+
+\textbf{Tier 3 Question:} Design an Artificial Bee Colony optimization for equipment selection with 50 employed bees, 50 onlooker bees, and abandonment limit of 75 trials. The solution space includes RTG quantities (0-25), RMG quantities (0-18), straddle carrier quantities (0-40), and block allocation assignments. Define the fitness function incorporating cost (\$180M budget), productivity (minimum 3,500 moves/day), flexibility index, and sustainability score. Run 300 iterations and analyze convergence behavior, including the impact of scout bee exploration on solution diversity.
+
+\textbf{Tier 4 Question:} Develop a federated learning system for equipment selection involving 8 container terminals with different operational profiles. Terminal A operates 12 RTG cranes with 2.1M TEU annual volume, Terminal B operates 8 RMG cranes with 1.8M TEU volume, and Terminal C operates 18 straddle carriers with 1.5M TEU volume. Design the neural network architecture, define the federated averaging algorithm with client contribution weighting, and predict optimal equipment configuration for a new terminal with 2.7M TEU projected volume, 65\% truck traffic, 25\% rail connectivity, and \$220M capital budget.
+
+\textbf{Tier 5 Question:} Design a digital twin system-of-systems architecture for integrated equipment selection optimization. The system must incorporate real-time data from 950 IoT sensors, weather monitoring systems, vessel scheduling databases, and financial markets. Define the simulation framework including discrete event models for crane operations, continuous models for traffic flows, and Monte Carlo uncertainty modeling. Specify the integration protocols between physical and digital systems, including data latency requirements ($<$200ms for critical operations), model calibration frequencies, and decision update cycles. Analyze a scenario where vessel bunching increases peak demand by 40\% for 3 consecutive days.
+
+\textbf{Tier 7 Question:} Implement a human-AI centaur model for equipment selection decisions involving terminal operations manager expertise and AI system recommendations. The AI system analyzes 12 years of operational data and recommends pure RMG configuration based on efficiency optimization. The human expert identifies upcoming changes in vessel size distributions (30\% increase in smaller feeders) and new environmental regulations requiring 50\% emission reduction by 2030. Design the explainable AI interface showing trade-off visualizations, uncertainty quantification, and sensitivity analysis. Document the collaborative decision process leading to final equipment selection, including human override justifications and AI learning from human feedback.
+
+\textbf{Tier 8 Question:} Develop a value-aligned ethical framework for equipment selection addressing competing stakeholder interests. The decision affects 280 current equipment operators, surrounding community of 15,000 residents, and environmental impact on regional air quality. RMG automation would reduce employment by 45\% but decrease emissions by 75\%. RTG configuration maintains employment but increases particulate emissions affecting asthmatic children in nearby schools. Design the stakeholder value modeling approach, constitutional AI constraints preventing unacceptable outcomes, and multi-criteria decision analysis incorporating social justice principles. Propose a solution that balances efficiency gains with ethical obligations, including specific mitigation measures and stakeholder compensation mechanisms.
+
+\end{document}
