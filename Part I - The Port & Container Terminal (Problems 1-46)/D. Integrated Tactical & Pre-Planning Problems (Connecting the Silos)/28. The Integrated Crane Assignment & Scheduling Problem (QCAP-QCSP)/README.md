@@ -24,9 +24,6 @@ The Port of Singapore Authority faces a critical optimization challenge at their
 ### **Tier 6**: Autonomous Self-Optimizing Ecosystem — [`P28-Tier-6_executed.ipynb`](./P28-Tier-6_executed.ipynb)
 - Implements Autonomous Self-Optimizing Ecosystem
 
-### **Tier 7**: Hybrid Metaheuristic — [`P28-Tier-7_executed.ipynb`](./P28-Tier-7_executed.ipynb)
-- Implements Hybrid Metaheuristic
-
 ### **Tier 9**: Quantum Leap (QAOA) — [`P28-Tier-9_executed.ipynb`](./P28-Tier-9_executed.ipynb)
 - Implements Quantum Leap (QAOA)
 

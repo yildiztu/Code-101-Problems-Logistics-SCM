@@ -25,6 +25,12 @@ The supply chain director has tasked the analytics team with implementing expone
 - Implements state-space models for exponential smoothing
 - Develops robust forecasting with outlier detection
 
+### **Tier 4**: AI/ML Augmentation — [`P48-Tier-4_executed.ipynb`](./P48-Tier-4_executed.ipynb)
+- Neural network learns optimal smoothing functions from data
+- Self-supervised learning discovers complex temporal patterns
+- Provides uncertainty quantification with confidence intervals
+- Attention mechanisms automatically determine optimal weighting
+
 ## 📚 Resources
 
 - **Source Book**: [Part II - The End-to-End Supply Chain](https://www.amazon.com/dp/B0FV89XJZ5) (Problem 48)

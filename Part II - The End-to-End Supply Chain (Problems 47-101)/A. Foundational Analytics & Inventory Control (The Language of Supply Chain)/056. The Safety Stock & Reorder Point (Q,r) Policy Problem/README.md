@@ -25,6 +25,12 @@ The operations director wants to implement a systematic (Q,r) policy: order a fi
 - Implements simulation-based policy evaluation
 - Develops adaptive policies with demand learning
 
+### **Tier 4**: Deep Learning Augmentation — [`P56-Tier-4_executed.ipynb`](./P56-Tier-4_executed.ipynb)
+- Neural networks learn complex patterns in inventory optimization
+- Generates synthetic training data with diverse scenarios
+- Predicts optimal (Q,r) policies for new product characteristics
+- Provides robustness testing across different demand patterns
+
 ## 📚 Resources
 
 - **Source Book**: [Part II - The End-to-End Supply Chain](https://www.amazon.com/dp/B0FV89XJZ5) (Problem 56)
