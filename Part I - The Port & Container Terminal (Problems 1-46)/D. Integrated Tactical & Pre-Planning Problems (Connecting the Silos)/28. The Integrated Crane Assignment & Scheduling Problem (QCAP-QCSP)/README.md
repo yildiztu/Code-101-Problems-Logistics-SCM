@@ -38,4 +38,8 @@ The Port of Singapore Authority faces a critical optimization challenge at their
 
 ## 🔗 Related Problems
 
-*Related problems based on problem dependencies.*
+- **Problem 7**: The Static Berth Allocation Problem
+- **Problem 8**: The Quay Crane Assignment Problem
+- **Problem 9**: The Quay Crane Scheduling Problem
+- **Problem 11**: The Dynamic Berth Allocation Problem
+- **Problem 27**: The Integrated Berth & Crane Allocation Problem (BAP-QCAP)

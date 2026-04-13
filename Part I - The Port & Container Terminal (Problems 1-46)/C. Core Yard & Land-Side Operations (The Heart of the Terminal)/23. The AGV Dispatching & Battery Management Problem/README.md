@@ -2,7 +2,11 @@
 
 ## 📋 Problem Overview
 
-*Problem scenario from source material.*
+At the Port of Rotterdam's automated container terminal, a fleet of 25 Automated Guided Vehicles (AGVs) operates 24/7 to transport containers between quay cranes and yard stacks. Each AGV has a battery capacity of 100 kWh, consuming approximately 0.8 kWh per kilometer traveled. The terminal features 6 strategically placed charging stations, each capable of charging 4 AGVs simultaneously.
+
+During peak operations, the terminal handles up to 180 container moves per hour across 8 active quay cranes. Each transport task has a pickup location (quay crane), delivery location (yard block), priority level (based on vessel departure times), and time window constraints. AGVs must be dispatched efficiently while ensuring they never run out of battery during a task, requiring intelligent routing to charging stations when battery levels drop below safety thresholds.
+
+The challenge is to minimize total travel distance, reduce waiting times at both pickup and delivery points, and maintain high AGV availability through smart battery management - all while respecting the physical constraints of the terminal layout and the operational requirements of vessel loading/unloading schedules.
 
 ## 🎯 Solution Approaches
 
@@ -41,4 +45,7 @@
 
 ## 🔗 Related Problems
 
-*Related problems based on problem dependencies.*
+- **Problem 16**: The Storage Location Assignment Problem (SLAP)
+- **Problem 18**: The Yard Crane (RTG/RMG) Scheduling Problem
+- **Problem 22**: The Internal Vehicle (Terminal Truck) Dispatching Problem
+- **Problem 27**: The Integrated Berth & Crane Allocation Problem (BAP-QCAP)

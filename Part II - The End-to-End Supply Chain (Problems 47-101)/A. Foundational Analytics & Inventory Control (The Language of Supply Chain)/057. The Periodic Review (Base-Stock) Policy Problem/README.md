@@ -8,13 +8,25 @@ The challenge lies in determining optimal inventory policies for each product ca
 
 ## 🎯 Solution Approaches
 
-### **Tier 1** — [`P57-Tier-1_executed.ipynb`](./P57-Tier-1_executed.ipynb)
+### **Tier 1**: Newsvendor Model & Base-Stock Calculation — [`P57-Tier-1_executed.ipynb`](./P57-Tier-1_executed.ipynb)
+- Derives optimal base-stock level using newsvendor framework
+- Calculates safety stock for periodic review with lead time
+- Analyzes service level vs. cost trade-offs
 
-### **Tier 2** — [`P57-Tier-2_executed.ipynb`](./P57-Tier-2_executed.ipynb)
+### **Tier 2**: Simulation-Based Policy Evaluation — [`P57-Tier-2_executed.ipynb`](./P57-Tier-2_executed.ipynb)
+- Simulates periodic review system with stochastic demand
+- Evaluates policy performance across multiple scenarios
+- Compares base-stock policies with different review periods
 
-### **Tier 3** — [`P57-Tier-3_executed.ipynb`](./P57-Tier-3_executed.ipynb)
+### **Tier 3**: Dynamic Programming Optimization — [`P57-Tier-3_executed.ipynb`](./P57-Tier-3_executed.ipynb)
+- Formulates multi-period inventory problem as DP
+- Computes optimal ordering policies under uncertainty
+- Analyzes state-dependent base-stock levels
 
-### **Tier 4** — [`P57-Tier-4_executed.ipynb`](./P57-Tier-4_executed.ipynb)
+### **Tier 4**: Machine Learning for Demand Patterns — [`P57-Tier-4_executed.ipynb`](./P57-Tier-4_executed.ipynb)
+- Applies ML to identify demand patterns and seasonality
+- Implements adaptive base-stock policies with learning
+- Develops predictive models for lead time variability
 
 ## 📚 Resources
 

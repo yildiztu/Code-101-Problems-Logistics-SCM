@@ -6,35 +6,30 @@ The massive container vessel *MSC Gülsün* approaches the Port of Hamburg with 
 
 ## 🎯 Solution Approaches
 
-### **Tier 1** — [`P14-Tier-1_executed.ipynb`](./P14-Tier-1_executed.ipynb)
-- **Learning Goals**:
-  - Tier 1 ## Markov Decision Process Formulation
-  - approaches the Port of Hamburg with 24,346 TEU capacity, ready to load 8,500 export containers destined for 12 different ports across Asia and the Middle East. Each container varies in size (20ft, 40f
+### **Tier 1**: Markov Decision Process Formulation — [`P14-Tier-1_executed.ipynb`](./P14-Tier-1_executed.ipynb)
+- Formulates vessel stowage as a sequential decision problem with state transitions
+- Implements value iteration and policy iteration algorithms
+- Analyzes optimal stowage policies under uncertainty
 
+### **Tier 5**: Integrated Digital Twin — [`P14-Tier-5_executed.ipynb`](./P14-Tier-5_executed.ipynb)
+- Creates real-time digital replica of vessel and terminal operations
+- Synchronizes physical and virtual systems for predictive optimization
+- Enables scenario testing and what-if analysis
 
-### **Tier 5** — [`P14-Tier-5_executed.ipynb`](./P14-Tier-5_executed.ipynb)
-- **Learning Goals**:
-  - Tier 5 ## Integrated Digital Twin (System-of-Systems Simulation)
-  - with 24,346 TEU capacity requires sophisticated coordination between vessel operations, terminal systems, weather conditions, and multi-port routing constraints. Traditional static planning methods ca
+### **Tier 7**: Human-AI Symbiotic Partnership — [`P14-Tier-7_executed.ipynb`](./P14-Tier-7_executed.ipynb)
+- Combines experienced stowage planner expertise with AI optimization
+- Implements explainable AI for transparent decision support
+- Develops trust-building mechanisms for human-AI collaboration
 
+### **Tier 9**: Quantum Leap (Computational Supremacy) — [`P14-Tier-9_executed.ipynb`](./P14-Tier-9_executed.ipynb)
+- Applies quantum optimization algorithms (QAOA) to combinatorial stowage problem
+- Explores quantum advantage for large-scale constraint satisfaction
+- Analyzes quantum circuit design for vessel loading optimization
 
-### **Tier 7** — [`P14-Tier-7_executed.ipynb`](./P14-Tier-7_executed.ipynb)
-- **Learning Goals**:
-  - Tier 7 ## Human-AI Symbiotic Partnership (The Centaur Model)
-  - with 24,346 TEU capacity requires sophisticated coordination between experienced stowage planners and AI systems. While AI excels at processing vast constraint spaces and identifying subtle optimizati
-
-
-### **Tier 9** — [`P14-Tier-9_executed.ipynb`](./P14-Tier-9_executed.ipynb)
-- **Learning Goals**:
-  - Tier 9 ## Quantum Leap (Computational Supremacy)
-  - with 24,346 TEU capacity and 8,500 export containers represents an optimization space of astronomical proportions. Traditional classical algorithms struggle with the combinatorial explosion of possibl
-
-
-### **Tier 11** — [`P14-Tier-11_executed.ipynb`](./P14-Tier-11_executed.ipynb)
-- **Learning Goals**:
-  - Tier 11 ## Physical-Cyber Synthesis (Programmable & Digital Matter)
-  - with 24,346 TEU capacity becomes a living, breathing entity composed of programmable materials that can change their physical properties, geometry, and functionality through digital control. This tran
-
+### **Tier 11**: Physical-Cyber Synthesis — [`P14-Tier-11_executed.ipynb`](./P14-Tier-11_executed.ipynb)
+- Integrates programmable materials and adaptive container systems
+- Implements self-organizing cargo with digital control
+- Explores future of autonomous physical-cyber vessel operations
 
 ## 📚 Resources
 
