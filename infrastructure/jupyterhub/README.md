@@ -94,7 +94,7 @@ http://localhost:8000
 From this folder:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
 
 ## PAM authenticator (creating users inside the container)
