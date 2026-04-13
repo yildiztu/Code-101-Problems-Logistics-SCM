@@ -24,6 +24,31 @@ The challenge extends beyond simple cost comparison. The team must consider: dem
 - Develops threshold-based mode selection criteria
 - Evaluates hybrid strategies for different product categories
 
+### **Tier 3**: Genetic Algorithm — [`P80-Tier-3_executed.ipynb`](./P80-Tier-3_executed.ipynb)
+- Population-based metaheuristic for global optimization
+- Discovers non-intuitive optimal shipment patterns
+- Analyzes convergence and solution quality vs heuristics
+
+### **Tier 4**: Reinforcement Learning — [`P80-Tier-4_executed.ipynb`](./P80-Tier-4_executed.ipynb)
+- Deep Q-learning for adaptive policy development
+- Learns from market disruptions and volatility patterns
+- Enables dynamic decision-making under uncertainty
+
+### **Tier 5**: Digital Twin — [`P80-Tier-5_executed.ipynb`](./P80-Tier-5_executed.ipynb)
+- Real-time IoT integration with 2.3M daily data points
+- Predictive analytics for disruption forecasting
+- Scenario testing and what-if analysis capabilities
+
+### **Tier 7**: Human-AI Partnership — [`P80-Tier-7_executed.ipynb`](./P80-Tier-7_executed.ipynb)
+- Symbiotic collaboration between experts and AI systems
+- Explainable AI with transparent reasoning processes
+- Trust development and learning from human feedback
+
+### **Tier 8**: Ethical Framework — [`P80-Tier-8_executed.ipynb`](./P80-Tier-8_executed.ipynb)
+- Multi-stakeholder utility optimization
+- Environmental and social impact assessment
+- Constitutional AI with ethical constraint compliance
+
 ## 📚 Resources
 
 - **Source Book**: [Part II - The End-to-End Supply Chain](https://www.amazon.com/dp/B0FV89XJZ5) (Problem 80)
