@@ -1,42 +1,74 @@
 ---
 name: Feature Request
-about: Suggest an idea for this project
-title: '[FEATURE] '
-labels: enhancement
+about: Suggest an idea for our logistics optimization educational repository
+title: '[FEATURE] <Area> - <Brief Description>'
+labels: ['enhancement', 'needs-discussion']
 assignees: ''
 
 ---
 
-## Feature Description
-A clear and concise description of the feature you'd like to see added.
+## **Feature Description**
+A clear and concise description of the feature you'd like to see added. Please be specific about how this enhances the educational value of our optimization problems.
 
-## Problem Statement
-What problem does this feature solve? What limitation does it address?
+## **Problem Statement**
+What educational or technical problem does this feature solve? What limitation does it address in our current logistics optimization curriculum?
 
-## Proposed Solution
-How would you like this feature to work? Please describe in detail.
+## **Proposed Solution**
+How would you like this feature to work? Please describe in detail:
+- Which problem(s) or tier(s) would this affect?
+- What new content would be added?
+- How would it integrate with existing materials?
 
-## Alternative Solutions
-Describe any alternative solutions or features you've considered.
+## **Alternative Solutions**
+Describe any alternative solutions or features you've considered. Why is your proposed solution preferred?
 
-## Use Cases
-How would this feature be used? Please provide specific examples.
+## **Educational Value**
+How would this feature enhance learning? Please explain:
+- What concepts would students learn better?
+- How does it improve understanding of optimization?
+- What real-world applications would it demonstrate?
 
-## Target Problems
-Which problems would benefit from this feature? (e.g., specific problem numbers, types of problems)
+## **Use Cases**
+How would this feature be used by different audiences:
+- **Students:** How would it help their learning?
+- **Educators:** How would it support teaching?
+- **Researchers:** How would it aid research?
+- **Practitioners:** How would it apply to real problems?
 
-## Implementation Ideas
+## **Target Problems**
+Which problems would benefit from this feature?
+- **Specific Problems:** (e.g., P1, P23, P47)
+- **Problem Categories:** (e.g., Vehicle Routing, Inventory Management)
+- **Algorithm Types:** (e.g., MIP, Metaheuristics, Machine Learning)
+- **Tiers:** (e.g., Tier-1 fundamentals, Tier-4 AI/ML)
+
+## **Implementation Ideas**
 Do you have any ideas about how this could be implemented?
+- **Code Structure:** Where would this fit in the repository?
+- **Dependencies:** What new libraries or resources would be needed?
+- **Complexity:** Is this a simple addition or major enhancement?
 
-## Additional Context
-Add any other context, mockups, or screenshots about the feature request here.
+## **Additional Context**
+Add any other context, mockups, or screenshots about the feature request here:
+- Reference materials or papers
+- Similar implementations in other projects
+- Example outputs or visualizations
 
-## Priority
+## **Priority**
 How important is this feature to you?
-- [ ] Critical - blocking my work
-- [ ] High - would significantly improve my workflow
-- [ ] Medium - nice to have
-- [ ] Low - minor improvement
+- [ ] **Critical** - Essential for learning objectives
+- [ ] **High** - Would significantly improve educational value
+- [ ] **Medium** - Nice to have enhancement
+- [ ] **Low** - Minor improvement
 
-## Additional Information
-Is there anything else you'd like to add?
+## **Willing to Contribute**
+- [ ] **Yes** - I can help implement this feature
+- [ ] **Maybe** - I might be able to help with guidance
+- [ ] **No** - I'm suggesting this for others to implement
+
+## **Additional Information**
+Is there anything else you'd like to add about your expertise, timeline, or resources?
+
+---
+
+**Thank you for helping improve our educational materials!** Every feature request helps make these resources more valuable for the global optimization community.

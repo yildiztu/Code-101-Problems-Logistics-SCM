@@ -1,13 +1,40 @@
 # Contributing to Code - 101 Problems
 
-Thank you for your interest in contributing to this project! This document provides guidelines for contributors.
+**Thank you for your interest in contributing!** 
 
-## How to Contribute
+This repository is a community-driven educational resource for **101 logistics and supply chain optimization problems**. Every contribution helps make advanced optimization education accessible to everyone!
 
-### Reporting Issues
+## **Why Contribute?**
+- **Learn** - Master optimization algorithms through hands-on contribution
+- **Teach** - Help others understand complex concepts
+- **Build** - Create lasting educational resources
+- **Network** - Connect with the global optimization community
+
+## **Ways to Contribute**
+
+### **Easy Contributions (Great for Beginners!)**
+- **Documentation** - Improve explanations, fix typos, add examples
+- **Visualizations** - Create better charts, graphs, or diagrams
+- **Translations** - Translate content to other languages
+- **Testing** - Run notebooks and report issues
+
+### **Medium Contributions**
+- **New Algorithms** - Implement alternative solution methods
+- **Performance** - Optimize existing code for speed/memory
+- **Examples** - Add real-world case studies
+- **Tutorials** - Create step-by-step guides
+
+### **Advanced Contributions**
+- **New Problems** - Propose and implement new optimization problems
+- **Framework** - Improve the tiered structure system
+- **Integration** - Connect with external tools/APIs
+- **Research** - Add cutting-edge optimization techniques
+
+### **Reporting Issues**
 - Use GitHub Issues to report bugs or request features
 - Provide clear descriptions and steps to reproduce
 - Include relevant screenshots and error messages
+- Tag with appropriate labels (bug, enhancement, question)
 
 ### Submitting Changes
 1. Fork the repository

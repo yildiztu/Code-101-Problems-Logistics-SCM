@@ -5,8 +5,12 @@
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626.svg?logo=jupyter)](https://jupyter.org/)
 [![YouTube](https://img.shields.io/badge/YouTube-IntelliBoost-red.svg?logo=youtube)](https://www.youtube.com/@IntelliBoost/courses)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![GitHub stars](https://img.shields.io/github/stars/yildiztu/Code-101-Problems-Logistics-SCM.svg?style=social&label=Star)](https://github.com/yildiztu/Code-101-Problems-Logistics-SCM)
+[![GitHub forks](https://img.shields.io/github/forks/yildiztu/Code-101-Problems-Logistics-SCM.svg?style=social&label=Fork)](https://github.com/yildiztu/Code-101-Problems-Logistics-SCM)
 
 > *A comprehensive, interactive, and tiered approach to solving 101 complex logistics and supply chain problems using Python and Jupyter Notebooks.*
+
+**Topics:** `python` `jupyter-notebook` `optimization` `operations-research` `logistics` `supply-chain` `machine-learning` `artificial-intelligence` `metaheuristics` `digital-twin` `simulation` `educational` `tutorial` `data-science` `algorithms` `linear-programming` `genetic-algorithm` `reinforcement-learning` `warehouse-management` `transportation` `inventory-management` `heuristics`
 
 ---
 
