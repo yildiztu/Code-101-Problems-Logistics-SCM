@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      metadata: write
     steps:
     - name: Update repository topics
       uses: actions/github-script@v7
@@ -41,10 +42,16 @@ jobs:
             'heuristics'
           ];
           
-          await github.rest.repos.replaceAllTopics({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            names: topics
-          });
-          
-          console.log('Repository topics updated successfully!');
+          try {
+            await github.rest.repos.replaceAllTopics({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              names: topics
+            });
+            
+            console.log('Repository topics updated successfully!');
+          } catch (error) {
+            console.log('Error updating topics:', error.message);
+            console.log('This might be due to API rate limits or permissions.');
+            // Don't fail the workflow if topics can't be updated
+          }
