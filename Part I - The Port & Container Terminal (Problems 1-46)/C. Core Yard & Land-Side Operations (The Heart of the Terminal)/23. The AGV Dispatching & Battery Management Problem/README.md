@@ -16,7 +16,7 @@ The challenge is to minimize total travel distance, reduce waiting times at both
 ### **Tier 2**: Battery-Aware Cheapest Insertion Heuristic — [`P23-Tier-2_executed.ipynb`](./P23-Tier-2_executed.ipynb)
 - Implements Battery-Aware Cheapest Insertion Heuristic
 
-### **Tier 3**: Ant Colony Optimization — [`P23-Tier-3-BACKUP_executed.ipynb`](./P23-Tier-3-BACKUP_executed.ipynb)
+### **Tier 3**: Ant Colony Optimization — [`P23-Tier-3_executed.ipynb`](./P23-Tier-3_executed.ipynb)
 - Implements Ant Colony Optimization
 
 ### **Tier 4**: Deep Reinforcement Learning — [`P23-Tier-4_executed.ipynb`](./P23-Tier-4_executed.ipynb)
