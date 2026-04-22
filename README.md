@@ -36,7 +36,7 @@
 
 ## Overview 📘
 
-This workspace contains Jupyter notebooks for solving **101 logistics and supply chain optimization problems**, organized by problem and difficulty tiers. The notebooks are designed to be educational and reproducible, providing executable, well-documented solutions and visualizations for each problem.
+This repository contains Jupyter notebooks for solving **101 logistics and supply chain optimization problems**, organized by problem and difficulty tiers. The notebooks are designed to be educational and reproducible, providing executable, well-documented solutions and visualizations for each problem.
 
 ## Relationship to the Books 📚
 
@@ -179,11 +179,15 @@ All 604 executed notebooks have been tested with the following packages:
 - `pulp>=2.7.0` - Used in 46 notebooks for linear/integer programming
 
 **Machine Learning (Optional):**
-- `scikit-learn>=1.3.0` - For ML-based approaches
+- `scikit-learn>=1.3.0` - Used in 29 notebooks for ML-based approaches
 - `torch>=2.0.0` - Used in 11 notebooks for deep learning
 
 **Network & Graph (Optional):**
 - `networkx>=3.1` - Used in 9 notebooks for graph algorithms
+
+**Visualization & Utilities (Optional):**
+- `plotly>=5.14.0` - For interactive visualizations
+- `tqdm>=4.65.0` - For progress tracking
 
 **Jupyter Support (Required):**
 - `jupyter>=1.0.0`
@@ -276,8 +280,8 @@ python -m venv .venv
 # Activate virtual environment
 .venv\Scripts\activate
 
-# Install dependencies
-pip install jupyterlab numpy pandas matplotlib seaborn
+# Install all required packages
+pip install -r requirements.txt
 
 # Launch JupyterLab
 jupyter lab
@@ -291,8 +295,8 @@ python -m venv .venv
 # Activate virtual environment
 source .venv/bin/activate
 
-# Install dependencies
-pip install jupyterlab numpy pandas matplotlib seaborn
+# Install all required packages
+pip install -r requirements.txt
 
 # Launch JupyterLab
 jupyter lab
@@ -300,9 +304,6 @@ jupyter lab
 
 ### Repository Updates:
 ```bash
-# Navigate to repository directory
-cd Code-101-Problems-Logistics-SCM
-
 # Pull latest changes
 git pull origin main
 

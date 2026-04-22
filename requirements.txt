@@ -1,6 +1,6 @@
 # ============================================================================
 # The Logistics & Supply Chain Problem-Solving Playbook (101 Problems Edition)
-# Requirements for all 630 executed notebooks
+# Requirements for all 604 executed notebooks
 # ============================================================================
 
 # Core Scientific Computing (Required - used in all notebooks)
@@ -18,14 +18,14 @@ ipywidgets>=8.0.0
 nbformat>=5.9.0
 nbconvert>=7.0.0
 
-# Optimization Libraries (Required - used in 48+ notebooks)
+# Optimization Libraries (Required - used in 46 notebooks)
 pulp>=2.7.0
 
 # Machine Learning (Optional - used in specific tiers)
 scikit-learn>=1.3.0
 torch>=2.0.0
 
-# Network and Graph Algorithms (Required - used in 9+ notebooks)
+# Network and Graph Algorithms (Optional - used in 9 notebooks)
 networkx>=3.1
 
 # Visualization Enhancements
