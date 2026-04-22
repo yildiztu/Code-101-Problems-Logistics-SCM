@@ -94,7 +94,14 @@ The tiered approach generally follows a progression from exact mathematical foun
 2. **Tier 2**: Classic Heuristic Algorithms
 3. **Tier 3**: Advanced Metaheuristics (GA, PSO, ACO)
 4. **Tier 4**: AI/ML and Reinforcement Learning
-5. **Tier 5+**: Digital Twins, Human-AI Collaboration, and Quantum Computing
+5. **Tier 5**: Integrated Digital Twin
+6. **Tier 6**: Multi-Agent System / Autonomous Ecosystem
+7. **Tier 7**: Human-AI Symbiotic Partnership
+8. **Tier 8**: Value-Aligned & Ethical Framework
+9. **Tier 9**: Quantum Leap (QAOA, Quantum Computing)
+10. **Tier 10**: Proactive Demand & Market Shaping
+11. **Tier 11**: Physical-Cyber Synthesis (Programmable & Digital Matter)
+12. **Tier 12**: Biologically Integrated & Regenerative Logistics
 
 > *Note: The specific tiers and total number of tiers may vary per problem.*
 
@@ -138,8 +145,8 @@ This repository is designed for:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yildiztu/Code-101-Problems.git
-cd Code-101-Problems
+git clone https://github.com/yildiztu/Code-101-Problems-Logistics-SCM.git
+cd Code-101-Problems-Logistics-SCM
 
 # Create and activate virtual environment
 python -m venv .venv
@@ -159,12 +166,12 @@ jupyter lab
 
 ### 📦 Package Requirements
 
-All 630 executed notebooks have been tested with the following packages:
+All 604 executed notebooks have been tested with the following packages:
 
 **Core Scientific Computing (Required):**
-- `numpy>=1.24.0` - Used in all 630 notebooks
+- `numpy>=1.24.0` - Used in all 604 notebooks
 - `pandas>=2.0.0` - Used in 522 notebooks
-- `matplotlib>=3.7.0` - Used in all 630 notebooks
+- `matplotlib>=3.7.0` - Used in all 604 notebooks
 - `seaborn>=0.12.0` - Used in 567 notebooks
 - `scipy>=1.10.0` - Used in 65 notebooks
 
@@ -217,7 +224,7 @@ docker run -d --name jupyterhub -p 8000:8000 my-jupyterhub
 ```
 
 **JupyterHub Features:**
-- ✅ All 630 notebooks' dependencies pre-installed
+- ✅ All 604 notebooks' dependencies pre-installed
 - ✅ Multi-user support with authentication
 - ✅ Consistent environment across platforms
 - ✅ No local Python setup required
@@ -253,10 +260,10 @@ See `infrastructure/jupyterhub/README.md` for detailed configuration options.
 ### Clone Repository:
 ```bash
 # Clone the repository
-git clone https://github.com/yildiztu/Code-101-Problems.git
+git clone https://github.com/yildiztu/Code-101-Problems-Logistics-SCM.git
 
 # Navigate to repository
-cd Code-101-Problems
+cd Code-101-Problems-Logistics-SCM
 ```
 
 ### Platform-Specific Setup:
@@ -294,7 +301,7 @@ jupyter lab
 ### Repository Updates:
 ```bash
 # Navigate to repository directory
-cd Code-101-Problems
+cd Code-101-Problems-Logistics-SCM
 
 # Pull latest changes
 git pull origin main
