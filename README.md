@@ -1,7 +1,7 @@
 # Code — 101 Problems (Jupyter Notebooks) 🚢📦
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-F37626.svg?logo=jupyter)](https://jupyter.org/)
 [![YouTube](https://img.shields.io/badge/YouTube-IntelliBoost-red.svg?logo=youtube)](https://www.youtube.com/@IntelliBoost/courses)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
@@ -36,7 +36,7 @@
 
 ## Overview 📘
 
-This workspace contains Jupyter notebooks for solving **101 programming problems**, organized by problem and difficulty tiers. The notebooks are designed to be educational and reproducible, providing executable, well-documented solutions and visualizations for each problem.
+This workspace contains Jupyter notebooks for solving **101 logistics and supply chain optimization problems**, organized by problem and difficulty tiers. The notebooks are designed to be educational and reproducible, providing executable, well-documented solutions and visualizations for each problem.
 
 ## Relationship to the Books 📚
 
@@ -170,19 +170,19 @@ All 604 executed notebooks have been tested with the following packages:
 
 **Core Scientific Computing (Required):**
 - `numpy>=1.24.0` - Used in all 604 notebooks
-- `pandas>=2.0.0` - Used in 522 notebooks
+- `pandas>=2.0.0` - Used in 496 notebooks
 - `matplotlib>=3.7.0` - Used in all 604 notebooks
-- `seaborn>=0.12.0` - Used in 567 notebooks
-- `scipy>=1.10.0` - Used in 65 notebooks
+- `seaborn>=0.12.0` - Used in 541 notebooks
+- `scipy>=1.10.0` - Used in 56 notebooks
 
 **Optimization Libraries (Required):**
-- `pulp>=2.7.0` - Used in 48 notebooks for linear/integer programming
+- `pulp>=2.7.0` - Used in 46 notebooks for linear/integer programming
 
 **Machine Learning (Optional):**
 - `scikit-learn>=1.3.0` - For ML-based approaches
 - `torch>=2.0.0` - Used in 11 notebooks for deep learning
 
-**Network & Graph (Required):**
+**Network & Graph (Optional):**
 - `networkx>=3.1` - Used in 9 notebooks for graph algorithms
 
 **Jupyter Support (Required):**
