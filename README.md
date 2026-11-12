@@ -166,24 +166,24 @@ jupyter lab
 
 ### 📦 Package Requirements
 
-All 604 executed notebooks have been tested with the following packages:
+All 622 executed notebooks have been tested with the following packages:
 
 **Core Scientific Computing (Required):**
-- `numpy>=1.24.0` - Used in all 604 notebooks
-- `pandas>=2.0.0` - Used in 496 notebooks
-- `matplotlib>=3.7.0` - Used in all 604 notebooks
-- `seaborn>=0.12.0` - Used in 541 notebooks
-- `scipy>=1.10.0` - Used in 56 notebooks
+- `numpy>=1.24.0` - Used in 609 notebooks
+- `pandas>=2.0.0` - Used in 261 notebooks
+- `matplotlib>=3.7.0` - Used in 618 notebooks
+- `seaborn>=0.12.0` - Used in 416 notebooks
+- `scipy>=1.10.0` - Used in 40 notebooks
 
 **Optimization Libraries (Required):**
-- `pulp>=2.7.0` - Used in 46 notebooks for linear/integer programming
+- `pulp>=2.7.0` - Used in 47 notebooks for linear/integer programming
 
 **Machine Learning (Optional):**
 - `scikit-learn>=1.3.0` - Used in 29 notebooks for ML-based approaches
 - `torch>=2.0.0` - Used in 11 notebooks for deep learning
 
 **Network & Graph (Optional):**
-- `networkx>=3.1` - Used in 9 notebooks for graph algorithms
+- `networkx>=3.1` - Used in 2 notebooks for graph algorithms
 
 **Visualization & Utilities (Optional):**
 - `plotly>=5.14.0` - For interactive visualizations
@@ -228,7 +228,7 @@ docker run -d --name jupyterhub -p 8000:8000 my-jupyterhub
 ```
 
 **JupyterHub Features:**
-- ✅ All 604 notebooks' dependencies pre-installed
+- ✅ All 622 notebooks' dependencies pre-installed
 - ✅ Multi-user support with authentication
 - ✅ Consistent environment across platforms
 - ✅ No local Python setup required

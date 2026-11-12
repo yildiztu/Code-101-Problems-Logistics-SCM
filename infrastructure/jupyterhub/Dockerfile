@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir \
     jupyterhub-ldapauthenticator \
     dockerspawner
 
-# Install core scientific computing packages (used in all 630 notebooks)
+# Install core scientific computing packages (used in the majority of notebooks)
 RUN pip install --no-cache-dir \
     numpy>=1.24.0 \
     pandas>=2.0.0 \
@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir \
     nbformat>=5.9.0 \
     nbconvert>=7.0.0
 
-# Install optimization libraries (used in 48+ notebooks)
+# Install optimization libraries (used in 47 notebooks)
 RUN pip install --no-cache-dir \
     pulp>=2.7.0
 
@@ -38,7 +38,7 @@ RUN pip install --no-cache-dir \
     scikit-learn>=1.3.0 \
     torch>=2.0.0
 
-# Install network and graph algorithms (used in 9+ notebooks)
+# Install network and graph algorithms (used in 2 notebooks)
 RUN pip install --no-cache-dir \
     networkx>=3.1
 

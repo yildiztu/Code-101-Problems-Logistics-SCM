@@ -1,6 +1,6 @@
 # JupyterHub (Docker) — Setup and Run
 
-This folder contains a complete, reproducible setup to run **JupyterHub in Docker** with all dependencies for the **630 executed notebooks** in this repository.
+This folder contains a complete, reproducible setup to run **JupyterHub in Docker** with all dependencies for the **622 executed notebooks** in this repository.
 
 ## What's Included
 
@@ -12,21 +12,21 @@ The provided `Dockerfile` extends the official JupyterHub image and installs all
 - `jupyterhub-ldapauthenticator` - LDAP authentication support
 - `dockerspawner` - Docker-based user spawning
 
-### Core Scientific Computing (Used in all 630 notebooks)
-- `numpy>=1.24.0` - Numerical computing
-- `pandas>=2.0.0` - Data manipulation (522 notebooks)
-- `matplotlib>=3.7.0` - Plotting and visualization
-- `seaborn>=0.12.0` - Statistical visualization (567 notebooks)
-- `scipy>=1.10.0` - Scientific computing (65 notebooks)
+### Core Scientific Computing (Used across the notebook collection)
+- `numpy>=1.24.0` - Numerical computing (609 notebooks)
+- `pandas>=2.0.0` - Data manipulation (261 notebooks)
+- `matplotlib>=3.7.0` - Plotting and visualization (618 notebooks)
+- `seaborn>=0.12.0` - Statistical visualization (416 notebooks)
+- `scipy>=1.10.0` - Scientific computing (40 notebooks)
 
-### Optimization & Operations Research (48 notebooks)
+### Optimization & Operations Research (47 notebooks)
 - `pulp>=2.7.0` - Linear/integer programming
 
-### Machine Learning (11 notebooks)
-- `scikit-learn>=1.3.0` - Machine learning algorithms
-- `torch>=2.0.0` - Deep learning framework
+### Machine Learning (used in specific tiers)
+- `scikit-learn>=1.3.0` - Machine learning algorithms (29 notebooks)
+- `torch>=2.0.0` - Deep learning framework (11 notebooks)
 
-### Network & Graph Algorithms (9 notebooks)
+### Network & Graph Algorithms (2 notebooks)
 - `networkx>=3.1` - Graph theory and network analysis
 
 ### Visualization & Utilities
@@ -35,7 +35,7 @@ The provided `Dockerfile` extends the official JupyterHub image and installs all
 - `tqdm>=4.65.0` - Progress bars
 - `joblib>=1.3.0` - Parallel processing
 
-This is intentional: in a classroom or multi-user setting, it is better to **bake all dependencies into the Docker image** so that all 630 notebooks run with `Run All` without per-notebook package installation.
+This is intentional: in a classroom or multi-user setting, it is better to **bake all dependencies into the Docker image** so that all 622 notebooks run with `Run All` without per-notebook package installation.
 
 ## Prerequisites
 
