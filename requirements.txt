@@ -3,7 +3,7 @@
 # Requirements for all 620 executed notebooks
 # ============================================================================
 
-# Core Scientific Computing (Required - used in all notebooks)
+# Core Scientific Computing (Required - used across the notebook collection)
 numpy>=1.24.0
 pandas>=2.0.0
 matplotlib>=3.7.0
