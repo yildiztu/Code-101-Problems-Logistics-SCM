@@ -8,7 +8,7 @@ This repository presents a **comprehensive educational framework** for solving 1
 
 ### **Educational Innovation**
 - **Progressive Learning Architecture**: 12-tier framework systematically advancing from exact mathematical methods to AI-driven solutions
-- **Interactive Pedagogy**: 622 executable notebooks providing hands-on learning experiences
+- **Interactive Pedagogy**: 620 executable notebooks providing hands-on learning experiences
 - **Cross-Disciplinary Integration**: Combines operations research, computer science, and logistics engineering
 
 ### **Research Contributions**
@@ -107,7 +107,7 @@ The repository employs a **bipartite structure** aligned with modern logistics e
 - **Infrastructure**: Docker-based JupyterHub for multi-user environments
 
 ### **Quality Assurance**
-- **Comprehensive Testing**: All 622 notebooks validated for execution
+- **Comprehensive Testing**: All 620 notebooks validated for execution
 - **Documentation Standards**: P1/P2 pedagogical quality benchmarks
 - **Visual Excellence**: Professional 4-panel analysis dashboards
 - **Code Quality**: Heavily commented with beginner-friendly structure

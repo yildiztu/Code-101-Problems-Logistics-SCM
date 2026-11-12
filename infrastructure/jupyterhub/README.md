@@ -1,6 +1,6 @@
 # JupyterHub (Docker) — Setup and Run
 
-This folder contains a complete, reproducible setup to run **JupyterHub in Docker** with all dependencies for the **622 executed notebooks** in this repository.
+This folder contains a complete, reproducible setup to run **JupyterHub in Docker** with all dependencies for the **620 executed notebooks** in this repository.
 
 ## What's Included
 
@@ -17,13 +17,13 @@ The provided `Dockerfile` extends the official JupyterHub image and installs all
 - `pandas>=2.0.0` - Data manipulation (261 notebooks)
 - `matplotlib>=3.7.0` - Plotting and visualization (618 notebooks)
 - `seaborn>=0.12.0` - Statistical visualization (416 notebooks)
-- `scipy>=1.10.0` - Scientific computing (40 notebooks)
+- `scipy>=1.10.0` - Scientific computing (39 notebooks)
 
 ### Optimization & Operations Research (47 notebooks)
 - `pulp>=2.7.0` - Linear/integer programming
 
 ### Machine Learning (used in specific tiers)
-- `scikit-learn>=1.3.0` - Machine learning algorithms (29 notebooks)
+- `scikit-learn>=1.3.0` - Machine learning algorithms (28 notebooks)
 - `torch>=2.0.0` - Deep learning framework (11 notebooks)
 
 ### Network & Graph Algorithms (2 notebooks)
@@ -35,7 +35,7 @@ The provided `Dockerfile` extends the official JupyterHub image and installs all
 - `tqdm>=4.65.0` - Progress bars
 - `joblib>=1.3.0` - Parallel processing
 
-This is intentional: in a classroom or multi-user setting, it is better to **bake all dependencies into the Docker image** so that all 622 notebooks run with `Run All` without per-notebook package installation.
+This is intentional: in a classroom or multi-user setting, it is better to **bake all dependencies into the Docker image** so that all 620 notebooks run with `Run All` without per-notebook package installation.
 
 ## Prerequisites
 

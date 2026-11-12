@@ -1,6 +1,6 @@
 # ============================================================================
 # The Logistics & Supply Chain Problem-Solving Playbook (101 Problems Edition)
-# Requirements for all 622 executed notebooks
+# Requirements for all 620 executed notebooks
 # ============================================================================
 
 # Core Scientific Computing (Required - used in all notebooks)
