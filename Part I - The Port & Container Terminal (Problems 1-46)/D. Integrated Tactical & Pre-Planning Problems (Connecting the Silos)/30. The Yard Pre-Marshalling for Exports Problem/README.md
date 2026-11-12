@@ -8,20 +8,8 @@ Consider Bay 7, where Container A (departing Monday) sits beneath Container B (d
 
 ## 🎯 Solution Approaches
 
-### **Tier 1**: The Pen \& Paper Method (Network Flow Formulation) — [`P30-Tier-1-SOLUTION_executed.ipynb`](./P30-Tier-1-SOLUTION_executed.ipynb)
-- Implements The Pen \& Paper Method (Network Flow Formulation)
-
 ### **Tier 1**: The Pen \& Paper Method (Network Flow Formulation) — [`P30-Tier-1_executed.ipynb`](./P30-Tier-1_executed.ipynb)
 - Implements The Pen \& Paper Method (Network Flow Formulation)
-
-### **Tier 2**: The Classic Heuristic (List Scheduling Algorithm) — [`P30-Tier-2-BACKUP_executed.ipynb`](./P30-Tier-2-BACKUP_executed.ipynb)
-- Implements The Classic Heuristic (List Scheduling Algorithm)
-
-### **Tier 2**: The Classic Heuristic (List Scheduling Algorithm) — [`P30-Tier-2-COMPLETE_executed.ipynb`](./P30-Tier-2-COMPLETE_executed.ipynb)
-- Implements The Classic Heuristic (List Scheduling Algorithm)
-
-### **Tier 2**: The Classic Heuristic (List Scheduling Algorithm) — [`P30-Tier-2-CORRECTED_executed.ipynb`](./P30-Tier-2-CORRECTED_executed.ipynb)
-- Implements The Classic Heuristic (List Scheduling Algorithm)
 
 ### **Tier 2**: The Classic Heuristic (List Scheduling Algorithm) — [`P30-Tier-2_executed.ipynb`](./P30-Tier-2_executed.ipynb)
 - Implements The Classic Heuristic (List Scheduling Algorithm)

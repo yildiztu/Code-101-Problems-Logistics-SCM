@@ -8,14 +8,8 @@ The challenge encompasses multiple interconnected problems: real-time sensor mon
 
 ## 🎯 Solution Approaches
 
-### **Tier 1**: The Pen \& Paper Method (Mathematical Formulation) — [`P26-Tier-1-CLEAN_executed.ipynb`](./P26-Tier-1-CLEAN_executed.ipynb)
-- Implements The Pen \& Paper Method (Mathematical Formulation)
-
 ### **Tier 1**: The Pen \& Paper Method (Mathematical Formulation) — [`P26-Tier-1_executed.ipynb`](./P26-Tier-1_executed.ipynb)
 - Implements The Pen \& Paper Method (Mathematical Formulation)
-
-### **Tier 2**: The Classic Heuristic (Python Implementation) — [`P26-Tier-2-CLEAN_executed.ipynb`](./P26-Tier-2-CLEAN_executed.ipynb)
-- Implements The Classic Heuristic (Python Implementation)
 
 ### **Tier 2**: The Classic Heuristic (Python Implementation) — [`P26-Tier-2_executed.ipynb`](./P26-Tier-2_executed.ipynb)
 - Implements The Classic Heuristic (Python Implementation)
