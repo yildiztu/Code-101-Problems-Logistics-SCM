@@ -14,12 +14,6 @@ The facility features multiple picking zones: fast-pick areas near packing stati
 ### **Tier 2**: The Classic Heuristic (Python Implementation) — [`P60-Tier-2_executed.ipynb`](./P60-Tier-2_executed.ipynb)
 - Implements The Classic Heuristic (Python Implementation)
 
-### **Tier 3**: The Advanced Algorithm (Genetic Algorithm Implementation) — [`P49-Tier-3_executed.ipynb`](./P49-Tier-3_executed.ipynb)
-- Implements The Advanced Algorithm (Genetic Algorithm Implementation)
-
-### **Tier 3**: The Advanced Algorithm (Genetic Algorithm Implementation) — [`P56-Tier-3_executed.ipynb`](./P56-Tier-3_executed.ipynb)
-- Implements The Advanced Algorithm (Genetic Algorithm Implementation)
-
 ### **Tier 3**: The Advanced Algorithm (Genetic Algorithm Implementation) — [`P60-Tier-3_executed.ipynb`](./P60-Tier-3_executed.ipynb)
 - Implements The Advanced Algorithm (Genetic Algorithm Implementation)
 

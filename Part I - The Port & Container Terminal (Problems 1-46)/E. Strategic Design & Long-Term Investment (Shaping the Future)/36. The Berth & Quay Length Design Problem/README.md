@@ -18,8 +18,6 @@ Mediterranean Logistics Hub (MLH) is planning a major expansion of its container
   - Constraint propagation can significantly reduce the search space
 
 
-### **Tier 2** — [`P37-Tier-2_executed.ipynb`](./P37-Tier-2_executed.ipynb)
-
 ### **Tier 3**: The Advanced Algorithm (Firefly Algorithm Implementation) — [`P36-Tier-3_executed.ipynb`](./P36-Tier-3_executed.ipynb)
 - **Learning Goals**:
   - Each firefly represents a complete berth configuration solution
