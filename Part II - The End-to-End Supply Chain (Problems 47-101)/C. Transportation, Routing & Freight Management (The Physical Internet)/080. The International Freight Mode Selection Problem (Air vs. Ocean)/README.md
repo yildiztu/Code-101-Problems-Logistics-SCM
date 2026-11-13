@@ -58,6 +58,6 @@ The challenge extends beyond simple cost comparison. The team must consider: dem
 ## 🔗 Related Problems
 
 - **Problem 71**: The Classic Vehicle Routing Problem (VRP)
-- **Problem 78**: The Freight Consolidation & LTL Optimization Problem
-- **Problem 79**: The Intermodal Transportation Problem
+- **Problem 78**: The Fleet Sizing and Composition Problem
+- **Problem 79**: The Freight Carrier Selection & Bidding Problem
 - **Problem 82**: The Single Facility Location Problem (Center of Gravity)
